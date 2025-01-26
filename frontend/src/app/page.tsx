@@ -47,7 +47,7 @@ export function  ExportCheckbox({id}){
     }
   }
   return(
-  <input name='csvCheckbox' type='checkbox' onChange={()=>putID(willBeExported, id)}></input>
+  <input id = {`${id}export_checkbox`} name='csvCheckbox' type='checkbox' onChange={()=>putID(willBeExported, id)}></input>
   );
 }
 
@@ -69,7 +69,7 @@ export function SingleCSVExportButton({id, vorName, nachName}){
     exportToCsv(justThis);
   }
   return(
-  <button name='csvSingleExportButt' onClick = {()=>exportAsCSV(id)}>
+  <button id = {`${id}export_button`} name='csvSingleExportButt' onClick = {()=>exportAsCSV(id)}>
       {vorName} {nachName} als CSV exportieren
   </button>
   );
