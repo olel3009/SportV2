@@ -56,11 +56,16 @@ class BasicSeleniumTest(unittest.TestCase):
         # Initialize the WebDriver with the options
         self.driver = webdriver.Chrome(options=chrome_options)
         
-        # Navigate to your target URL
+        # Navigate to your target URL but fail the test if it takes too long
+        self.driver.set_page_load_timeout(10)
         self.driver.get("http://localhost:3000")
     
     def test_csv_download(self):
-        exportManyButton = self.driver.find_element(By.NAME, "csvMassExportButt")
+        #find the button for mass export but throw an appropriate error if it isnt found
+        try:
+            exportManyButton = self.driver.find_element(By.NAME, "csvMassExportButt")
+        except:
+            self.fail("Button for mass export not found!")
         exportManyButton.click()
         try:
             alert = self.driver.switch_to.alert
@@ -72,8 +77,11 @@ class BasicSeleniumTest(unittest.TestCase):
         
         # Ensure download directory is correctly set
         
-        # Test single export button
-        exportSingleButton = self.driver.find_element(By.NAME, "csvSingleExportButt")
+        # Test single export button but throw an appropriate error if it isnt found
+        try:
+            exportSingleButton = self.driver.find_element(By.NAME, "csvSingleExportButt")
+        except:
+            self.fail("Button for single export not found!")
         exportSingleButton.click()
         butt_id = exportSingleButton.get_attribute("id")
         downloaded_id = self.extract_digits_until_non_digit(butt_id)
@@ -91,6 +99,9 @@ class BasicSeleniumTest(unittest.TestCase):
         self.assertTrue(gotTheRightOne, "The wrong file was downloaded or it was named wrong!")
         print("File with one athlete was downloaded!")
         exportCheckBoxes = self.driver.find_elements(By.NAME, "csvCheckbox")
+        #make sure there are checkboxes to click
+        self.assertTrue(len(exportCheckBoxes) > 0, "No checkboxes to click!")
+        #test the export many button
         for checkBox in exportCheckBoxes:
             checkBox.click()
         exportManyButton.click()
