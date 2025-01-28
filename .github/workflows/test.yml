@@ -13,11 +13,15 @@ jobs:
     steps:
       # Any setup (like package or library installing) required goes here
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
       - uses: actions/setup-node@v2 
         with:
           node-version: 18
+      - run: pip install -r requirements.txt
             
       # Run test scripts here (Test scripts should ALWAYS throw an error or exit with a value > 0 if they fail)
       - run: echo "testing..."
-
+      - run: python ./frontend/tests/testCsvExport.py
       - run: echo "Test complete"
