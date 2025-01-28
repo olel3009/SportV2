@@ -153,14 +153,14 @@ def delete_result(id):
 def create_regel():
     data = request.json
     new_regel = Regel(
-        reglename=data['reglename'],
-        beschreibung=data.get('beschreibung'),
-        disziplin=data.get('disziplin'),
-        strecke=data['strecke'],
-        zeit_in_sekunden=data['zeit_in_sekunden'],
-        punkte=data['punkte'],
-        gueltig_ab=datetime.strptime(data['gueltig_ab'], '%Y-%m-%d'),
-        gueltig_bis=datetime.strptime(data['gueltig_bis'], '%Y-%m-%d') if 'gueltig_bis' in data else None
+        rulename=data['rulename'],
+        description=data.get('description'),
+        disciplin=data.get('disciplin'),
+        distance=data['distance'],
+        time_in_seconds=data['time_in_seconds'],
+        points=data['points'],
+        valid_start=datetime.strptime(data['valid_start'], '%Y-%m-%d'),
+        valid_end=datetime.strptime(data['valid_end'], '%Y-%m-%d') if 'valid_end' in data else None
     )
     db.session.add(new_regel)
     db.session.commit()
@@ -171,30 +171,30 @@ def get_regeln():
     regeln = Regel.query.all()
     return jsonify([{
         "id": regel.id,
-        "reglename": regel.reglename,
-        "beschreibung": regel.beschreibung,
-        "disziplin": regel.disziplin,
-        "strecke": regel.strecke,
-        "zeit_in_sekunden": regel.zeit_in_sekunden,
-        "punkte": regel.punkte,
-        "gueltig_ab": regel.gueltig_ab.strftime('%Y-%m-%d'),
-        "gueltig_bis": regel.gueltig_bis.strftime('%Y-%m-%d') if regel.gueltig_bis else None,
+        "rulename": regel.rulename,
+        "description": regel.description,
+        "disciplin": regel.disciplin,
+        "distance": regel.distance,
+        "time_in_seconds": regel.time_in_seconds,
+        "points": regel.points,
+        "valid_start": regel.valid_start.strftime('%Y-%m-%d'),
+        "valid_end": regel.valid_end.strftime('%Y-%m-%d') if regel.valid_end else None,
         "version": regel.version,
-        "erstellt_am": regel.erstellt_am,
-        "aktualisiert_am": regel.aktualisiert_am
+        "created_at": regel.created_at,
+        "updated_at": regel.updated_at
     } for regel in regeln])
 
 @bp.route('/regeln/<int:id>', methods=['PUT'])
 def update_regel(id):
     regel = Regel.query.get_or_404(id)
     data = request.json
-    regel.beschreibung = data.get('beschreibung', regel.beschreibung)
-    regel.disziplin = data.get('disziplin', regel.disziplin)
-    regel.strecke = data.get('strecke', regel.strecke)
-    regel.zeit_in_sekunden = data.get('zeit_in_sekunden', regel.zeit_in_sekunden)
-    regel.punkte = data.get('punkte', regel.punkte)
-    regel.gueltig_ab = datetime.strptime(data['gueltig_ab'], '%Y-%m-%d') if 'gueltig_ab' in data else regel.gueltig_ab
-    regel.gueltig_bis = datetime.strptime(data['gueltig_bis'], '%Y-%m-%d') if 'gueltig_bis' in data else regel.gueltig_bis
+    regel.description = data.get('description', regel.description)
+    regel.disciplin = data.get('disciplin', regel.disciplin)
+    regel.distance = data.get('distance', regel.distance)
+    regel.time_in_seconds = data.get('time_in_seconds', regel.time_in_seconds)
+    regel.points = data.get('points', regel.points)
+    regel.valid_start = datetime.strptime(data['valid_start'], '%Y-%m-%d') if 'valid_start' in data else regel.valid_start
+    regel.valid_end = datetime.strptime(data['valid_end'], '%Y-%m-%d') if 'valid_end' in data else regel.valid_end
     regel.version += 1  # Version erhöhen
     db.session.commit()
     return jsonify({"message": "Regel aktualisiert"})
