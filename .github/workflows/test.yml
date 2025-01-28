@@ -20,6 +20,7 @@ jobs:
         with:
           node-version: 18
       - run: pip install -r requirements.txt
+      - run: npm run dev
             
       # Run test scripts here (Test scripts should ALWAYS throw an error or exit with a value > 0 if they fail)
       - run: echo "testing..."
