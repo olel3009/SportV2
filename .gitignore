@@ -2,7 +2,6 @@
 
 # dependencies
 frontend/node_modules
-frontend/package-lock.json
 frontend/.pnp
 frontend/.pnp.*
 frontend/.yarn/*
