@@ -50,6 +50,8 @@ class BasicSeleniumTest(unittest.TestCase):
             "download.prompt_for_download": False,
         }
         chrome_options.add_experimental_option("prefs", chrome_prefs)
+        chrome_options.add_argument("--headless")  # Run in headless mode
+        chrome_options.add_argument("--disable-gpu")
         
         # Initialize the WebDriver with the options
         self.driver = webdriver.Chrome(options=chrome_options)
