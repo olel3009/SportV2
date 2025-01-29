@@ -72,3 +72,7 @@ export function getAthleteById(id:number) {
     // Return the trainee that has the id from the passed parameter 
     return translatedTrainees.find((trainee: Athlete) => trainee.id === id);
 }
+
+export function getAllAthletes() : Athlete[] {
+  return JSON.parse(mockupData);
+} 
