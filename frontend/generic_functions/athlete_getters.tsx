@@ -9,22 +9,25 @@ let mockupData = `[
       "name": "Dieter",
       "sex": "m",
       "dateOfBirth": "18.03.2014",
-      "disciplines": ["Sprinten", "Springen"],
+      "disciplines": ["Schnelligkeit", "Kraft"],
       "feats": [
         {
-          "discipline": "Sprinten",
+          "discipline": "Schnelligkeit",
+          "exercise": "Sprinten",
           "date": "5.09.2023",
           "result": "10 Sek",
           "score": "90"
         },
         {
-          "discipline": "Sprinten",
+          "discipline": "Schnelligkeit",
+          "exercise": "Sprinten",
           "date": "5.09.2022",
           "result": "90 Sek",
           "score": "1"
         },
         {
-          "discipline": "Springen",
+          "discipline": "Kraft",
+          "exercise": "Springen",
           "date": "5.08.2023",
           "result": "50 cm",
           "score": "70"
@@ -37,22 +40,25 @@ let mockupData = `[
       "name": "Peter",
       "sex": "m",
       "dateOfBirth": "10.08.2010",
-      "disciplines": ["Sprinten", "Springen"],
+      "disciplines": ["Schnelligkeit", "Kraft"],
       "feats": [
         {
-          "discipline": "Springen",
+          "discipline": "Kraft",
+          "exercise": "Springen",
           "date": "5.08.2023",
           "result": "90 cm",
           "score": "80"
         },
         {
-          "discipline": "Sprinten",
+          "discipline": "Schnelligkeit",
+          "exercise": "Sprinten",
           "date": "5.09.2023",
           "result": "5 Sek",
           "score": "100"
         },
         {
-          "discipline": "Sprinten",
+          "discipline": "Schnelligkeit",
+          "exercise": "Sprinten",
           "date": "5.09.2022",
           "result": "10 Sek",
           "score": "80"
