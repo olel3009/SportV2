@@ -3,6 +3,7 @@ export interface Athlete {
     firstName: string;
     lastName: string;
     sex: "m" | "w" | "d";
+    eMail: string;
     dateOfBirth: string;
     disciplines?: string[];
     feats?: Array<{
