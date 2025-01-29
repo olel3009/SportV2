@@ -61,7 +61,7 @@ let mockupData = `[
     }
   ]`;
 
-function getAthleteById(id: number) {  
+export function getAthleteById(id: number) {  
     let translatedTrainees = JSON.parse(mockupData);
     // Return the trainee that has the id from the passed parameter 
     return translatedTrainees.find(trainee => trainee.id === id);
