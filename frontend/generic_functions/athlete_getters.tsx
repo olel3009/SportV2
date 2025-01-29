@@ -1,7 +1,7 @@
 //Fügen Sie hier alle Funktionen ein, die Athleten abrufen, damit sie im bereits vorhandenen Code verwendet werden können
 //Auf diese Weise müssen wir, wenn die API fertig ist, nur die Logik hier ändern und nicht an anderer Stelle im Code
 //Außerdem werden diese Funktionen mit ziemlicher Sicherheit mehr als einmal verwendet, daher ist es gut, sie woanders zu platzieren
-
+import {Athlete} from "../src/models/athlete"
 let mockupData = `[
     {
       "id": 420,
@@ -67,8 +67,8 @@ let mockupData = `[
     }
   ]`;
 
-export function getAthleteById(id: number) {  
+export function getAthleteById(id:number) {  
     let translatedTrainees = JSON.parse(mockupData);
     // Return the trainee that has the id from the passed parameter 
-    return translatedTrainees.find(trainee => trainee.id === id);
+    return translatedTrainees.find((trainee: Athlete) => trainee.id === id);
 }
