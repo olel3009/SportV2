@@ -16,6 +16,20 @@ export default function FeatsResultsPage() {
   const handleChange = (discipline: string) => {
     setExpanded(expanded === discipline ? false : discipline);
   };
+  const filterAndSortFeats = (discipline: string): Feat[] => {
+    return athletedata.feats
+      .filter((feat: Feat) => feat.discipline === discipline)
+      .sort((a: Feat, b: Feat) => {
+        const dateA = new Date(a.date.split('.').reverse().join('-'));
+        const dateB = new Date(b.date.split('.').reverse().join('-'));
+        return dateB.getTime() - dateA.getTime(); // Neuere zuerst
+      });
+  };
+
+  const getNewestFeat = (discipline: string): Feat | null => {
+    const sortedFeats = filterAndSortFeats(discipline);
+    return sortedFeats.length > 0 ? sortedFeats[0] : null;
+  };
 
   return (
     <div className={styles.page}>
@@ -28,9 +42,26 @@ export default function FeatsResultsPage() {
           <div className={styles.disciplinesContainer}>
             <span>
               {athletedata.disciplines.map((discipline: string) => (
-                <a key={discipline} onClick={() => handleChange(discipline)}  className={styles.disciplineTitle}>
-                {discipline}
-              </a>
+                <a key={discipline} onClick={() => handleChange(discipline)} className={styles.disciplineTitle}>
+                  {discipline}
+                  <div className={styles.newestFeat}>
+                  {(() => {
+                    const newestFeat = getNewestFeat(discipline);
+                    return newestFeat ? (
+                      <div>
+                        <p>Neueste Leistung:</p>
+                        <p>Übung: {newestFeat.exercise}</p>
+                        <p>Ergebnis: {newestFeat.result}</p>
+                        <p>Punkte: {newestFeat.score}</p>
+                        <p>Datum: {newestFeat.date}</p>
+                      </div>
+                    ) : (
+                      <p>Keine Leistungen vorhanden</p>
+                    );
+                  })()}
+                </div>
+                </a>
+                
               ))}
             </span>
             {athletedata.disciplines.map((discipline: string) => (
@@ -47,21 +78,14 @@ export default function FeatsResultsPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {athletedata.feats
-                          .filter((feat: Feat) => feat.discipline === discipline)
-                          .sort((a: Feat, b: Feat) => {
-                            const dateA = new Date(a.date.split('.').reverse().join('-'));
-                            const dateB = new Date(b.date.split('.').reverse().join('-'));
-                            return dateB.getTime() - dateA.getTime(); // Neuere zuerst
-                          })
-                          .map((feat: Feat, index: number) => (
-                            <tr key={index}>
-                              <td>{feat.exercise}</td>
-                              <td>{feat.result}</td>
-                              <td>{feat.score}</td>
-                              <td>{feat.date}</td>
-                            </tr>
-                          ))}
+                        {filterAndSortFeats(discipline).map((feat: Feat, index: number) => (
+                          <tr key={index}>
+                            <td>{feat.exercise}</td>
+                            <td>{feat.result}</td>
+                            <td>{feat.score}</td>
+                            <td>{feat.date}</td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
