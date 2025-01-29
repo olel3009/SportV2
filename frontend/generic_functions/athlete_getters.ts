@@ -8,6 +8,7 @@ let mockupData = `[
       "lastName": "Schulz",
       "name": "Dieter",
       "sex": "m",
+      "eMail": "ds@wasauchimmer.de",
       "dateOfBirth": "18.03.2014",
       "disciplines": ["Schnelligkeit", "Kraft"],
       "feats": [
@@ -39,6 +40,7 @@ let mockupData = `[
       "lastName": "Dortmeier",
       "name": "Peter",
       "sex": "m",
+      "eMail": "pD@wasauchimmer.de",
       "dateOfBirth": "10.08.2010",
       "disciplines": ["Schnelligkeit", "Kraft"],
       "feats": [
