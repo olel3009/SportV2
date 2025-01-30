@@ -1,6 +1,7 @@
+from datetime import datetime
 from flask import Blueprint, request, jsonify
-from app import db
-from app.models import Trainer, Athlete, Result, Regel
+from database import db
+from database.models import Trainer, Athlete, Result, Regel
 
 # Blueprint für Routen
 bp = Blueprint('routes', __name__)
