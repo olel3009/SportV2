@@ -18,7 +18,7 @@ def create_app():
     migrate.init_app(app, db)
 
     # Blueprint oder Routen registrieren
-    from app.routes import bp as routes_bp
+    from database.routes import bp as routes_bp
     app.register_blueprint(routes_bp)
 
     return app
