@@ -37,13 +37,15 @@ export default function FeatsResultsPage() {
         <h1 className={styles.title}>Leistungen Ergebnisse</h1>
         <section className={styles.resultsSection}>
           <p className={styles.athleteInfo}>
-            Ergebnisse von: {athletedata.name} {athletedata.lastName}
+            <a><b>Ergebnisse von: {athletedata.name} {athletedata.lastName}</b></a>
           </p>
           <div className={styles.disciplinesContainer}>
             <span>
               {athletedata.disciplines.map((discipline: string) => (
                 <a key={discipline} onClick={() => handleChange(discipline)} className={styles.disciplineTitle}>
-                  {discipline}
+                  <b>
+                    {discipline}
+                  </b>
                   <div className={styles.newestFeat}>
                   {(() => {
                     const newestFeat = getNewestFeat(discipline);

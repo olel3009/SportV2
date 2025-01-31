@@ -74,10 +74,11 @@ table tbody tr:nth-of-type(even) {
 table tbody tr:last-of-type {
   border-bottom: 2px solid #009879;
 }
-
-a {
+a{
   display: inline-block; /* Ensures the element can have padding */
   margin: 0 20px; /* Adds space to the left and right */
+}
+a b{
   font-weight: bold; /* Makes the font thicker */
   font-size: 1.5em; /* Similar to <h2> */
   text-decoration: none; /* Optional: removes the underline */
