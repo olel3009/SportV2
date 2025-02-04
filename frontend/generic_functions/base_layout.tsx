@@ -18,13 +18,15 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div>
-      <Nav_Menu />
-      <div className={styles.page}>
-        <main className={styles.main}>
-          {children}
-        </main>
+      <div className={styles.back_layer}>
+        <Nav_Menu />
+        <div className={styles.page}>
+          <main className={styles.main}>
+            <div className={styles.content}>
+              {children}
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
   )
 }
