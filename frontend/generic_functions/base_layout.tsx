@@ -1,7 +1,7 @@
 // components/Layout.js
 import React, { ReactNode } from 'react'
 import Link from "next/link";
-import { useState } from "react";
+import styles from "../src/app/page.module.css";
 
 let sites: string[][] = [["Startseite", "/"], ["Testseite", "/test_page"]];
 
@@ -20,9 +20,11 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div>
       <Nav_Menu />
-      <main>
-        {children}
-      </main>
+      <div className={styles.page}>
+        <main className={styles.main}>
+          {children}
+        </main>
+      </div>
     </div>
   )
 }

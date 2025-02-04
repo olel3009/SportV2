@@ -8,7 +8,7 @@ import Layout from "../../../generic_functions/base_layout";
 export default function Home() {
   return (
     <Layout>
-      <h1>Testseite 2</h1>
+      <h1>Testseite</h1>
       <p>Nur hier um zu existieren</p>
     </Layout>
   );
