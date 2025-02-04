@@ -10,6 +10,14 @@ from selenium.common.exceptions import NoAlertPresentException
 class nav_menu_test(unittest.TestCase):   
     
     def setUp(self):
+        
+        # Set Chrome options and preferences
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--headless")  # Run in headless mode
+        chrome_options.add_argument("--disable-gpu")
+        
+        # Initialize the WebDriver with the options
+        self.driver = webdriver.Chrome(options=chrome_options)
         self.driver = webdriver.Chrome()
         
         # Navigate to your target URL but fail the test if it takes too long
