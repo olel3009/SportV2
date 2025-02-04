@@ -7,9 +7,9 @@ let sites: string[][] = [["Startseite", "/"], ["Testseite", "/test_page"]];
 
 function Nav_Menu() {
   let links = sites.map((site, index) => {
-    return <Link href={site[1]} key={index}>{site[0]}</Link>
+    return<Link href={site[1]} key={index} className={styles.navbutt}>{site[0]}</Link>
   });
-  return <nav>{links}</nav>;
+  return <nav key = 'navMen' className={styles.navbar}>{links}</nav>;
 }
 
 interface LayoutProps {
