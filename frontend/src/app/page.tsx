@@ -13,16 +13,6 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
        Nur hier um zu existieren, gerne schnell überschreiben
-       <div>
-        <label htmlFor="dynamicInput">Enter something:</label>
-        <input
-          id="dynamicInput"
-          type="text"
-          value={queryValue}
-          onChange={(e) => setQueryValue(e.target.value)}
-        />
-      </div>
-       <Link href={`/feats_results_page?id=${encodeURIComponent(queryValue)}`}>Anzeige der Ergebnisse</Link>
       </main>
       <footer className={styles.footer}>
       </footer>

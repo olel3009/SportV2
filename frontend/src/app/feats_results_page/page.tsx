@@ -39,38 +39,36 @@ export default function FeatsResultsPage() {
           <p className={styles.athleteInfo}>
             <a><b>Ergebnisse von: {athletedata.name} {athletedata.lastName}</b></a>
           </p>
-          <div className={styles.disciplinesContainer}>
-            <span>
+          <div>
+            <div className={styles.disciplinesContainer}>
               {athletedata.disciplines.map((discipline: string) => (
-                <a key={discipline} onClick={() => handleChange(discipline)} className={styles.disciplineTitle}>
+                <div key={discipline} onClick={() => handleChange(discipline)} className={styles.feat}>
                   <b>
                     {discipline}
                   </b>
-                  <div className={styles.newestFeat}>
-                  {(() => {
-                    const newestFeat = getNewestFeat(discipline);
-                    return newestFeat ? (
-                      <div>
-                        <p>Neueste Leistung:</p>
-                        <p>Übung: {newestFeat.exercise}</p>
-                        <p>Ergebnis: {newestFeat.result}</p>
-                        <p>Punkte: {newestFeat.score}</p>
-                        <p>Datum: {newestFeat.date}</p>
-                      </div>
-                    ) : (
-                      <p>Keine Leistungen vorhanden</p>
-                    );
-                  })()}
-                </div>
-                </a>
-                
+                    {(() => {
+                      const newestFeat = getNewestFeat(discipline);
+                      return newestFeat ? (
+                        <span>
+                          <p>Neueste Leistung:</p>
+                          <p>Übung: {newestFeat.exercise}</p>
+                          <p>Ergebnis: {newestFeat.result}</p>
+                          <p>Punkte: {newestFeat.score}</p>
+                          <p>Datum: {newestFeat.date}</p>
+                        </span>
+                      ) : (
+                        <p>Keine Leistungen vorhanden</p>
+                      );
+                    })()}
+                  
+                </div>  
               ))}
-            </span>
+            </div>
             {athletedata.disciplines.map((discipline: string) => (
               <div key={discipline} className={styles.disciplineCard}>
                 {expanded === discipline && (
-                  <div className={styles.resultsCard}>
-                    <table className={styles.resultsTable}>
+                  <div>
+                    <table className={styles.featTable}>
                       <thead>
                         <tr>
                           <th>Übung</th>
@@ -96,8 +94,7 @@ export default function FeatsResultsPage() {
             ))}
           </div>
         </section>
-      </main>
-      <footer className={styles.footer}></footer>
+        </main>
     </div>
   );
 }
