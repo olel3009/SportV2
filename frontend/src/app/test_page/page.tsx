@@ -7,7 +7,7 @@ import Layout from "../../../generic_functions/base_layout";
 
 export default function Home() {
   return (
-    <Layout>
+    <div>
       <h1>Testseite</h1>
       <p>Nur hier um zu existieren</p>
       <p>Dies ist mehr Content</p>
@@ -20,6 +20,6 @@ export default function Home() {
       <p>Dies ist mehr Content</p>
       <p>Dies ist mehr Content</p>
       <p>Dies ist mehr Content</p>
-    </Layout>
+    </div>
   );
 }
