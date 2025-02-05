@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { getAthleteById } from "../../../generic_functions/athlete_getters";
 import { useState } from "react";
 import { Feat } from "@/models/athlete";
+import DataTable from 'datatables.net-dt';
+import { useEffect } from "react";
 
 export default function FeatsResultsPage() {
   const searchParams = useSearchParams();
@@ -12,6 +14,45 @@ export default function FeatsResultsPage() {
   const presentIDNumber = Number(presentID);
   const athletedata = getAthleteById(presentIDNumber);
   const [expanded, setExpanded] = useState<string | false>(false);
+
+  interface DiscProps {
+    discipline: string; // We’re making this required and specifically a string
+  }
+
+  function DisciplineTable({discipline}:DiscProps){
+    let tID= discipline+"_table";
+    useEffect(() => {
+
+      new DataTable('#'+tID)
+
+    }, []);
+    return(
+      <table id ={tID} className={styles.featTable}>
+        <thead>
+          <tr>
+            <th>Übung</th>
+            <th>Ergebnis</th>
+            <th>Punkte</th>
+            <th>Datum</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filterAndSortFeats(discipline).map((feat: Feat, index: number) => (
+            <tr key={index}>
+              <td>{feat.exercise}</td>
+              <td>{feat.result}</td>
+              <td>{feat.score}</td>
+              <td>{feat.date}</td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+        </tfoot>
+      </table>
+      
+    );
+  
+  }
 
   const handleChange = (discipline: string) => {
     setExpanded(expanded === discipline ? false : discipline);
@@ -68,26 +109,7 @@ export default function FeatsResultsPage() {
               <div key={discipline} className={styles.disciplineCard}>
                 {expanded === discipline && (
                   <div>
-                    <table className={styles.featTable}>
-                      <thead>
-                        <tr>
-                          <th>Übung</th>
-                          <th>Ergebnis</th>
-                          <th>Punkte</th>
-                          <th>Datum</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filterAndSortFeats(discipline).map((feat: Feat, index: number) => (
-                          <tr key={index}>
-                            <td>{feat.exercise}</td>
-                            <td>{feat.result}</td>
-                            <td>{feat.score}</td>
-                            <td>{feat.date}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                    <DisciplineTable discipline={discipline}/>
                   </div>
                 )}
               </div>
