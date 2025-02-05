@@ -1,6 +1,6 @@
 let exportThese:Array<Number>;
 exportThese =[];
-import { getAthleteById } from "../../generic_functions/athlete_getters";
+import { getAthleteById } from "../../../generic_functions/athlete_getters";
 import { Athlete } from "@/models/athlete";
 function exportToCsv(idArray:Array<Number>){
   //get Actual Values for export from Database/API here

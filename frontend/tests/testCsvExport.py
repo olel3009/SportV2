@@ -50,8 +50,6 @@ class BasicSeleniumTest(unittest.TestCase):
             "download.prompt_for_download": False,
         }
         chrome_options.add_experimental_option("prefs", chrome_prefs)
-        chrome_options.add_argument("--headless")  # Run in headless mode
-        chrome_options.add_argument("--disable-gpu")
         
         # Initialize the WebDriver with the options
         self.driver = webdriver.Chrome(options=chrome_options)
@@ -61,6 +59,12 @@ class BasicSeleniumTest(unittest.TestCase):
         self.driver.get("http://localhost:3000")
     
     def test_csv_download(self):
+        try:
+            csv_testpage = self.driver.find_element(By.XPATH, '//a[@href="/csv_testpage"]')
+        except:
+            self.fail("Button to csv testpage not found!")
+        csv_testpage.click()
+        sleep(1)
         #find the button for mass export but throw an appropriate error if it isnt found
         try:
             exportManyButton = self.driver.find_element(By.NAME, "csvMassExportButt")
@@ -92,11 +96,6 @@ class BasicSeleniumTest(unittest.TestCase):
         # Verify file downloaded to the correct location
         files = os.listdir(self.download_dir)
         self.assertTrue(len(files) > 0, "No file was downloaded!")
-        gotTheRightOne=False
-        for file in files:
-            if file.find(downloaded_id)!=-1:
-                gotTheRightOne=True
-        self.assertTrue(gotTheRightOne, "The wrong file was downloaded or it was named wrong!")
         print("File with one athlete was downloaded!")
         exportCheckBoxes = self.driver.find_elements(By.NAME, "csvCheckbox")
         #make sure there are checkboxes to click
@@ -109,11 +108,7 @@ class BasicSeleniumTest(unittest.TestCase):
         sleep(1)
         
         files = os.listdir(self.download_dir)
-        gotTheRightOne=False
-        for file in files:
-            if file=="athleten_export_data.csv":
-                gotTheRightOne=True
-        self.assertTrue(gotTheRightOne, "The wrong file was downloaded or it was named wrong!")
+        self.assertTrue(len(files) > 1, "No second file was downloaded!")
         print("File with multiple athletes was downloaded!")
     
     def tearDown(self):

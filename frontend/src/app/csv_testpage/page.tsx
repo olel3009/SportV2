@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import styles from "./page.module.css";
+import styles from "../page.module.css";
 import { json } from "stream/consumers";
 import exp from "constants";
 import { MassExportButton, ExportCheckbox, SingleCSVExportButton } from "./csv_export_functions";
@@ -20,8 +20,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-       Das hier ist die Standard next.js Seite und wird normalerweise angesprochen, ist also praktisch die index Seite
-       Nutzt sie fürs Testen oder  bearbeitet schonmal was
+       Dies ist die CSV Export Testseite
         <div>
             <CsvExporTable />
             <MassExportButton />
