@@ -1,4 +1,4 @@
-from app import app, db, Regel
+from database import app, db, Regel
 import pytest
 
 @pytest.fixture
