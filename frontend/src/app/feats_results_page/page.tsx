@@ -23,7 +23,30 @@ export default function FeatsResultsPage() {
     let tID= discipline+"_table";
     useEffect(() => {
 
-      new DataTable('#'+tID)
+      new DataTable('#' + tID, {
+        destroy: true,
+        language: {
+          sEmptyTable:     "Keine Daten in der Tabelle vorhanden",
+          sInfo:           "Zeige _START_ bis _END_ von _TOTAL_ Einträgen",
+          sInfoEmpty:      "Zeige 0 bis 0 von 0 Einträgen",
+          sInfoFiltered:   "(gefiltert von _MAX_ Einträgen)",
+          sLengthMenu:     "Zeige _MENU_ Einträge",
+          sLoadingRecords: "Wird geladen...",
+          sProcessing:     "Bitte warten...",
+          sSearch:         "Suchen:",
+          sZeroRecords:    "Keine Einträge vorhanden.",
+          oPaginate: {
+            sFirst:    "Erste",
+            sPrevious: "Zurück",
+            sNext:     "Weiter",
+            sLast:     "Letzte"
+          },
+          oAria: {
+            sSortAscending:  ": aktivieren, um Spalte aufsteigend zu sortieren",
+            sSortDescending: ": aktivieren, um Spalte absteigend zu sortieren"
+          }
+        }
+      });
 
     }, []);
     return(
