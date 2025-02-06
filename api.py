@@ -6,19 +6,16 @@ import athlet
 #Athlet
 swimming_certificate1 = athlet.SwimmingCertificate("keine Ahnung", True)
 performance_data1 = athlet.PerformanceData("Laufen", "11.09.2001", "1 Min., 30 Sek.", 3)
-athlet1 = athlet.Athlet("Müller", "Mark Alexander", "Männlich", "25.01.2005", performance_data1, swimming_certificate1) 
+performance_data2 = athlet.PerformanceData("Schwimmen", "11.09.2001", "0 Min., 30 Sek.", 2)
+athlet1 = athlet.Athlet("Müller", "Mark Alexander", "Männlich", "25.01.2005", (performance_data1, performance_data2), swimming_certificate1)
 
 pdffile = r'C:\Users\A200274077\OneDrive - Deutsche Telekom AG\Desktop\SportV2-2\data\DSA_Einzelpruefkarte_2025_SCREEN.pdf'
 
 def extract_form_fields(inputpdf) -> dict | None:
     reader = PdfReader(inputpdf)
-    page0 = reader.pages[0]
-    print(page0)
-    #Anscheinend befinden sich keine Forms auf der ersten Seite (sollten aber)
-    fields = page0.get_fields()
-    #fields = page0.getObject()
-    #fields = reader.get_form_text_fields()
-    print(fields)
+    fields = reader.get_fields()
+    for key in fields.keys():
+        print(f"{key}\n")
     return fields
 
 def fill_out_fields(inputpdf):
@@ -27,10 +24,10 @@ def fill_out_fields(inputpdf):
     writer = PdfWriter()
     writer.append(reader)
     #value muss zu den jeweiligen attributen der 3 Klassen umgeändert werden
-    for key, value in fields:
+    for key in fields:
         writer.update_page_form_field_values(
             writer.pages[0],
-            {key: value},
+            {key: ""},
             auto_regenerate=False,
         )
 
@@ -44,7 +41,5 @@ def export_pdf(ath_id):
     pass
 
 if __name__ == "__main__":
-    #add_text(pdffile, destination, "LOLOLOLOLOLOL", 72, 72)
-    #add_text(pdffile, test, "LOLOLOLOLOLOL", 72, 72)
-    #print(PdfReader(pdffile).pages[0])
-    extract_form_fields(pdffile)
+    print(extract_form_fields(pdffile))
+    print(athlet1.performances)

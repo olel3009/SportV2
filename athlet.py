@@ -12,7 +12,7 @@ class SwimmingCertificate:
         self.fullfilled = fullfilled
 
 class Athlet:
-    def __init__(self, name, surname, sex, birthdate, performances: PerformanceData, swimming_proof: SwimmingCertificate):
+    def __init__(self, name, surname, sex, birthdate, *performances: PerformanceData, swimming_proof: SwimmingCertificate):
         self.name = name
         self.surname = surname
         self.sex = sex
