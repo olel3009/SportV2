@@ -14,22 +14,22 @@ let mockupData = `[
       "feats": [
         {
           "discipline": "Schnelligkeit",
-          "exercise": "Sprinten",
-          "date": "5.09.2023",
+          "exercise": "50mLauf",
+          "date": "05.09.2023",
           "result": "10 Sek",
           "score": "90"
         },
         {
           "discipline": "Schnelligkeit",
           "exercise": "Sprinten",
-          "date": "5.09.2022",
+          "date": "05.09.2022",
           "result": "90 Sek",
           "score": "1"
         },
         {
           "discipline": "Kraft",
           "exercise": "Springen",
-          "date": "5.08.2023",
+          "date": "05.08.2023",
           "result": "50 cm",
           "score": "70"
         }
@@ -47,21 +47,21 @@ let mockupData = `[
         {
           "discipline": "Kraft",
           "exercise": "Springen",
-          "date": "5.08.2023",
+          "date": "05.08.2023",
           "result": "90 cm",
           "score": "80"
         },
         {
           "discipline": "Schnelligkeit",
           "exercise": "Sprinten",
-          "date": "5.09.2023",
+          "date": "05.09.2023",
           "result": "5 Sek",
           "score": "100"
         },
         {
           "discipline": "Schnelligkeit",
           "exercise": "Sprinten",
-          "date": "5.09.2022",
+          "date": "05.09.2022",
           "result": "10 Sek",
           "score": "80"
         }
@@ -90,6 +90,7 @@ export function addFeatToAthlete(athleteId: number, exercise: string, date: stri
   if(!athlete){
     return;
   }
+  console.log("before: "+athlete.feats);
   let discipline: string;
   let exToDisc = [["50mLauf"], ["Hochsprung", "Weitsprung"], ["Kugelstossen"]];
   if (exToDisc[0].includes(exercise)){
@@ -110,8 +111,25 @@ export function addFeatToAthlete(athleteId: number, exercise: string, date: stri
     score: score
   };
   if(athlete.feats){
-    athlete.feats.push(newFeat);
+    let repeat = false;
+    let overwrite=false;
+    athlete.feats.forEach(feat=>{
+      if(feat.date==date&&feat.exercise==exercise){
+        repeat=true;
+      }
+    });
+    if(repeat){
+      overwrite = confirm("Diese Übung wurde für diesen Tag bereits eingetragen, überschreiben?");
+    }
+    if(repeat){
+      if(overwrite){
+        athlete.feats.push(newFeat);
+      }
+    }else{
+      athlete.feats.push(newFeat);
+    }
   }else{
     athlete.feats = [newFeat];
   }
+  console.log("after: "+athlete.feats);
 }

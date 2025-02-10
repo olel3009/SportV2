@@ -39,11 +39,12 @@ export default function Home() {
 
     // Use .value instead of getAttribute("value")
     let ueb = uebungSelect.value;
-    let ath = athleteSelect.value;
+    let ath = Number(athleteSelect.value);
     let dat = datumInput.value;
     let erg = ergebnisInput.value;
 
     console.log("Uebung:", ueb, "Athlet:", ath, "Datum:", dat, "Ergebnis:", erg);
+    addFeatToAthlete(ath, ueb, dat, erg);
 
     // If you need to store the result, you might do:
     // addFeatToAthlete( /* your parameters here */ );
