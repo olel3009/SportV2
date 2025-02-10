@@ -124,12 +124,15 @@ export function addFeatToAthlete(athleteId: number, exercise: string, date: stri
     if(repeat){
       if(overwrite){
         athlete.feats.push(newFeat);
+        alert("Neue Leistung Eingetragen!")
       }
     }else{
       athlete.feats.push(newFeat);
+      alert("Neue Leistung Eingetragen!")
     }
   }else{
     athlete.feats = [newFeat];
+    alert("Neue Leistung Eingetragen!")
   }
   console.log("after: "+athlete.feats);
 }
