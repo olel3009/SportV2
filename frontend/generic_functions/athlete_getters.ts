@@ -1,12 +1,12 @@
 //Fügen Sie hier alle Funktionen ein, die Athleten abrufen, damit sie im bereits vorhandenen Code verwendet werden können
 //Auf diese Weise müssen wir, wenn die API fertig ist, nur die Logik hier ändern und nicht an anderer Stelle im Code
 //Außerdem werden diese Funktionen mit ziemlicher Sicherheit mehr als einmal verwendet, daher ist es gut, sie woanders zu platzieren
-import {Athlete} from "../src/models/athlete"
+import {Athlete, Feat} from "../src/models/athlete"
 let mockupData = `[
     {
       "id": 420,
       "lastName": "Schulz",
-      "name": "Dieter",
+      "firstName": "Dieter",
       "sex": "m",
       "eMail": "ds@wasauchimmer.de",
       "dateOfBirth": "18.03.2014",
@@ -38,7 +38,7 @@ let mockupData = `[
     {
       "id": 69,
       "lastName": "Dortmeier",
-      "name": "Peter",
+      "firstName": "Peter",
       "sex": "m",
       "eMail": "pD@wasauchimmer.de",
       "dateOfBirth": "10.08.2010",
@@ -79,3 +79,39 @@ export function getAthleteById(id: number) : Athlete | undefined {
 export function getAllAthletes() : Athlete[] {
   return JSON.parse(mockupData);
 } 
+
+function calculateMedal(score: number) : number {
+ return 69;
+}
+
+
+export function addFeatToAthlete(athleteId: number, exercise: string, date: string, result: string) {
+  let athlete = getAthleteById(athleteId);
+  if(!athlete){
+    return;
+  }
+  let discipline: string;
+  let exToDisc = [["50mLauf"], ["Hochsprung", "Weitsprung"], ["Kugelstossen"]];
+  if (exToDisc[0].includes(exercise)){
+    discipline = "Schnelligkeit"; 
+  }else if(exToDisc[1].includes(exercise)){
+    discipline = "Koordination";
+  }else if(exToDisc[2].includes(exercise)){
+    discipline = "Kraft";
+  }else{
+    discipline = "Sonstiges";
+  }
+  let score = calculateMedal(result.length); 
+  let newFeat:Feat = {
+    discipline: discipline,
+    exercise: exercise,
+    date: date,
+    result: result,
+    score: score
+  };
+  if(athlete.feats){
+    athlete.feats.push(newFeat);
+  }else{
+    athlete.feats = [newFeat];
+  }
+}
