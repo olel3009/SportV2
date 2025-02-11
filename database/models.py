@@ -70,4 +70,26 @@ class Regel(db.Model):
 
     def __repr__(self):
         return f"<Regel {self.reglename}, Disziplin: {self.disziplin}>"
-    
+
+class User(db.Model):
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)  # Hash-Speicherung empfohlen
+    trainer_id = db.Column(db.Integer, db.ForeignKey('trainers.id'), nullable=True)
+    athlete_id = db.Column(db.Integer, db.ForeignKey('athletes.id'), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Beziehungen
+    trainer = db.relationship('Trainer', backref=db.backref('users', lazy=True))
+    athlete = db.relationship('Athlete', backref=db.backref('users', lazy=True))
+
+    __table_args__ = (
+        db.CheckConstraint('(trainer_id IS NOT NULL AND athlete_id IS NULL) OR (trainer_id IS NULL AND athlete_id IS NOT NULL)', 
+                           name='check_only_one_role'),
+    )
+
+    def __repr__(self):
+        return f"<User {self.email}>"    
