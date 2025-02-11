@@ -2,7 +2,7 @@
 import { SignupFormSchema, FormState, LoginFormSchema } from '@/app/definitions'
 import { createUser, LoginKontrolle, userExists } from '../../generic_functions/user_getters'
 import { redirect } from 'next/navigation'
-import {} from '@/app/startpage'
+
 
 
 
@@ -22,11 +22,11 @@ export async function login(state: FormState, formData: FormData) {
     }
 
     //Test Login Data and test return
+    
     const mail = formData.get('email') as string;
     const password = formData.get('password') as string;
     if (LoginKontrolle(mail, password) == 2) {
         console.log("login successful")
-        
         redirect('/startpage')
         return {
             message: 'Login successful',
