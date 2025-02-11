@@ -2,15 +2,15 @@
 
 import React from "react";
 import { Athlete } from "@/models/athlete";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { DataTable } from "@/ui/DataTable";
 
 export function AthleteList( {athletes}: {athletes: Athlete[]} ) {
     const router = useRouter();
 
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full border-collapse border rounded-xl border-gray-300">
+            <DataTable className="display">
 
                 <thead>
                     <tr className="bg-gray-200">
@@ -42,7 +42,7 @@ export function AthleteList( {athletes}: {athletes: Athlete[]} ) {
                     ))}
                 </tbody>
 
-            </table>
+            </DataTable>
         </div>
     )
 }
