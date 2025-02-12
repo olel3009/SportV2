@@ -90,6 +90,18 @@ export function addFeatToAthlete(athleteId: number, exercise: string, date: stri
   if(!athlete){
     return;
   }
+  if(exercise==''){
+    alert("Bitte eine Übung auswählen!");
+    return;
+  }
+  if(date==''){
+    alert("Bitte ein Datum eingeben!");
+    return;
+  }
+  if(result==''){
+    alert("Bitte ein Ergebnis eingeben!");
+    return;
+  }
   console.log("before: "+athlete.feats);
   let discipline: string;
   let exToDisc = [["50mLauf"], ["Hochsprung", "Weitsprung"], ["Kugelstossen"]];

@@ -210,6 +210,44 @@ a.secondary {
 
 
 
+
+
+/* Headings inside main content */
+.heading {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+
+/* Inputs and selects */
+.basic_input {
+  background-color: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+/* Button styling */
+.basic_button {
+  padding: 0.5rem 1rem;
+  background-color: lightgoldenrodyellow;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+.basic_button:hover {
+  background-color: lightyellow;
+}
+
+
 @media (prefers-color-scheme: dark) {
   .logo {
     filter: invert();

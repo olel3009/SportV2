@@ -1,6 +1,7 @@
 "use client";
 import { Athlete } from "../../models/athlete";
 import { getAllAthletes, addFeatToAthlete } from "../../../generic_functions/athlete_getters";
+import styles from "../page.module.css";
 
 function AthleteSelect() {
   const athletes: Athlete[] = getAllAthletes();
@@ -11,7 +12,7 @@ function AthleteSelect() {
       </option>
     );
   });
-  return <select name="athlete" id="athlete">{options}</select>;
+  return <select name="athlete" id="athlete" className={styles.basic_input}>{options}</select>;
 }
 
 function formatDate(date: Date): string {
@@ -45,16 +46,13 @@ export default function Home() {
 
     console.log("Uebung:", ueb, "Athlet:", ath, "Datum:", dat, "Ergebnis:", erg);
     addFeatToAthlete(ath, ueb, dat, erg);
-
-    // If you need to store the result, you might do:
-    // addFeatToAthlete( /* your parameters here */ );
   };
 
   return (
     <div>
-      <h1>Leistungseintragung</h1>
+      <h1 className={styles.heading}>Leistungseintragung</h1>
       <div>
-        <select name="uebung" id="uebung">
+        <select name="uebung" id="uebung" className={styles.basic_input}>
           <option value="50mLauf">50-Meter Lauf</option>
           <option value="Hochsprung">Hochsprung</option>
           <option value="Weitsprung">Weitsprung</option>
@@ -66,10 +64,11 @@ export default function Home() {
           id="datum"
           placeholder="Datum des Ergebnis"
           defaultValue={formatted}
+          className={styles.basic_input}
         />
-        <input id="ergebnis" placeholder="Ergebnis" />
+        <input id="ergebnis" placeholder="Ergebnis" className={styles.basic_input}/>
         <br />
-        <button id="submit" onClick={submit}>Eintragen</button>
+        <button id="submit" onClick={submit} className={styles.basic_button}>Eintragen</button>
       </div>
     </div>
   );
