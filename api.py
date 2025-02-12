@@ -6,17 +6,28 @@ import athlet
 #Athlet
 swimming_certificate1 = athlet.SwimmingCertificate("keine Ahnung", True)
 performance_data1 = athlet.PerformanceData("Laufen", "11.09.2001", "1 Min., 30 Sek.", 3)
-performance_data2 = athlet.PerformanceData("Schwimmen", "11.09.2001", "0 Min., 30 Sek.", 2)
-athlet1 = athlet.Athlet("Müller", "Mark Alexander", "Männlich", "25.01.2005", (performance_data1, performance_data2), swimming_certificate1)
+performance_data2 = athlet.PerformanceData("Schwimmen Schnelligkeit", "11.09.2001", "0 Min., 30 Sek.", 2)
+athlet1 = athlet.Athlet("Müller", "Mark Alexander", "m", "25.01.2005", swimming_certificate1, performance_data1, performance_data2)
 
 pdffile = r'C:\Users\A200274077\OneDrive - Deutsche Telekom AG\Desktop\SportV2-2\data\DSA_Einzelpruefkarte_2025_SCREEN.pdf'
+
 
 def extract_form_fields(inputpdf) -> dict | None:
     reader = PdfReader(inputpdf)
     fields = reader.get_fields()
-    for key in fields.keys():
-        print(f"{key}\n")
+    #for key in fields.keys():
+    #    print(f"{key}\n")
     return fields
+
+def append_obj(key, obj: object, writer: PdfWriter):
+    for sub_attr, sub_value in obj.__dict__.items():
+        if key == sub_attr:
+            print("KLAPPT!")
+            writer.update_page_form_field_values(
+                writer.pages[0],
+                {sub_attr: sub_value},
+                auto_regenerate=False,
+            )
 
 def fill_out_fields(inputpdf):
     fields = extract_form_fields(inputpdf)
@@ -25,11 +36,36 @@ def fill_out_fields(inputpdf):
     writer.append(reader)
     #value muss zu den jeweiligen attributen der 3 Klassen umgeändert werden
     for key in fields:
-        writer.update_page_form_field_values(
-            writer.pages[0],
-            {key: ""},
-            auto_regenerate=False,
-        )
+        print(key)
+        for attr, value in athlet1.__dict__.items():
+            #print(type(value))
+            if key == attr and value is tuple:
+                for perf_obj in value:
+                    #append_obj(key, perf_obj, writer)
+                    print(perf_obj.__name__().upper() + "-OBJEKT GEFUNDEN!")
+            #print(value)
+            if key == attr and value is athlet.SwimmingCertificate:
+                print("ZERTIFIKAT!")
+                #writer.update_page_form_field_values(
+                #    writer.pages[0],
+                #    {key: value.fullfilled},
+                #    auto_regenerate=False,
+                #)
+            if key == attr and (value.isdigit() or bool):
+                if value.isdigit():
+                    print("ZIFFER!")
+                if value is bool:
+                    print("BOOL!")
+            if  key == attr and (value is not object or not tuple):
+                print("STRING!")
+            #    #writer.update_page_form_field_values(
+            #    #    writer.pages[0],
+            #    #    {attr: value},
+            #    #    auto_regenerate=False,
+            #    #)
+
+    with open(r"C:\Users\A200274077\OneDrive - Deutsche Telekom AG\Desktop\SportV2-2\data\NEU_DSA_Einzelpruefkarte_2025_SCREEN.pdf", "wb") as dest:
+        writer.write(dest)
 
 app = Flask(__name__)
 
@@ -41,5 +77,7 @@ def export_pdf(ath_id):
     pass
 
 if __name__ == "__main__":
-    print(extract_form_fields(pdffile))
-    print(athlet1.performances)
+    #print(athlet1.performances[0].exersize)
+    #print(performance_data1.exersize)
+    #print(athlet1.__dict__.items())
+    fill_out_fields(pdffile)
