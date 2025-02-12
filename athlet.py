@@ -7,9 +7,9 @@ class PerformanceData:
         self.points = points
 
 class SwimmingCertificate:
-    def __init__(self, requirement, fullfilled: bool):
+    def __init__(self, requirement, fulfilled: bool):
         self.requirement = requirement
-        self.fullfilled = fullfilled
+        self.fulfilled = fulfilled
 
 class Athlet:
     def __init__(self, name, surname, sex, birthdate, swimming_proof: SwimmingCertificate, *performances: PerformanceData):

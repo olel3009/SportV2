@@ -11,7 +11,6 @@ athlet1 = athlet.Athlet("Müller", "Mark Alexander", "m", "25.01.2005", swimming
 
 pdffile = r'C:\Users\A200274077\OneDrive - Deutsche Telekom AG\Desktop\SportV2-2\data\DSA_Einzelpruefkarte_2025_SCREEN.pdf'
 
-
 def extract_form_fields(inputpdf) -> dict | None:
     reader = PdfReader(inputpdf)
     fields = reader.get_fields()
@@ -39,30 +38,42 @@ def fill_out_fields(inputpdf):
         print(key)
         for attr, value in athlet1.__dict__.items():
             #print(type(value))
-            if key == attr and value is tuple:
+            if attr == "performances" and isinstance(value, tuple):
                 for perf_obj in value:
-                    #append_obj(key, perf_obj, writer)
-                    print(perf_obj.__name__().upper() + "-OBJEKT GEFUNDEN!")
+                    if key == value.exersize:
+                        #append_obj(key, perf_obj, writer)
+                        print(perf_obj.__name__().upper() + "-OBJEKT GEFUNDEN!")
             #print(value)
-            if key == attr and value is athlet.SwimmingCertificate:
+            if key == attr and isinstance(value, athlet.SwimmingCertificate) :
                 print("ZERTIFIKAT!")
+                if value.fulfilled == True:
+                    pass
+                    print(True)
+                    #writer.update_page_form_field_values(
+                    #    writer.pages[0],
+                    #    {key: value.fulfilled},
+                    #    auto_regenerate=False,
+                    #)
+                if value.fulfilled == False:
+                    pass
+                print(False)
+                    #writer.update_page_form_field_values(
+                    #    writer.pages[0],
+                    #    {key: value.fulfilled},
+                    #    auto_regenerate=False,
+                    #)
+            if  key == attr and (not isinstance(value, object) or not isinstance(value, tuple)):
+                print("STRING!")
                 #writer.update_page_form_field_values(
                 #    writer.pages[0],
-                #    {key: value.fullfilled},
+                #    {attr: value},
                 #    auto_regenerate=False,
                 #)
-            if key == attr and (value.isdigit() or bool):
-                if value.isdigit():
+            if key == attr and (isinstance(value, int) or isinstance(value, bool)):
+                if isinstance(value, int):
                     print("ZIFFER!")
-                if value is bool:
+                if isinstance(value, bool):
                     print("BOOL!")
-            if  key == attr and (value is not object or not tuple):
-                print("STRING!")
-            #    #writer.update_page_form_field_values(
-            #    #    writer.pages[0],
-            #    #    {attr: value},
-            #    #    auto_regenerate=False,
-            #    #)
 
     with open(r"C:\Users\A200274077\OneDrive - Deutsche Telekom AG\Desktop\SportV2-2\data\NEU_DSA_Einzelpruefkarte_2025_SCREEN.pdf", "wb") as dest:
         writer.write(dest)
