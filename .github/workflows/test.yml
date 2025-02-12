@@ -11,13 +11,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Any setup (like package or library installing) required goes here
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2 
+      
+      # 1. Set up Python
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      
+      # 2. Set up Node
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
-            
-      # Run test scripts here (Test scripts should ALWAYS throw an error or exit with a value > 0 if they fail)
-      - run: echo "testing..."
-
-      - run: echo "Test complete"
+      
+      # 3. (Optional) Ensure Chrome is installed (GitHub runner usually has it, but this is to be sure)
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          
+      # 4. Install Python dependencies
+      - name: Install Python Requirements
+        run: pip install -r requirements.txt
+      
+      # 5. Install Node dependencies
+      - name: Install Node Modules
+        run: npm install
+        working-directory: ./frontend
+      
+      # 6. Start your front-end dev server in the background
+      - name: Start Frontend in Background
+        run: |
+          npm run dev &
+          echo $! > process.pid
+          echo "Background process started with PID $(cat process.pid)."
+        working-directory: ./frontend
+      
+      # 7. Run your Selenium tests using Xvfb to avoid display issues
+      - name: Run Selenium Tests
+        run: xvfb-run -a python ./frontend/tests/login_page.py
