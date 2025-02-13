@@ -62,6 +62,7 @@ class Regel(db.Model):
     distance = db.Column(db.Integer, nullable=False)
     time_in_seconds = db.Column(db.Integer, nullable=False)
     points = db.Column(db.Integer, nullable=False)
+    medal = db.Column(db.Enum('Bronze', 'Silber', 'Gold', name='medal_enum'), nullable=False)
     valid_start = db.Column(db.Date, nullable=False)
     valid_end = db.Column(db.Date, nullable=True)
     version = db.Column(db.Integer, nullable=False, default=1)
