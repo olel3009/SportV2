@@ -8,7 +8,7 @@ import re
 #Athlet
 swimming_certificate1 = athlet.SwimmingCertificate("keine Ahnung", True)
 performance_data1 = athlet.PerformanceData("Laufen Ausdauer", "11.09.2001", "1 Min., 30 Sek.", 3)
-performance_data2 = athlet.PerformanceData("Schwimmen Schnelligkeit", "11.09.2001", "0 Min., 30 Sek.", 2)
+performance_data2 = athlet.PerformanceData("Schwimmen Schnelligkeit", "03.06.1989", "0 Min., 30 Sek.", 2)
 athlet1 = athlet.Athlet("Müller", "Mark Alexander", "m", "25.01.2005", swimming_certificate1, performance_data1, performance_data2)
 
 birthdate: Tuple[str, str, str, str, str, str, str, str] = ("T1", "T2", "M1", "M2", "J1", "J2", "J3", "J4")
