@@ -40,75 +40,75 @@ def fill_out_fields(inputpdf: str, ath: athlet):
             #richtiges schreiben der Punkte und Daten gehlt
             if attr == "performances" and isinstance(value, tuple):
                 for perf_obj in value:
-                    if perf_obj.exersize == key:
-                        writer.update_page_form_field_values(
-                        writer.pages[0],
-                        {key : perf_obj.result},
-                        auto_regenerate=False,
-                    )
-                    if str(perf_obj.points) in key and (re.search(regex, key) and re.search(regex, perf_obj.exersize) is not None) and re.search(regex, key).group() == re.search(regex, perf_obj.exersize).group():
-                        writer.update_page_form_field_values(
-                        writer.pages[0],
-                        {key : "X"},
-                        auto_regenerate=False,
-                    )
-                    if "date" in key and (re.search(regex, key) and re.search(regex, perf_obj.exersize) is not None) and re.search(regex, key).group() == re.search(regex, perf_obj.exersize).group():
-                        writer.update_page_form_field_values(
-                        writer.pages[0],
-                        {key : perf_obj.date},
-                        auto_regenerate=False,
-                    )
-                    #if (re.search(regex, key) and re.search(regex, perf_obj.exersize)) is not None:
-                    #    print(re.search(regex, key).group())
-                    #    print(re.search(regex, perf_obj.exersize).group())
+                    match perf_obj:
+                        case perf_obj if perf_obj.exersize == key:
+                            writer.update_page_form_field_values(
+                            writer.pages[0],
+                            {key : perf_obj.result},
+                            auto_regenerate=False,
+                        )
+                        case perf_obj if str(perf_obj.points) in key and (re.search(regex, key) and re.search(regex, perf_obj.exersize) is not None) and re.search(regex, key).group() == re.search(regex, perf_obj.exersize).group():
+                            writer.update_page_form_field_values(
+                            writer.pages[0],
+                            {key : "X"},
+                            auto_regenerate=False,
+                        )
+                        case perf_obj if "date" in key and (re.search(regex, key) and re.search(regex, perf_obj.exersize) is not None) and re.search(regex, key).group() == re.search(regex, perf_obj.exersize).group():
+                            writer.update_page_form_field_values(
+                            writer.pages[0],
+                            {key : perf_obj.date},
+                            auto_regenerate=False,
+                        )
+            match key:
             #Fertiggestellt
-            if key == attr and isinstance(value, athlet.SwimmingCertificate) :
-                #print("ZERTIFIKAT!")
-                #print(key)
-                if value.fulfilled:
-                    #print(value.fulfilled)
+                case key if key == attr and isinstance(value, athlet.SwimmingCertificate) :
+                    #print("ZERTIFIKAT!")
+                    #print(key)
+                    if value.fulfilled:
+                        #print(value.fulfilled)
+                        writer.update_page_form_field_values(
+                            writer.pages[0],
+                            {key : "X"},
+                            auto_regenerate=False,
+                        )
+                    if not value.fulfilled:
+                        #print(value.fulfilled)
+                        writer.update_page_form_field_values(
+                            writer.pages[0],
+                            {key: ""},
+                            auto_regenerate=False,
+                        )
+                #Fast fertiggestellt nur noch das Geburtsdatum
+                case key if key == attr and not isinstance(value, athlet.SwimmingCertificate):
+                    #print("STRING!")
                     writer.update_page_form_field_values(
                         writer.pages[0],
-                        {key : "X"},
+                        {attr: value},
                         auto_regenerate=False,
                     )
-                if not value.fulfilled:
-                    #print(value.fulfilled)
-                    writer.update_page_form_field_values(
-                        writer.pages[0],
-                        {key: ""},
-                        auto_regenerate=False,
-                    )
-            #Fast fertiggestellt nur noch das Geburtsdatum
-            if  key == attr and not isinstance(value, athlet.SwimmingCertificate):
-                #print("STRING!")
-                writer.update_page_form_field_values(
-                    writer.pages[0],
-                    {attr: value},
-                    auto_regenerate=False,
-                )
-            if key in birthdate:
-                for dateelement in birthdate:
-                    if key == dateelement:
-                        n = dateelement[1]
-                        if dateelement[0] == "T":
-                            writer.update_page_form_field_values(
-                                writer.pages[0],
-                                {key: bday(ath)[int(n)-1]},
-                                auto_regenerate=False,
-                            )
-                        if dateelement[0] == "M":
-                            writer.update_page_form_field_values(
-                                writer.pages[0],
-                                {key: bday(ath)[1+int(n)]},
-                                auto_regenerate=False,
-                            )
-                        if dateelement[0] == "J":
-                            writer.update_page_form_field_values(
-                                writer.pages[0],
-                                {key: bday(ath)[3+int(n)]},
-                                auto_regenerate=False,
-                            )
+                case key if key in birthdate:
+                    for dateelement in birthdate:
+                        if key == dateelement:
+                            n = dateelement[1]
+                            match dateelement[0]:
+                                case "T":
+                                    writer.update_page_form_field_values(
+                                        writer.pages[0],
+                                        {key: bday(ath)[int(n)-1]},
+                                        auto_regenerate=False,
+                                    )
+                                case "M":
+                                    writer.update_page_form_field_values(
+                                        writer.pages[0],
+                                        {key: bday(ath)[1+int(n)]},
+                                        auto_regenerate=False,
+                                    )
+                                case "J":
+                                    writer.update_page_form_field_values(
+                                        writer.pages[0],
+                                        {key: bday(ath)[3+int(n)]},
+                                        auto_regenerate=False,
+                                    )
 
     with open(destfile, "wb") as dest:
         writer.write(dest)
@@ -124,6 +124,6 @@ def export_pdf(ath_id):
 
 if __name__ == "__main__":
     fill_out_fields(pdffile, athlet1)
-
+    #optimized(pdffile, athlet1)
 #für git
 # git config --global http.proxy http://sia.telekom.de:8080
