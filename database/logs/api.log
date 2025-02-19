@@ -1,0 +1,8 @@
+INFO:__main__:PDF von <athlet.Athlet object at 0x0000022DBB4931A0> wird ausgefüllt!
+WARNING:pypdf._writer:Font dictionary for /Helvetica not found.
+WARNING:pypdf._writer:Font dictionary for /Helvetica not found.
+WARNING:pypdf._writer:Font dictionary for /Helvetica not found.
+WARNING:pypdf._writer:Font dictionary for /Helvetica not found.
+WARNING:pypdf._writer:Font dictionary for /Helvetica not found.
+WARNING:pypdf._writer:Font dictionary for /Helvetica not found.
+INFO:__main__:PDF von <athlet.Athlet object at 0x0000022DBB4931A0> wurde ausgefüllt!

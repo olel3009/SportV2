@@ -4,6 +4,9 @@ from pypdf import *
 import athlet
 from typing import Tuple
 import re
+import logging
+
+logger =logging.getLogger(__name__)
 
 #Athlet
 swimming_certificate1 = athlet.SwimmingCertificate("keine Ahnung", True)
@@ -35,7 +38,7 @@ def fill_out_fields(inputpdf: str, ath: athlet):
     writer.append(reader)
     #value muss zu den jeweiligen attributen der 3 Klassen umgeändert werden
     for key in fields:
-        print(key)
+        #print(key)
         for attr, value in ath.__dict__.items():
             #richtiges schreiben der Punkte und Daten gehlt
             if attr == "performances" and isinstance(value, tuple):
@@ -71,7 +74,7 @@ def fill_out_fields(inputpdf: str, ath: athlet):
                             {key : "X"},
                             auto_regenerate=False,
                         )
-                    if not value.fulfilled:
+                    else:
                         #print(value.fulfilled)
                         writer.update_page_form_field_values(
                             writer.pages[0],
@@ -113,6 +116,12 @@ def fill_out_fields(inputpdf: str, ath: athlet):
     with open(destfile, "wb") as dest:
         writer.write(dest)
 
+def main():
+    logging.basicConfig(filename='database/logs/api.log', level=logging.INFO)
+    logger.info(f'PDF von {athlet1} wird ausgefüllt!')
+    fill_out_fields(pdffile, athlet1)
+    logger.info(f'PDF von {athlet1} wurde ausgefüllt!')
+
 app = Flask(__name__)
 
 base_url = '/api/v1'
@@ -123,7 +132,6 @@ def export_pdf(ath_id):
     pass
 
 if __name__ == "__main__":
-    fill_out_fields(pdffile, athlet1)
-    #optimized(pdffile, athlet1)
+    main()
 #für git
 # git config --global http.proxy http://sia.telekom.de:8080
