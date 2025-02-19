@@ -101,6 +101,12 @@ def delete_athlete(id):
     db.session.commit()
     return jsonify({"message": "Athlet gelöscht"})
 
+@bp.route('athletes/<int:id>/export/pdf', methods=['GET'])
+def export_athlete_pdf(id):
+    athlete = Athlete.query.get_or_404(id)
+    # Hier Funktion zum Export aufrufen und Daten aus "athlete" übergeben.
+    return jsonify({"message": "PDF-Export erfolgreich"})
+
 # RESULTS -----------------------------------------------------------------------
 
 @bp.route('/results', methods=['POST'])
