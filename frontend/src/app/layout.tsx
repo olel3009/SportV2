@@ -5,10 +5,14 @@ import styles from "./page.module.css";
 import { usePathname, useSearchParams } from 'next/navigation'
 
 
+
 let sites: string[][] = [["Startseite", "/"], ["Testseite", "/test_page"]];
 
 function Nav_Menu() {
   const path = usePathname();
+  if(path==="/"){
+    return "";
+  }
   let links = sites.map((site, index) => {
     if(site[1]==path){
       return<Link href={site[1]} key={index} className={styles.navbutt +" "+ styles.active}>{site[0]}</Link>
