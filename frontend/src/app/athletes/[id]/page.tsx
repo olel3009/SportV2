@@ -22,7 +22,12 @@ export default async function Page({ params }: {
             <h1>{athlete.firstName} {athlete.lastName}</h1>
             <p>Geburtsdatum: {athlete.dateOfBirth}</p>
             <p>Geschlecht: {mapSex(athlete.sex)}</p>
-
+            <p>Disziplinen:</p>
+            <ul>
+                {athlete.disciplines?.map((discipline) => {
+                    return <li key={discipline}>{discipline}</li>
+                })}
+            </ul>
         </div>
     )
 }
