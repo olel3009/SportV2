@@ -6,11 +6,13 @@ export interface Athlete {
     eMail: string;
     dateOfBirth: string;
     disciplines?: string[];
-    feats?: Array<{
-        discipline: string;
-        exercise: string; 
-        date: string;
-        result: string;
-        score: number;
-    }>
+    feats?: Array<Feat>
+}
+
+export interface Feat {
+    discipline: string;
+    excercise: string;
+    date: string;
+    result: string;
+    score: number
 }

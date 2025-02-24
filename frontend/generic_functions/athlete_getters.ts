@@ -182,6 +182,8 @@ let mockupData = `[
 
 export function getAthleteById(id: number) : Athlete | undefined {  
     let translatedTrainees: Athlete[] = JSON.parse(mockupData);
+    id = typeof id === "string" ? parseInt(id, 10) : id;
+
     // Return the trainee that has the id from the passed parameter 
     return translatedTrainees.find(trainee => trainee.id === id);
 }
