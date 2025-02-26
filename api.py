@@ -19,7 +19,6 @@ birthdate: Tuple[str, str, str, str, str, str, str, str] = ("T1", "T2", "M1", "M
 regex = ".(Ausdauer)|.(Kraft)|.(Schnelligkeit)|.(Koordinaten)"
 
 pdffile = r'data\DSA_Einzelpruefkarte_2025_SCREEN.pdf'
-destfile = r'data\NEU_DSA_Einzelpruefkarte_2025_SCREEN.pdf'
 
 def bday(ath: athlet) -> Tuple[str, str, str, str, str, str, str, str]:
     return (ath.birthdate[0], ath.birthdate[1], ath.birthdate[3], ath.birthdate[4], ath.birthdate[6], ath.birthdate[7], ath.birthdate[8], ath.birthdate[9])
@@ -112,12 +111,13 @@ def fill_out_fields(inputpdf: str, ath: athlet):
                                         {key: bday(ath)[3+int(n)]},
                                         auto_regenerate=False,
                                     )
+    destfile = rf'data\{ath.name}_{ath.surname}_DSA_Einzelpruefkarte_2025_SCREEN.pdf'
 
     with open(destfile, "wb") as dest:
         writer.write(dest)
 
 def main():
-    logging.basicConfig(filename='database/logs/api.log', level=logging.INFO)
+    logging.basicConfig(filename='database/logs/api.log', level=logging.DEBUG)
     logger.info(f'PDF von {athlet1} wird ausgefüllt!')
     fill_out_fields(pdffile, athlet1)
     logger.info(f'PDF von {athlet1} wurde ausgefüllt!')
