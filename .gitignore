@@ -44,4 +44,4 @@ frontend/next-env.d.ts
 venv
 **/__pycache__
 pdfs/
-**/*.log
+*.log
