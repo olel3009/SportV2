@@ -1,12 +1,9 @@
 from flask import Flask, jsonify, request
 #import main
 from pypdf import *
-import athlet
+import api.athlet as athlet
 from typing import Tuple
 import re
-import logging
-
-logger =logging.getLogger(__name__)
 
 #Athlet
 swimming_certificate1 = athlet.SwimmingCertificate("keine Ahnung", True)
@@ -18,26 +15,26 @@ birthdate: Tuple[str, str, str, str, str, str, str, str] = ("T1", "T2", "M1", "M
 
 regex = ".(Ausdauer)|.(Kraft)|.(Schnelligkeit)|.(Koordinaten)"
 
-pdffile = r'data\DSA_Einzelpruefkarte_2025_SCREEN.pdf'
+PDFFILE = r'data\DSA_Einzelpruefkarte_2025_SCREEN.pdf'
 
 def bday(ath: athlet) -> Tuple[str, str, str, str, str, str, str, str]:
     return (ath.birthdate[0], ath.birthdate[1], ath.birthdate[3], ath.birthdate[4], ath.birthdate[6], ath.birthdate[7], ath.birthdate[8], ath.birthdate[9])
 
-def extract_form_fields(inputpdf) -> dict | None:
-    reader = PdfReader(inputpdf)
+def extract_form_fields() -> dict | None:
+    reader = PdfReader(PDFFILE)
     fields = reader.get_fields()
     #for key, value in fields.items():
     #    print(key + " : " + str(value))
     return fields
 
-def fill_out_fields(inputpdf: str, ath: athlet):
-    fields = extract_form_fields(inputpdf)
-    reader = PdfReader(inputpdf)
+def fill_out_fields(ath: athlet):
+    fields = extract_form_fields()
+    reader = PdfReader(PDFFILE)
     writer = PdfWriter()
     writer.append(reader)
     #value muss zu den jeweiligen attributen der 3 Klassen umgeändert werden
     for key in fields:
-        #print(key)
+        print(key)
         for attr, value in ath.__dict__.items():
             #richtiges schreiben der Punkte und Daten gehlt
             if attr == "performances" and isinstance(value, tuple):
@@ -73,7 +70,7 @@ def fill_out_fields(inputpdf: str, ath: athlet):
                             {key : "X"},
                             auto_regenerate=False,
                         )
-                    else:
+                    if not value.fulfilled:
                         #print(value.fulfilled)
                         writer.update_page_form_field_values(
                             writer.pages[0],
@@ -111,27 +108,8 @@ def fill_out_fields(inputpdf: str, ath: athlet):
                                         {key: bday(ath)[3+int(n)]},
                                         auto_regenerate=False,
                                     )
-    destfile = rf'data\{ath.name}_{ath.surname}_DSA_Einzelpruefkarte_2025_SCREEN.pdf'
+    DESTINATION = rf'pdfs\{ath.name}_{ath.surname}_DSA_Einzelpruefkarte_2025_SCREEN.pdf'
 
-    with open(destfile, "wb") as dest:
+    with open(DESTINATION, "wb") as dest:
         writer.write(dest)
 
-def main():
-    logging.basicConfig(filename='database/logs/api.log', level=logging.DEBUG)
-    logger.info(f'PDF von {athlet1} wird ausgefüllt!')
-    fill_out_fields(pdffile, athlet1)
-    logger.info(f'PDF von {athlet1} wurde ausgefüllt!')
-
-app = Flask(__name__)
-
-base_url = '/api/v1'
-
-@app.route(base_url + '/athleten/<int:ath_id>/export/pdf', methods=['GET'])
-def export_pdf(ath_id):
-    #return main.create_pdf(ath_id)
-    pass
-
-if __name__ == "__main__":
-    main()
-#für git
-# git config --global http.proxy http://sia.telekom.de:8080

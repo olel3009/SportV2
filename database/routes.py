@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify
 from database import db
 from database.models import Trainer, Athlete, Result, Regel
-from export_pdf import *
+from api.export_pdf import *
 
 # Blueprint für Routen
 bp = Blueprint('routes', __name__)
