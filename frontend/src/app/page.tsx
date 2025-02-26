@@ -28,7 +28,7 @@ export default function Login() {
             <div>
               <p>Password:</p>
               <ul>
-                {state.errors.password.map((error) => (
+                {state.errors.password.map((error: any) => (
                   <li key={error}>- {error}</li>
                 ))}
               </ul>

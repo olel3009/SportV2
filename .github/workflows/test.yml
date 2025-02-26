@@ -47,6 +47,7 @@ jobs:
         working-directory: ./frontend
       
       # 7. Run your Selenium tests using Xvfb to avoid display issues
-      - name: Run Selenium Tests
-        run: xvfb-run -a python ./frontend/tests/test_nav_menu.py &
-             xvfb-run -a python ./frontend/tests/login_page.py
+      - name: Run Nav Test
+        run: xvfb-run -a python ./frontend/tests/test_nav_menu.py
+      - name: Run Login Page Test
+        run: xvfb-run -a python ./frontend/tests/login_page.py
