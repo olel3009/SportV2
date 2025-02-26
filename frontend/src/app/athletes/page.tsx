@@ -1,6 +1,6 @@
 import styles from "./page.module.css";
 import { AthleteList } from "@/ui/AthleteList";
-import { getAllAthletes } from "../../../generic_functions/athlete_getters";
+import { getAllAthletes } from "@/athlete_getters";
 
 export default function Page() {
     return (

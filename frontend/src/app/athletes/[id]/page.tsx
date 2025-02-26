@@ -1,6 +1,6 @@
 import { useParams } from "next/navigation";
 import { Athlete, Feat } from "@/models/athlete";
-import { getAthleteById } from "@/../generic_functions/athlete_getters";
+import { getAthleteById } from "@/athlete_getters";
 import Link from "next/link";
 
 export default async function Page({ params }: {

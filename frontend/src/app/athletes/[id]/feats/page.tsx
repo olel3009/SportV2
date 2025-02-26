@@ -1,17 +1,18 @@
 "use client";
 import Image from "next/image";
-import styles from "../page.module.css";
+import styles from "../../..//page.module.css"
 import { useSearchParams } from "next/navigation";
-import { getAthleteById } from "../../../generic_functions/athlete_getters";
+import { getAthleteById } from "@/athlete_getters";
 import { useState } from "react";
 import { Feat } from "@/models/athlete";
-import DataTable from 'datatables.net-dt';
 import { useEffect } from "react";
+import { DataTable } from "@/ui/DataTable";
 
-export default function FeatsResultsPage() {
-  const searchParams = useSearchParams();
-  const presentID = searchParams.get('id');
-  const presentIDNumber = Number(presentID);
+export default async function Page({ params }: {
+  params: Promise<{ id: number }>
+}) {
+  const id = (await params).id
+  const presentIDNumber = Number(id);
   const athletedata = getAthleteById(presentIDNumber);
   const [expanded, setExpanded] = useState<string | false>(false);
 
@@ -20,37 +21,9 @@ export default function FeatsResultsPage() {
   }
 
   function DisciplineTable({discipline}:DiscProps){
-    let tID= discipline+"_table";
-    useEffect(() => {
 
-      new DataTable('#' + tID, {
-        destroy: true,
-        language: {
-          sEmptyTable:     "Keine Daten in der Tabelle vorhanden",
-          sInfo:           "Zeige _START_ bis _END_ von _TOTAL_ Einträgen",
-          sInfoEmpty:      "Zeige 0 bis 0 von 0 Einträgen",
-          sInfoFiltered:   "(gefiltert von _MAX_ Einträgen)",
-          sLengthMenu:     "Zeige _MENU_ Einträge",
-          sLoadingRecords: "Wird geladen...",
-          sProcessing:     "Bitte warten...",
-          sSearch:         "Suchen:",
-          sZeroRecords:    "Keine Einträge vorhanden.",
-          oPaginate: {
-            sFirst:    "Erste",
-            sPrevious: "Zurück",
-            sNext:     "Weiter",
-            sLast:     "Letzte"
-          },
-          oAria: {
-            sSortAscending:  ": aktivieren, um Spalte aufsteigend zu sortieren",
-            sSortDescending: ": aktivieren, um Spalte absteigend zu sortieren"
-          }
-        }
-      });
-
-    }, []);
     return(
-      <table id ={tID} className={styles.featTable}>
+      <DataTable className={styles.featTable}>
         <thead>
           <tr>
             <th>Übung</th>
@@ -71,7 +44,7 @@ export default function FeatsResultsPage() {
         </tbody>
         <tfoot>
         </tfoot>
-      </table>
+      </DataTable>
       
     );
   
@@ -101,11 +74,11 @@ export default function FeatsResultsPage() {
         <h1 className={styles.title}>Leistungen Ergebnisse</h1>
         <section className={styles.resultsSection}>
           <p className={styles.athleteInfo}>
-            <a><b>Ergebnisse von: {athletedata.name} {athletedata.lastName}</b></a>
+            <a><b>Ergebnisse von: {athletedata?.firstName} {athletedata?.lastName}</b></a>
           </p>
           <div>
             <div className={styles.disciplinesContainer}>
-              {athletedata.disciplines.map((discipline: string) => (
+              {athletedata?.disciplines?.map((discipline: string) => (
                 <div key={discipline} onClick={() => handleChange(discipline)} className={styles.feat}>
                   <b>
                     {discipline}
@@ -128,7 +101,7 @@ export default function FeatsResultsPage() {
                 </div>  
               ))}
             </div>
-            {athletedata.disciplines.map((discipline: string) => (
+            {athletedata?.disciplines?.map((discipline: string) => (
               <div key={discipline} className={styles.disciplineCard}>
                 {expanded === discipline && (
                   <div>
