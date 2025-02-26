@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify
 from database import db
 from database.models import Trainer, Athlete, Result, Regel
+from api.export_pdf import *
 
 # Blueprint für Routen
 bp = Blueprint('routes', __name__)
@@ -100,6 +101,13 @@ def delete_athlete(id):
     db.session.delete(athlete)
     db.session.commit()
     return jsonify({"message": "Athlet gelöscht"})
+
+@bp.route('athletes/<int:id>/export/pdf', methods=['GET'])
+def export_athlete_pdf(id):
+    athlete = Athlete.query.get_or_404(id)
+    ###################################
+    fill_out_fields(athlete)
+    return jsonify({"message": "PDF-Export erfolgreich"})
 
 # RESULTS -----------------------------------------------------------------------
 
