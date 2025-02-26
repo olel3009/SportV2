@@ -108,7 +108,7 @@ def fill_out_fields(ath: athlet):
                                         {key: bday(ath)[3+int(n)]},
                                         auto_regenerate=False,
                                     )
-    DESTINATION = rf'data\{ath.name}_{ath.surname}_DSA_Einzelpruefkarte_2025_SCREEN.pdf'
+    DESTINATION = rf'pdfs\{ath.name}_{ath.surname}_DSA_Einzelpruefkarte_2025_SCREEN.pdf'
 
     with open(DESTINATION, "wb") as dest:
         writer.write(dest)

@@ -43,3 +43,4 @@ frontend/next-env.d.ts
 #python venvs
 venv
 **/__pycache__
+pdfs/
