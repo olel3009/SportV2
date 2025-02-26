@@ -1,13 +1,12 @@
 "use client";
 
 import React from 'react';
-
+import styles from '../page.module.css'; // Importiere die CSS-Module von der Ebene darüber
 
 export default function Home() {
   return (
-    <div>
-        <h1>Wiki-Seite</h1>
-      <nav>
+    <div className={styles.container}>
+      <nav className={styles.sidebar}>
         <ul>
           <li><a href="#leistungen_ergebnisse_athlet_diziplin">Ansicht von Leistungen und Ergebnissen pro Athlet und Disziplin</a></li>
           <li><a href="#detailansicht_athleten">Detailansicht eines Athleten</a></li>
@@ -22,8 +21,8 @@ export default function Home() {
           <li><a href="#visuelle_darstellung_entwicklung">Visuelle Darstellung der Entwicklung eines Athleten</a></li>
         </ul>
       </nav>
-      <div>
-        
+      <div className={styles.content}>
+        <h1>Wiki-Seite</h1>
         <div id="leistungen_ergebnisse_athlet_diziplin">
           <h2>Ansicht von Leistungen und Ergebnissen pro Athlet und Disziplin</h2>
           <p>Hier könnte die Beschreibung stehen</p>
