@@ -3,7 +3,6 @@ export interface Athlete {
     firstName: string;
     lastName: string;
     sex: "m" | "w" | "d";
-    eMail: string;
     dateOfBirth: string;
     disciplines?: string[];
     feats?: Array<Feat>
@@ -11,8 +10,8 @@ export interface Athlete {
 
 export interface Feat {
     discipline: string;
-    excercise: string;
+    exercise: string; 
     date: string;
     result: string;
-    score: number
+    score: number;
 }
