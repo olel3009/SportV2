@@ -22,7 +22,7 @@ export default async function Page({ params }: {
             <h1>{athlete.firstName} {athlete.lastName}</h1>
             <p>Geburtsdatum: {athlete.dateOfBirth}</p>
             <p>Geschlecht: {mapSex(athlete.sex)}</p>
-            <Link href={`${id}/feats/`}>Disziplinen:</Link>
+            <Link href={`/feats_result_page?id=${id}`}>Disziplinen:</Link>
             <ul>
                 {athlete.disciplines?.map((discipline) => {
                     return <li key={discipline}>{discipline}</li>
