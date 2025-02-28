@@ -49,3 +49,5 @@ jobs:
       # 7. Run your Selenium tests using Xvfb to avoid display issues
       - name: Run Selenium Tests
         run: xvfb-run -a python ./frontend/tests/test_nav_menu.py
+      - name: Run Wiki Tests
+        run: xvfb-run -a python ./frontend/tests/test_wiki_pages.py

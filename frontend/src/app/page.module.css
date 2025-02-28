@@ -246,3 +246,7 @@ a.secondary {
   margin-left: 220px;
   padding: 20px;
 }
+
+.section {
+  scroll-margin-top: 100px;
+}
