@@ -39,12 +39,12 @@ class wiki_test(unittest.TestCase):
      
         # Find the link to the page
         self.driver.get("http://localhost:3000/wiki_page")
-        self.sites =[["Ansicht von Leistungen und Ergebnissen pro Athlet und Disziplin", "#leistungen_ergebnisse_athlet_diziplin"], ["Detailansicht eines Athleten","#detailansicht_athleten"],
-                     ["Eintragsmodus für Leistungswerte","#eintragsmodus_leistungen"], ["Erstellen oder Ändern von Reglungen","#erstellen_aendern_von_reglungen"],
-                     ["Export eines Athleten","#export_eines_athleten"],["Export eines Athleten und seiner Daten als PDF","#export_eines_athleten_pdf"],
-                     ["Export mehrerer Athleten als CSV","#export_mehrer_athlethen"],["Liste aller Athleten","#liste_athlethen"], 
-                     ["Manuelle Aktualisierung der Reglungen durch Knopfdruck","#knopf_reglungsaktualisierung"],["Medaillen Ansicht","#medaillen_ansicht"], ["Regelungsverwaltung","#regelungsverwaltung"],
-                     ["Visuelle Darstellung der Entwicklung eines Athleten","#visuelle_darstellung_entwicklung"]]
+        self.sites =[["01. Ansicht von Leistungen und Ergebnissen pro Athlet und Disziplin", "#leistungen_ergebnisse_athlet_diziplin"], ["02. Detailansicht eines Athleten","#detailansicht_athleten"],
+                     ["03. Eintragsmodus für Leistungswerte","#eintragsmodus_leistungen"], ["04. Erstellen oder Ändern von Reglungen","#erstellen_aendern_von_reglungen"],
+                     ["05. Export eines Athleten","#export_eines_athleten"],["06. Export eines Athleten und seiner Daten als PDF","#export_eines_athleten_pdf"],
+                     ["07. Export mehrerer Athleten als CSV","#export_mehrer_athlethen"],["08. Liste aller Athleten","#liste_athlethen"], 
+                     ["09. Manuelle Aktualisierung der Reglungen durch Knopfdruck","#knopf_reglungsaktualisierung"],["10. Medaillen Ansicht","#medaillen_ansicht"], ["11. Regelungsverwaltung","#regelungsverwaltung"],
+                     ["12. Visuelle Darstellung der Entwicklung eines Athleten","#visuelle_darstellung_entwicklung"]]
         for thing in self.sites:
             # Find the link to the page
             link = self.driver.find_element(By.LINK_TEXT, thing[0])
