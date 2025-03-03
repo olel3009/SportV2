@@ -504,7 +504,7 @@ let basedata = `[
                 "action": "Sprung"
             }
         ]
-    }
+    },
     {
         "name": "Hochsprung",
         "discipline": "Koordination",
