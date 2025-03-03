@@ -297,6 +297,49 @@ let basedata = `[
         ]
     },
     {
+        "name": "Geräteturnen (Kraft)",
+        "discipline": "Kraft",
+        "unit": "Erledigt", 
+        "expectations": [
+            {
+                "ageFromTo": [6,7],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Boden"
+            },
+            {
+                "ageFromTo": [8,9],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Boden"
+            },
+            {
+                "ageFromTo": [10,11],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Barren"
+            },
+            {
+                "ageFromTo": [12,13],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Reck"
+            },
+            {
+                "ageFromTo": [14,15],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Boden"
+            },
+            {
+                "ageFromTo": [16,17],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Reck"
+            }
+        ]
+    },
+    {
         "name": "Laufen",
         "discipline": "Schnelligkeit",
         "unit": "sek", 
@@ -419,6 +462,49 @@ let basedata = `[
             }
         ]
     },
+    {
+        "name": "Geräteturnen (Schnelligkeit)",
+        "discipline": "Schnelligkeit",
+        "unit": "Erledigt", 
+        "expectations": [
+            {
+                "ageFromTo": [6,7],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Sprung"
+            },
+            {
+                "ageFromTo": [8,9],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Boden"
+            },
+            {
+                "ageFromTo": [10,11],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Sprung"
+            },
+            {
+                "ageFromTo": [12,13],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Sprung"
+            },
+            {
+                "ageFromTo": [14,15],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Sprung"
+            },
+            {
+                "ageFromTo": [16,17],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Sprung"
+            }
+        ]
+    }
     {
         "name": "Hochsprung",
         "discipline": "Koordination",
@@ -595,6 +681,49 @@ let basedata = `[
                 "action":  "Kreuzdurchschlag ohne Zwischensprung"
             }
             
+        ]
+    },
+    {
+        "name": "Geräteturnen (Koordination)",
+        "discipline": "Koordination",
+        "unit": "Erledigt", 
+        "expectations": [
+            {
+                "ageFromTo": [6,7],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Schwebebalken"
+            },
+            {
+                "ageFromTo": [8,9],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Reck"
+            },
+            {
+                "ageFromTo": [10,11],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Ringe"
+            },
+            {
+                "ageFromTo": [12,13],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Boden"
+            },
+            {
+                "ageFromTo": [14,15],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Boden"
+            },
+            {
+                "ageFromTo": [16,17],  
+                "medalThresholdsM": [-1, -1, 0],
+                "medalThresholdsW": [-1, -1, 0],
+                "action": "Boden"
+            }
         ]
     }
 
