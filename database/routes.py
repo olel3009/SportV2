@@ -102,7 +102,7 @@ def delete_athlete(id):
     db.session.commit()
     return jsonify({"message": "Athlet gelöscht"})
 
-@bp.route('athletes/<int:id>/export/pdf', methods=['GET'])
+@bp.route('/athletes/<int:id>/export/pdf', methods=['GET'])
 def export_athlete_pdf(id):
     athlete = Athlete.query.get_or_404(id)
     ###################################
