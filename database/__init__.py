@@ -16,9 +16,14 @@ def create_app():
     # Extensions initialisieren
     db.init_app(app)
     migrate.init_app(app, db)
-
-    # Blueprint oder Routen registrieren
-    from database.routes import bp as routes_bp
-    app.register_blueprint(routes_bp)
-
+    
+    from api.routes.athlete import bp_athlete
+    from api.routes.user import bp_user
+    from api.routes.trainer import bp_trainer
+    from api.routes.result import bp_result 
+    from api.routes.rule import bp_rule
+    
+    for bp in [bp_user, bp_trainer, bp_result, bp_athlete, bp_rule]:
+        app.register_blueprint(bp)
+    
     return app
