@@ -52,4 +52,4 @@ jobs:
       - name: Run Login Page Test
         run: xvfb-run -a python ./frontend/tests/login_page.py
       - name: Run Wiki Tests
-        run: xvfb-run -a python ./frontend/tests/test_wiki_pages.py
+        run: xvfb-run -a python ./frontend/tests/test_wiki.py
