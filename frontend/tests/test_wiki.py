@@ -51,7 +51,7 @@ class wiki_test(unittest.TestCase):
                      ["12. Visuelle Darstellung der Entwicklung eines Athleten","#visuelle_darstellung_entwicklung"]]
         for thing in self.sites:
             # Find the link to the page
-            link = self.driver.find_element(By.LINK_TEXT, thing[0])
+            link = self.driver.find_element(By.XPATH, f'//a[@href="{thing[1]}"]')
             sleep(1)
             self.scroll_into_view(link)
             link.click()
