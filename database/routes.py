@@ -16,7 +16,7 @@ def create_trainer():
         first_name=data['first_name'],
         last_name=data['last_name'],
         email=data['email'],
-        birth_date=datetime.strptime(data['birth_date'], '%Y-%m-%d'),
+        birth_date=datetime.strptime(data['birth_date'], '%d-%m-%Y'),
         gender=data['gender']
     )
     db.session.add(new_trainer)
@@ -102,7 +102,7 @@ def delete_athlete(id):
     db.session.commit()
     return jsonify({"message": "Athlet gelöscht"})
 
-@bp.route('athletes/<int:id>/export/pdf', methods=['GET'])
+@bp.route('/athletes/<int:id>/export/pdf', methods=['GET'])
 def export_athlete_pdf(id):
     athlete = Athlete.query.get_or_404(id)
     ###################################

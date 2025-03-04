@@ -1,5 +1,5 @@
 from database import app, db, Regel
-import pytest
+import pytest # type: ignore
 
 @pytest.fixture
 def client():
