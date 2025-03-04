@@ -10,7 +10,7 @@ class wiki_test(unittest.TestCase):
 
 
     def scroll_into_view(self, element):
-        self.driver.execute_script("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'bottom' });", element)
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
     def setUp(self):
         # Set Chrome options and preferences
