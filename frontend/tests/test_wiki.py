@@ -8,6 +8,10 @@ from selenium.common.exceptions import NoAlertPresentException
 
 class wiki_test(unittest.TestCase):
 
+
+    def scroll_into_view(self, element):
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+
     def setUp(self):
         # Set Chrome options and preferences
         chrome_options = webdriver.ChromeOptions()
@@ -49,6 +53,7 @@ class wiki_test(unittest.TestCase):
             # Find the link to the page
             link = self.driver.find_element(By.LINK_TEXT, thing[0])
             sleep(1)
+            self.scroll_into_view(link)
             link.click()
             self.assertEqual(self.driver.current_url, "http://localhost:3000/wiki_page"+thing[1], "The link did not lead to the right page!")
             print("Navigated to "+thing[0]+"!")
