@@ -30,7 +30,7 @@ class wiki_test(unittest.TestCase):
             # Find the link to the page
             link = self.driver.find_element(By.LINK_TEXT, thing[0])
             link.click()
-            sleep(5)
+            sleep(1)
             self.assertEqual(self.driver.current_url, "http://localhost:3000"+thing[1], "The link did not lead to the right page!")
             print("Navigated to "+thing[0]+"!")
 
@@ -48,9 +48,8 @@ class wiki_test(unittest.TestCase):
         for thing in self.sites:
             # Find the link to the page
             link = self.driver.find_element(By.LINK_TEXT, thing[0])
-            sleep(5)
+            sleep(1)
             link.click()
-            sleep(10)
             self.assertEqual(self.driver.current_url, "http://localhost:3000/wiki_page"+thing[1], "The link did not lead to the right page!")
             print("Navigated to "+thing[0]+"!")
         

@@ -5,8 +5,11 @@ import styles from '../page.module.css'; // Importiere die CSS-Module von der Eb
 
 export default function Home() {
   return (
-    <div className={styles.container}>
-      <nav className={styles.sidebar}>
+
+
+    <div> 
+    <nav className={styles.sidebar}>
+      <h2>Inhaltsverzeichnis</h2>
         <ul>
           <li><a id="link_leistungen_ergebnisse_athlet_diziplin" href="#leistungen_ergebnisse_athlet_diziplin">01. Ansicht von Leistungen und Ergebnissen pro Athlet und Disziplin</a></li>
           <li><a id="link_detailansicht_athleten" href="#detailansicht_athleten">02. Detailansicht eines Athleten</a></li>
@@ -21,7 +24,9 @@ export default function Home() {
           <li><a id="link_regelungsverwaltung" href="#regelungsverwaltung">11. Regelungsverwaltung</a></li>
           <li><a id="link_visuelle_darstellung_entwicklung" href="#visuelle_darstellung_entwicklung">12. Visuelle Darstellung der Entwicklung eines Athleten</a></li>
         </ul>
-      </nav>
+     </nav>
+    <div className={styles.container}>
+      
       <div className={styles.content2}>
         <h1>Wiki-Seite</h1>
         <div id="leistungen_ergebnisse_athlet_diziplin" className={styles.section}>
@@ -73,6 +78,7 @@ export default function Home() {
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
       </div>
+    </div>
     </div>
   );
 }

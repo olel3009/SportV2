@@ -221,16 +221,21 @@ a.secondary {
 .sidebar {
   background-color: bisque; /* Gleiche Farbe wie die Navigationsleiste */
   padding: 10px 20px;
-  width: 250px; /* Fixed width 500px */
-  height: 100vh; /* Full height */
+  width: 250px; /* Fixed width 250px */
+  height: 100%; /* Full height */
   position: fixed;
   overflow-y: auto;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2); /* Adds slight depth */
+  left: 14%;
+  
+  top:10%;
+  bottom:10%;
 }
 
 .sidebar ul {
   list-style-type: none;
   padding: 0;
+  
 }
 
 .sidebar ul li {
@@ -251,10 +256,12 @@ a.secondary {
   max-width: 900px; /* Limits width for better readability */
   margin: 0 auto; /* Centers content */
   line-height: 1.6; /* Improves text readability */
+  left: 50%;
+  right: 50%;
 }
 
 .content2 {
-  margin-left: 300px;
+  
   padding: 20px;
 }
 
