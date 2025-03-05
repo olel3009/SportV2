@@ -1,147 +1,100 @@
-#import main
 import re
-from typing import Any, Tuple
+from datetime import datetime
 from pypdf import PdfReader, PdfWriter
-import api.athlet as athlet
+from api.athlet import Athlete
 
-birthdate: Tuple[str, str, str, str, str, str, str, str] = ("T1", "T2", "M1", "M2", "J1", "J2", "J3", "J4")
+PDF_TEMPLATE = r"api/data/DSA_Einzelpruefkarte_2025_SCREEN.pdf"
 
-regex = ".(Ausdauer)|.(Kraft)|.(Schnelligkeit)|.(Koordinaten)"
+def fill_pdf_form(athlete: Athlete) -> str:
+     """
+     Nimmt ein Athlete-Objekt und schreibt dessen Daten
+     in die Felder der PDF "DSA_Einzelpruefkarte_2025_SCREEN.pdf".
+     Gibt den Pfad zur ausgefüllten PDF zurück.
+     """
+     try:
+         reader = PdfReader(PDF_TEMPLATE)
+     except FileNotFoundError:
+         return f"Fehler: PDF-Vorlage {PDF_TEMPLATE} nicht gefunden."
 
-PDFFILE = r'api\data\DSA_Einzelpruefkarte_2025_SCREEN.pdf'
+     writer = PdfWriter()
+     writer.append(reader)
 
-def bday(ath: athlet) -> Tuple[str, str, str, str, str, str, str, str]:
-    return (ath.birthdate[0], ath.birthdate[1], ath.birthdate[3], ath.birthdate[4], ath.birthdate[6], ath.birthdate[7], ath.birthdate[8], ath.birthdate[9])
+     # -----------------------
+     # 1) Geburtsdatum in T1, T2, M1, M2, J1, J2, J3, J4 splitten
+     #    Beispiel:  "DD-MM-YYYY" -> T1=1, T2=2, M1=0, M2=6, J1=2, J2=0, J3=2, J4=3
+     # -----------------------
+     birth_str = ""
+     if isinstance(athlete.birth_date, datetime):
+         birth_str = athlete.birth_date.strftime("%d-%m-%Y") 
+     elif isinstance(athlete.birth_date, str):
+         # Falls es schon ein String im Format "YYYY-MM-DD" ist, passend umwandeln
+         dt = datetime.strptime(athlete.birth_date, "%Y-%m-%d")
+         birth_str = dt.strftime("%d-%m-%Y")
+     else:
+         # Notlösung
+         birth_str = "01-01-2000"
 
-def extract_form_fields(reader: PdfReader):
-    """
-    Liest alle Formularfelder aus dem PDF aus.
-    """
-    fields = reader.get_fields()
-    return fields
+     # "DD-MM-YYYY"
+     day, month, year = birth_str.split("-")  # z.B. day="12", month="06", year="2023"
+     T1, T2 = day[0], day[1]
+     M1, M2 = month[0], month[1]
+     J1, J2, J3, J4 = year[0], year[1], year[2], year[3]
 
-def generate_export_string(athlete: Any) -> str:
-    """
-    Erzeugt einen komma-separierten String aus 
-    name, last_name, birthdate + PerformanceData (disciplin, date, result, points).
-    """
-    # Basisstring
-    output_string = f"{athlete.first_name},{athlete.last_name},{athlete.birthdate}"
+     # -----------------------
+     # 2) Athlete-Name, Geschlecht etc.
+     # -----------------------
+     # In deinem PDF gibt es Felder wie Nachname, Vorname, Geschlecht etc.
+     # Häufig sind die Feldnamen nicht offensichtlich. Du musst sie via
+     #   `reader.get_fields()` (pypdf 3.x) oder `reader.pages[0].Annots` inspizieren.
+     # Ich gehe davon aus, dass T1,T2,... existieren und z.B. "sex", "first_name", "last_name" so heißen.
+     # Du passt das bitte an die tatsächlichen Felder in deinem PDF an!
+     field_values = {
+         # Geburtsdatum
+         "T1": T1,
+         "T2": T2,
+         "M1": M1,
+         "M2": M2,
+         "J1": J1,
+         "J2": J2,
+         "J3": J3,
+         "J4": J4,
 
-    # Performance-Daten
-    for perf_obj in athlete.performances:
-        output_string += f",{perf_obj.disciplin},{perf_obj.date},{perf_obj.result},{perf_obj.points}"
+         # Name, Geschlecht ...
+         "name": athlete.first_name,
+         "surname": athlete.last_name,
+         "sex": athlete.gender,  # z.B. "m"
+     }
 
-    return output_string
+     # -----------------------
+     # 3) PerformanceData eintragen
+     #    Angenommen, du hast im PDF Felder wie "Ausdauer1", "Kraft1", etc.
+     #    oder du füllst generische Felder in Abhängigkeit der Disziplin
+     # -----------------------
+     # Wir erlauben bis zu 4 Einträge (wie gefordert)
+     for i, perf in enumerate(athlete.performances[:4]):
+         # Bsp. "Ausdauer1Disciplin", "Ausdauer1Year", "Ausdauer1Result", "Ausdauer1Points"
+         # Du kannst beliebige Feldnamen benutzen, je nach PDF-Feld.
+         # Hier exemplifiziert:
+         index = i + 1
+         prefix = perf.disciplin  # z.B. "Ausdauer", "Kraft", ...
+        
+         # Bilde daraus z.B. "Ausdauer1Result"
+         field_values[f"{prefix}{index}Disciplin"] = perf.disciplin
+         field_values[f"{prefix}{index}Year"]      = str(perf.year)
+         field_values[f"{prefix}{index}Result"]    = str(perf.result)
+         field_values[f"{prefix}{index}Points"]    = str(perf.points)
 
-def fill_out_fields(ath: Any) -> str:
-    """
-    Schreibt Athletendaten (Name, Birthdate usw.) + Performance-Daten in ein PDF-Formular.
-    Diese Funktion enthält den Code, den du in deinen Screenshots gezeigt hast,
-    leicht angepasst, um PerformanceData zu verarbeiten.
-    """
-    try:
-        reader = PdfReader(PDFFILE)
-    except FileNotFoundError:
-        return f"PDF-Datei {PDFFILE} nicht gefunden. Kein PDF-Export möglich."
+     # -----------------------
+     # 4) Felder wirklich ins PDF schreiben
+     # -----------------------
+     page = writer.pages[0]
+     writer.update_page_form_field_values(page, field_values, auto_regenerate=False)
 
-    writer = PdfWriter()
-    writer.append(reader)
-    
-    fields = extract_form_fields(reader)
-    # print(fields)  # Nur zum Debuggen
+     # -----------------------
+     # 5) Ausgefüllte PDF speichern
+     # -----------------------
+     destination = rf"api/pdfs/{athlete.last_name}_{athlete.first_name}_DSA_Einzelpruefkarte.pdf"
+     with open(destination, "wb") as f:
+         writer.write(f)
 
-    # Hier aktualisieren wir Felder in writer.pages[0]
-    for key in fields:
-        for attr, value in ath.__dict__.items():
-            # 1) Falls es um Performance-Daten geht
-            if key == "performances" and isinstance(ath.performances, (list, tuple)):
-                for perf_obj in value:
-                    match perf_obj:
-                        case perf_obj if perf_obj.exersize == key:
-                            writer.update_page_form_field_values(
-                            writer.pages[0],
-                            {key : perf_obj.result},
-                            auto_regenerate=False,
-                        )
-                        case perf_obj if str(perf_obj.points) in key and (re.search(regex, key) and re.search(regex, perf_obj.exersize) is not None) and re.search(regex, key).group() == re.search(regex, perf_obj.exersize).group():
-                            writer.update_page_form_field_values(
-                            writer.pages[0],
-                            {key : "X"},
-                            auto_regenerate=False,
-                        )
-                        case perf_obj if "date" in key and (re.search(regex, key) and re.search(regex, perf_obj.exersize) is not None) and re.search(regex, key).group() == re.search(regex, perf_obj.exersize).group():
-                            writer.update_page_form_field_values(
-                            writer.pages[0],
-                            {key : perf_obj.date},
-                            auto_regenerate=False,
-                        )
-            # 2) SwimmingCertificate (freiwillig)
-            match key:
-                #Fertiggestellt
-                    case key if key == attr and isinstance(value, athlet.SwimmingCertificate) :
-                        #print("ZERTIFIKAT!")
-                        #print(key)
-                        if value.fulfilled:
-                            #print(value.fulfilled)
-                            writer.update_page_form_field_values(
-                                writer.pages[0],
-                                {key : "X"},
-                                auto_regenerate=False,
-                            )
-                        if not value.fulfilled:
-                            #print(value.fulfilled)
-                            writer.update_page_form_field_values(
-                                writer.pages[0],
-                                {key: ""},
-                                auto_regenerate=False,
-                            )
-                    #Fast fertiggestellt nur noch das Geburtsdatum
-                    case key if key == attr and not isinstance(value, athlet.SwimmingCertificate):
-                        #print("STRING!")
-                        writer.update_page_form_field_values(
-                            writer.pages[0],
-                            {attr: value},
-                            auto_regenerate=False,
-                        )
-                    case key if key in birthdate:
-                        for dateelement in birthdate:
-                            if key == dateelement:
-                                n = dateelement[1]
-                                match dateelement[0]:
-                                    case "T":
-                                        writer.update_page_form_field_values(
-                                            writer.pages[0],
-                                            {key: bday(ath)[int(n)-1]},
-                                            auto_regenerate=False,
-                                        )
-                                    case "M":
-                                        writer.update_page_form_field_values(
-                                            writer.pages[0],
-                                            {key: bday(ath)[1+int(n)]},
-                                            auto_regenerate=False,
-                                        )
-                                    case "J":
-                                        writer.update_page_form_field_values(
-                                            writer.pages[0],
-                                            {key: bday(ath)[3+int(n)]},
-                                            auto_regenerate=False,
-                                        )
-
-    # PDF abspeichern
-    destination = rf"api\pdfs\{ath.first_name}_{ath.last_name}_DSA_Einzelpruefkarte_2025_SCREEN.pdf"
-    with open(destination, "wb") as dest:
-        writer.write(dest)
-
-    return f"PDF erfolgreich generiert: {destination}"
-
-
-def process_export(athlete: Any) -> tuple[str, str]:
-    """
-    1) Erzeugt den Export-String
-    2) Ruft die PDF-Schreibfunktion auf
-    3) Gibt beides zurück
-    """
-    output_string = generate_export_string(athlete)
-    pdf_feedback = fill_out_fields(athlete)
-    return output_string, pdf_feedback
+     return f"PDF erstellt unter {destination}"

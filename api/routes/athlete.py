@@ -1,16 +1,15 @@
 from datetime import datetime
 from flask import Blueprint, request, jsonify
-from api.export_pdf import process_export
-from api.load_athlete_config import load_athlete_for_export
 from database import db
-from database.models import Athlete
+from database.models import Athlete as DBAthlete, Result as DBResult
+from api.export_pdf import fill_pdf_form
 
 bp_athlete = Blueprint('athlete', __name__)
 
 @bp_athlete.route('/athletes', methods=['POST'])
 def create_athlete():
     data = request.json
-    new_athlete = Athlete(
+    new_athlete = DBAthlete(
         first_name=data['first_name'],
         last_name=data['last_name'],
         birth_date=datetime.strptime(data['birth_date'], '%d-%m-%Y'),
@@ -22,7 +21,7 @@ def create_athlete():
 
 @bp_athlete.route('/athletes', methods=['GET'])
 def get_athletes():
-    athletes = Athlete.query.all()
+    athletes = DBAthlete.query.all()
     return jsonify([{
         "id": athlete.id,
         "first_name": athlete.first_name,
@@ -35,7 +34,7 @@ def get_athletes():
 
 @bp_athlete.route('/athletes/<int:id>', methods=['PUT'])
 def update_athlete(id):
-    athlete = Athlete.query.get_or_404(id)
+    athlete = DBAthlete.query.get_or_404(id)
     data = request.json
     athlete.first_name = data.get('first_name', athlete.first_name)
     athlete.last_name = data.get('last_name', athlete.last_name)
@@ -46,27 +45,48 @@ def update_athlete(id):
 
 @bp_athlete.route('/athletes/<int:id>', methods=['DELETE'])
 def delete_athlete(id):
-    athlete = Athlete.query.get_or_404(id)
+    athlete = DBAthlete.query.get_or_404(id)
     db.session.delete(athlete)
     db.session.commit()
     return jsonify({"message": "Athlet gelöscht"})
 
 @bp_athlete.route('/athletes/<int:athlete_id>/export/pdf', methods=['GET'])
 def export_athlete_pdf(athlete_id):
-    """
-    Lädt Athlet + PerformanceData aus der DB,
-    übergibt sie an process_export -> 
-    generiert output_string und füllt das PDF.
-    """
-    try:
-        athlete_obj = load_athlete_for_export(athlete_id)
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 404
+    # 1) DB-Abfrage
+    db_athlete = DBAthlete.query.get_or_404(athlete_id)
 
-    output_string, pdf_feedback = process_export(athlete_obj)
+    # 2) Sample: hole bis zu 4 Results
+    db_results = DBResult.query.filter_by(athlete_id=athlete_id).limit(4).all()
+
+    # 3) Baue Python-Objekte
+    from api.athlet import Athlete, PerformanceData
+
+    # a) Athlete
+    #    Falls birth_date in DB ein datetime ist, direct übernehmen
+    #    Falls es ein date ist, auch ok
+    py_athlete = Athlete(
+        first_name=db_athlete.first_name,
+        last_name=db_athlete.last_name,
+        gender=db_athlete.gender,
+        birth_date=db_athlete.birth_date,  # datetime.date
+        performances=[]
+    )
+
+    # b) PerformanceData
+    for res in db_results:
+        py_athlete.performances.append(
+            PerformanceData(
+                disciplin=res.disciplin, 
+                year=res.year,
+                result=res.result, 
+                points=res.points
+            )
+        )
+
+    # 4) PDF generieren
+    pdf_feedback = fill_pdf_form(py_athlete)
 
     return jsonify({
         "message": "Export erfolgreich",
-        "output_string": output_string,
         "pdf_feedback": pdf_feedback
     })

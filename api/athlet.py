@@ -1,7 +1,7 @@
 class PerformanceData:
-    def __init__(self, disciplin, date, result, points):
+    def __init__(self, disciplin, year, result, points):
         self.disciplin = disciplin
-        self.date = date
+        self.year = year
         self.result = result
         self.points = points
 
@@ -10,11 +10,10 @@ class SwimmingCertificate:
         self.requirement = requirement
         self.fulfilled = fulfilled
 
-class Athlet:
-    def __init__(self, first_name, last_name, gender, birthdate, swimming_proof: SwimmingCertificate, *performances: PerformanceData):
+class Athlete:
+    def __init__(self, first_name, last_name, gender, birth_date, performances=None):
         self.first_name = first_name
         self.last_name = last_name
         self.gender = gender
-        self.birthdate = birthdate        
-        self.performances = list(performances)
-        self.swimming_proof = swimming_proof
+        self.birth_date = birth_date      # datetime.date oder String
+        self.performances = performances if performances else []
