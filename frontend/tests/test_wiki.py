@@ -53,7 +53,7 @@ class wiki_test(unittest.TestCase):
             try:
                 link.click()
             except ElementClickInterceptedException:
-                self.driver.execute_script("window.scrollBy(0, -100);")  # Scroll up a bit and try again
+                self.driver.execute_script("window.scrollBy(0, -50);")  # Scroll up a bit and try again
                 sleep(1)
                 link.click()
             sleep(1)
