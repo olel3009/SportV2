@@ -77,12 +77,12 @@ def fill_pdf_form(athlete: Athlete) -> str:
          # Hier exemplifiziert:
          index = i + 1
          prefix = perf.disciplin  # z.B. "Ausdauer", "Kraft", ...
-        
+         suffix = prefix.split()[-1]
+         points = perf.points
          # Bilde daraus z.B. "Ausdauer1Result"
-         field_values[f"{prefix}{index}Disciplin"] = perf.disciplin
-         field_values[f"{prefix}{index}Year"]      = str(perf.year)
-         field_values[f"{prefix}{index}Result"]    = str(perf.result)
-         field_values[f"{prefix}{index}Points"]    = str(perf.points)
+         field_values[f"date {prefix}"]      = str(perf.year)
+         field_values[f"{prefix}"]    = str(perf.result)
+         field_values[f"P{points} {suffix}"]    = str("x")
 
      # -----------------------
      # 4) Felder wirklich ins PDF schreiben
