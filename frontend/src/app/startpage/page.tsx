@@ -5,18 +5,9 @@
 export default function Startpage() {
   return (
     <div>
-        <div><h1>Testseite</h1></div>
-        <p>Nur hier um zu existieren</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
+        <div><h1>Willkommen bei SportV2</h1></div>
+        <p>Dies ist die Startseite</p>
+        <p>Alle weiteren Seiten und Funktionen finden sie dort oben</p>
     </div>
   );
 }
