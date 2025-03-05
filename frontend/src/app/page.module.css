@@ -227,7 +227,6 @@ a.secondary {
   overflow-y: auto;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2); /* Adds slight depth */
   left: 5%;
-  
   top:10%;
   bottom:10%;
 }
@@ -235,8 +234,6 @@ a.secondary {
 .sidebar ul {
   list-style-type: none;
   padding: 0;
- 
-  
 }
 
 .sidebar ul li {
