@@ -10,7 +10,7 @@ class wiki_test(unittest.TestCase):
 
     def scroll_into_view(self, element):
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
-        self.driver.execute_script("window.scrollBy(0, 100);")  # Scroll up 100 pixels
+        
 
 
     def setUp(self):
