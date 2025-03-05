@@ -47,7 +47,7 @@ class wiki_test(unittest.TestCase):
         for thing in self.sites:
             # Find the link to the page
             link = self.driver.find_element(By.XPATH, f'//a[@href="{thing[1]}"]')
-            self.scroll_into_view(link)  # Scroll to the element and scroll down 100 pixels
+            
             sleep(1)  # Wait for the scroll to complete
             try:
                 link.click()
@@ -58,6 +58,7 @@ class wiki_test(unittest.TestCase):
             sleep(1)
             self.assertEqual(self.driver.current_url, "http://localhost:3000/wiki_page"+thing[1], "The link did not lead to the right page!")
             print("Navigated to "+thing[0]+"!")
+            self.scroll_into_view(link)  # Scroll to the element and scroll down 100 pixels
 
     def tearDown(self):
         # Close the browser
