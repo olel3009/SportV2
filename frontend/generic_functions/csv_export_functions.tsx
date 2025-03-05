@@ -105,15 +105,20 @@ export function MassExportButton(){
     );
 }
 
-export function SingleCSVExportButton({id, vorName, nachName}){
-  function exportAsCSV(id){
-    let justThis:Array<Number>; 
-    justThis =[id];
+export function SingleCSVExportButton({id, vorName, nachName}) {
+  function exportAsCSV(event, id) {
+    event.stopPropagation();
+    let justThis: Array<Number>;
+    justThis = [id];
     exportToCsv(justThis);
   }
-  return(
-  <button id = {`${id}export_button`} name='csvSingleExportButt' onClick = {()=>exportAsCSV(id)}>
+  return (
+    <button
+      id={`${id}export_button`}
+      name="csvSingleExportButt"
+      onClick={(event) => exportAsCSV(event, id)}
+    >
       {vorName} {nachName} als CSV exportieren
-  </button>
+    </button>
   );
 }
