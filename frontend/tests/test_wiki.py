@@ -10,7 +10,7 @@ class wiki_test(unittest.TestCase):
 
     def scroll_into_view(self, element):
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
-        self.driver.execute_script("window.scrollBy(0, -100);")  # Scroll up 100 pixels
+        self.driver.execute_script("window.scrollBy(0, 100);")  # Scroll up 100 pixels
 
 
     def setUp(self):
@@ -18,7 +18,7 @@ class wiki_test(unittest.TestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--headless")  # Run in headless mode
         chrome_options.add_argument("--disable-gpu")
-        
+         
         # Initialize the WebDriver with the options
         self.driver = webdriver.Chrome(options=chrome_options)
         
@@ -53,7 +53,7 @@ class wiki_test(unittest.TestCase):
             try:
                 link.click()
             except ElementClickInterceptedException:
-                self.driver.execute_script("window.scrollBy(0, -100);")  # Scroll up a bit and try again
+                self.driver.execute_script("window.scrollBy(0, 100);")  # Scroll up a bit and try again
                 sleep(1)
                 link.click()
             sleep(1)
