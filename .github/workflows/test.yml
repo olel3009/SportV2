@@ -53,3 +53,5 @@ jobs:
         run: xvfb-run -a python ./frontend/tests/login_page.py
       - name: Run Wiki Tests
         run: xvfb-run -a python ./frontend/tests/test_wiki.py
+      - name: Run CSV Tests
+        run: xvfb-run -a python ./frontend/tests/testCsvExport.py
