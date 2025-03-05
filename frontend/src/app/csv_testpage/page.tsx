@@ -3,7 +3,7 @@ import Image from "next/image";
 import styles from "../page.module.css";
 import { json } from "stream/consumers";
 import exp from "constants";
-import { MassExportButton, ExportCheckbox, SingleCSVExportButton } from "./csv_export_functions";
+import { MassExportButton, ExportCheckbox, SingleCSVExportButton } from "../../../generic_functions/csv_export_functions";
 import { getAllAthletes, getAthleteById } from "../../../generic_functions/athlete_getters";
 
 

@@ -4,6 +4,8 @@ import React from "react";
 import { Athlete } from "@/models/athlete";
 import { useRouter } from "next/navigation";
 import { DataTable } from "@/ui/DataTable";
+import { MassExportButton, ExportCheckbox, SingleCSVExportButton } from "../../generic_functions/csv_export_functions";
+import { getAllAthletes, getAthleteById } from "../../generic_functions/athlete_getters";
 
 export function AthleteList( {athletes}: {athletes: Athlete[]} ) {
     const router = useRouter();
@@ -19,6 +21,7 @@ export function AthleteList( {athletes}: {athletes: Athlete[]} ) {
                         <th className="border border-gray-300 px-4 py-2 text-left">Geschlecht</th>
                         <th className="border border-gray-300 px-4 py-2 text-left">Geburtsdatum</th>
                         <th className="border border-gray-300 px-4 py-2 text-left">Disziplinen</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">CSV-Export</th>
                     </tr>
                 </thead>
 
@@ -38,6 +41,7 @@ export function AthleteList( {athletes}: {athletes: Athlete[]} ) {
                                     ? athlete.disciplines.join(", ")
                                     : "Keine"}
                             </td>
+                            <td className="border border-gray-300 px-4 px-2"><SingleCSVExportButton id={athlete.id} vorName={athlete.firstName} nachName={athlete.lastName} /></td>
                         </tr>
                     ))}
                 </tbody>
