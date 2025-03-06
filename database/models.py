@@ -44,7 +44,7 @@ class Result(db.Model):
     year = db.Column(db.Integer, nullable=False)
     age = db.Column(db.Integer, nullable=False)
     disciplin = db.Column(db.String(255), nullable=False)
-    result = db.Column(db.Float, nullable=False)  # Erzielte Zeit, Strecke oder Punkte
+    result = db.Column(db.String(50), nullable=False)  # Erzielte Zeit, Strecke oder Punkte
     points = db.Column(db.Integer, nullable=False) # Ergebnis Punkt von 1-3
     medal = db.Column(db.Enum('Bronze', 'Silber', 'Gold', name='medal_enum'), nullable=False)
     version = db.Column(db.Integer, nullable=False, default=1)
