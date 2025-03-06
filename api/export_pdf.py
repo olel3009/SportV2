@@ -43,11 +43,6 @@ def fill_pdf_form(athlete: Athlete) -> str:
      # -----------------------
      # 2) Athlete-Name, Geschlecht etc.
      # -----------------------
-     # In deinem PDF gibt es Felder wie Nachname, Vorname, Geschlecht etc.
-     # Häufig sind die Feldnamen nicht offensichtlich. Du musst sie via
-     #   `reader.get_fields()` (pypdf 3.x) oder `reader.pages[0].Annots` inspizieren.
-     # Ich gehe davon aus, dass T1,T2,... existieren und z.B. "sex", "first_name", "last_name" so heißen.
-     # Du passt das bitte an die tatsächlichen Felder in deinem PDF an!
      field_values = {
          # Geburtsdatum
          "T1": T1,
@@ -67,14 +62,11 @@ def fill_pdf_form(athlete: Athlete) -> str:
 
      # -----------------------
      # 3) PerformanceData eintragen
-     #    Angenommen, du hast im PDF Felder wie "Ausdauer1", "Kraft1", etc.
-     #    oder du füllst generische Felder in Abhängigkeit der Disziplin
+     #    
      # -----------------------
-     # Wir erlauben bis zu 4 Einträge (wie gefordert)
+     # Wir erlauben bis zu 4 Einträge 
      for i, perf in enumerate(athlete.performances[:4]):
-         # Bsp. "Ausdauer1Disciplin", "Ausdauer1Year", "Ausdauer1Result", "Ausdauer1Points"
-         # Du kannst beliebige Feldnamen benutzen, je nach PDF-Feld.
-         # Hier exemplifiziert:
+        
          index = i + 1
          prefix = perf.disciplin  # z.B. "Ausdauer", "Kraft", ...
          suffix = prefix.split()[-1]
