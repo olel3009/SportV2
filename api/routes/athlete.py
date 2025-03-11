@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify
 from database import db
 from database.models import Trainer, Athlete, Result, Regel, User
 from api.export_pdf import *
+import sqlalchemy as sql_func
 
 bp_athlete = Blueprint('athlete', __name__)
 
@@ -55,3 +56,25 @@ def export_athlete_pdf(id):
     athlete = Athlete.query.get_or_404(id)
     fill_out_fields(athlete)
     return jsonify({"message": "PDF-Export erfolgreich"})
+
+@bp_athlete.athlete.route('/athletes/best-result', methods=['GET'])
+def get_best_result():
+    # Angenommen es wird die Zeit als Leistungsparameter genommen - aktuell nicht festgelegt.
+    subq = db.session.query(
+        Result.athlete_id,
+        sql_func.min(Result.time).label('best_time')
+    ).group_by(Result.athlete_id).subquery()
+    
+    best_results = db.session.query(Result).join(
+        subq, 
+        db.and_(
+            Result.athlete_id == subq.c.athlete_id,
+            Result.time == subq.c.best_time
+        )
+    ).all()
+    return jsonify([{
+        "athlete_id": result.athlete_id,
+        "time": result.time,
+        "created_at": result.created_at,
+        "updated_at": result.updated_at
+    } for result in best_results])
