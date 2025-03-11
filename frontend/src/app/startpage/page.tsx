@@ -6,11 +6,13 @@ import { button_loggig_color, getButtonResult } from "../../../generic_functions
 
 export default function Startpage() {
   const wert = 0;
-  let buttonresult = "";
-  let buttonresulterfolg = "Das Aktualisieren der Reglung war erfolgreich";
-  let buttonresultfehler = "Das Aktualisieren der Reglung war nicht erfolgreich";
+  let testwert = 2;
+  const buttonresulterfolg = "Das Aktualisieren der Reglungen war erfolgreich.";
+  const buttonresultfehler = "Das Aktualisieren der Reglungen war nicht erfolgreich.<br />Versuchen sie es zu einem späteren Zeitpunkt erneut!";
+  const buttonresultabruch = "Das Aktualisieren der Reglungen wurde abgebrochen.";
 
   const [showPopup, setShowPopup] = useState(false);
+  const [buttonresult, setButtonresult] = useState("");
 
   const handleButtonClick = () => {
     setShowPopup(true);
@@ -18,12 +20,20 @@ export default function Startpage() {
 
   const handleClosePopup = () => {
     setShowPopup(false);
+    setButtonresult(buttonresultabruch);
   };
 
   const handleConfirm = () => {
-    // Hier kannst du die Logik für die Bestätigung hinzufügen
     setShowPopup(false);
-    //alert("Bestätigt!");
+    // Hier kannst du die Logik für die Bestätigung hinzufügen
+    //Bitte den Methodenaufruf zur Regelaktualisierung hier einfügen
+    
+    // Hier bitte die Methode einfügen, die den Wert zurückgibt, ob die Regelung erfolgreich aktualisiert wurde
+    if (testwert === 1) {
+      setButtonresult(buttonresulterfolg);
+    } else {
+      setButtonresult(buttonresultfehler);
+    }
   };
 
   return (
@@ -42,22 +52,22 @@ export default function Startpage() {
         <p>Dies ist mehr Content</p>
         <p>Dies ist mehr Content</p>
       </div>
-      {button_loggig_color() == wert ? (
+      {button_loggig_color() === wert ? (
         <div>
-          <button className={styles.button} onClick={handleButtonClick}>Reglungsaktualisierung</button>
-          <p>{buttonresult}</p>
+          <button className={styles.button} onClick={handleButtonClick}>Regelungen aktualisieren</button>
+          <p dangerouslySetInnerHTML={{ __html: buttonresult }}></p>
         </div>
       ) : (
         <div>
-          <button className={styles.button2} onClick={handleButtonClick}>Reglungsaktualisierung</button>
-          <p>{buttonresult}</p>
+          <button className={styles.button2} onClick={handleButtonClick}>Regelungen aktualisieren</button>
+          <p dangerouslySetInnerHTML={{ __html: buttonresult }}></p>
         </div>
       )}
 
       {showPopup && (
         <div className={styles.popupOverlay}>
           <div className={styles.popup}>
-            <h2>Regelaktualisierung</h2>
+            <h2>Regelungen aktualisieren</h2>
             <h3>Wollen sie wirklich die Regelungen aktualisieren?</h3>
             <button className={styles.button3} onClick={handleClosePopup}>Nein</button>
             <button className={styles.button4} onClick={handleConfirm}>Ja</button>

@@ -71,7 +71,7 @@ if (dbresults==1){
 
 export function getButtonResult():string {
     
-    let result= "";
+    let result= "Das Aktualisieren der Reglung war erfolgreich";
 
     return result;  
 }
