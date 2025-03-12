@@ -1,5 +1,5 @@
-from database import db
 from datetime import datetime
+from database import db
 
 # Trainer-Modell
 class Trainer(db.Model):
@@ -43,7 +43,10 @@ class Result(db.Model):
     athlete_id = db.Column(db.Integer, db.ForeignKey('athletes.id'), nullable=False)
     year = db.Column(db.Integer, nullable=False)
     age = db.Column(db.Integer, nullable=False)
-    result = db.Column(db.Float, nullable=False)  # z.B. Zeit oder Punkte
+    disciplin = db.Column(db.String(255), nullable=False)
+    result = db.Column(db.String(50), nullable=False)  # Erzielte Zeit, Strecke oder Punkte
+    points = db.Column(db.Integer, nullable=False) # Ergebnis Punkt von 1-3
+    medal = db.Column(db.Enum('Bronze', 'Silber', 'Gold', name='medal_enum'), nullable=False)
     version = db.Column(db.Integer, nullable=False, default=1)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -58,11 +61,10 @@ class Regel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     rulename = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    disciplin = db.Column(db.String(50), nullable=True)
+    disciplin = db.Column(db.String(255), nullable=True)
     distance = db.Column(db.Integer, nullable=False)
     time_in_seconds = db.Column(db.Integer, nullable=False)
     points = db.Column(db.Integer, nullable=False)
-    medal = db.Column(db.Enum('Bronze', 'Silber', 'Gold', name='medal_enum'), nullable=False)
     valid_start = db.Column(db.Date, nullable=False)
     valid_end = db.Column(db.Date, nullable=True)
     version = db.Column(db.Integer, nullable=False, default=1)

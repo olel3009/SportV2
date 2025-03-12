@@ -1,7 +1,6 @@
-from datetime import datetime
 from flask import Blueprint, request, jsonify
 from database import db
-from database.models import Trainer, Athlete, Result, Regel, User
+from database.models import User
 from api.export_pdf import *
 
 bp_user = Blueprint('user', __name__)

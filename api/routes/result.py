@@ -1,8 +1,6 @@
-from datetime import datetime
 from flask import Blueprint, request, jsonify
 from database import db
-from database.models import Trainer, Athlete, Result, Regel, User
-from api.export_pdf import *
+from database.models import Result
 
 bp_result = Blueprint('result', __name__)
 
@@ -13,7 +11,10 @@ def create_result():
         athlete_id=data['athlete_id'],
         year=data['year'],
         age=data['age'],
-        result=data['result']
+        disciplin=data['disciplin'],
+        result=data['result'],
+        points=data['points'],
+        medal=data['medal'],
     )
     db.session.add(new_result)
     db.session.commit()
@@ -27,7 +28,10 @@ def get_results():
         "athlete_id": result.athlete_id,
         "year": result.year,
         "age": result.age,
+        "disciplin": result.disciplin,
         "result": result.result,
+        "points": result.points,
+        "medal": result.medal,
         "version": result.version,
         "created_at": result.created_at,
         "updated_at": result.updated_at
@@ -39,7 +43,10 @@ def update_result(id):
     data = request.json
     result.year = data.get('year', result.year)
     result.age = data.get('age', result.age)
+    result.disciplin = data.get('disciplin', result.disciplin)
     result.result = data.get('result', result.result)
+    result.points = data.get('points', result.points)
+    result.medal = data.get('medal', result.medal)
     result.version += 1  # Neue Version erzeugen
     db.session.commit()
     return jsonify({"message": "Ergebnis aktualisiert"})
