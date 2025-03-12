@@ -63,36 +63,41 @@ export default function Home() {
           </div>
           <div id="knopf_reglungsaktualisierung" className={styles.section}>
             <h2>09. Manuelle Aktualisierung der Regelungen durch Knopfdruck</h2>
-            <p>Der Knopf zur Aktualisierung der Regelungen ist unten auf der Startseite zu finden. Dieser trägt die Aufschrift "Regelungen aktualisieren". 
+            <p>Der Knopf zur Aktualisierung der Regelungen ist unten auf der Startseite zu finden. Dieser trägt die Aufschrift "Regelungen aktualisieren".
               Dieser Knopf sorgt dafür das nach einer Bestätigung, dass akuelle Regelungen geladen werden.<br />
-              
-              <h4>Farbliche Bedeutung des Knopfes</h4>
+            </p>
+
+            <h4>Farbliche Bedeutung des Knopfes</h4>
+            <p>
               - Rot: Regelungen wurden dieses Jahr noch nicht aktualisiert und die ersten vier Wochen des Jahres sind noch nicht vorbei.<br />
               - Weiß: Regelungen wurden schon aktualisiert oder die ersten vier Wochen des Jahres sind vorbei.<br />
-              
-              <h4>Schritt für Schritt Anleitung</h4>
+            </p>
+            <h4>Schritt für Schritt Anleitung</h4>
+            <p>
               1. Zum Aktualisieren der Regelungen, klicken Sie auf den Knopf "Regelungen aktualisieren".<br />
               2. Warten Sie bis sich ein Popup öffnet.<br />
               3. Bestätigen Sie den Vorgang mit "Ja" (Grün hinterlegter Knopf) oder brechen Sie den Vorgang mit "Nein" (Rot hinterlegter Knopf) ab.<br />
               4. Warten Sie bis der Vorgang abgeschlossen ist. Denn Status vom Vorgang können sie am Text unter dem "Reglungen aktualisieren" Knopf erkennen.<br />
               5. Überprüfen Sie ob der Vorgang erfolgreich war oder nicht. Dies können sie am Text unter dem "Reglungen aktualisieren" Knopf erkennen.<br />
               6. Wenn der Vorgang nicht erfolgreich war, versuchen Sie es zu einem späteren Zeitpunkt erneut.<br />
-              
-              <h4>Rückmeldung vom Aktualisierungsprozess</h4>
+            </p>
+
+            <h4>Rückmeldung vom Aktualisierungsprozess</h4>
+            <p>
               - Das Aktualisieren der Reglungen war erfolgreich: Die Regelungen wurden erfolgreich aktualisiert.<br />
               - Das Aktualisieren der Reglungen war nicht erfolgreich: Die Regelungen konnten nicht aktualisiert werden.<br />
               - Das Aktualisieren der Reglungen wird durchgeführt: Die Regelungen werden gerade aktualisiert.<br />
               - Das Aktualisieren der Reglungen wurde abgebrochen: Die Regelungen wurden nicht aktualisiert, da sie den Prozess abgebrochen haben.<br />
-
-              <h4>Wichtige Hinweise</h4>
-              - Der Prozess kann nach der Bestätigung nicht abgebrochen werden.<br />
-              - Sollte dqs Aktualisieren der Regelungen nicht erfolgreich sein, versuchen Sie es nicht direkt nochmal sondern warten sie ein paar Minuten.
-              Dies kann dem Server helfe, wenn die fehlschläge an einer zu hohen auslastung liegt oder die Daten im moment durch andere Ursachen nicht abrufbar sind.<br />
-              - Sollte der Prozess öfter fehlschlagen, wenden Sie sich an den Administrator.<br />
-              - Wenn sich das Popup nicht öffnet, kontrollieren sie ihre Internetverbindung und versuchen sie es nach kurzem warten erneut.<br />
-
             </p>
 
+            <h4>Wichtige Hinweise</h4>
+            <p>
+              - Der Prozess kann nach der Bestätigung nicht abgebrochen werden.<br />
+              - Sollte das Aktualisieren der Regelungen nicht erfolgreich sein, versuchen Sie es nicht direkt nochmal sondern warten sie ein paar Minuten.
+              Dies kann dem Server helfen, wenn das Fehlschlagen des Vorgangs an einer zu hohen Auslastung liegt oder die Daten durch eine andere Ursache nicht abrufbar sind.<br />
+              - Sollte der Prozess öfter fehlschlagen, wenden Sie sich an den Administrator.<br />
+              - Wenn sich das Popup nicht öffnet, kontrollieren sie ihre Internetverbindung und versuchen sie es nach kurzem Warten erneut.<br />
+            </p>
 
           </div>
           <div id="medaillen_ansicht" className={styles.section}>
