@@ -6,9 +6,10 @@ import { button_loggig_color, getButtonResult } from "../../../generic_functions
 
 export default function Startpage() {
   const wert = 0;
-  let testwert = 2;
+  let testwert = 1;
   const buttonresulterfolg = "Das Aktualisieren der Reglungen war erfolgreich.";
   const buttonresultfehler = "Das Aktualisieren der Reglungen war nicht erfolgreich.<br />Versuchen sie es zu einem späteren Zeitpunkt erneut!";
+  const buttonresultwarten = "Das Aktualisieren der Reglungen wird durchgeführt.<br />Bitte warten sie einen Moment.";
   const buttonresultabruch = "Das Aktualisieren der Reglungen wurde abgebrochen.";
 
   const [showPopup, setShowPopup] = useState(false);
@@ -27,7 +28,7 @@ export default function Startpage() {
     setShowPopup(false);
     // Hier kannst du die Logik für die Bestätigung hinzufügen
     //Bitte den Methodenaufruf zur Regelaktualisierung hier einfügen
-    
+    setButtonresult(buttonresultwarten);
     // Hier bitte die Methode einfügen, die den Wert zurückgibt, ob die Regelung erfolgreich aktualisiert wurde
     if (testwert === 1) {
       setButtonresult(buttonresulterfolg);
