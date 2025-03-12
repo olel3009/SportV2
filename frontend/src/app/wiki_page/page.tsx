@@ -72,10 +72,11 @@ export default function Home() {
               
               <h4>Schritt für Schritt Anleitung</h4>
               1. Zum Aktualisieren der Regelungen, klicken Sie auf den Knopf "Regelungen aktualisieren".<br />
-              2. Bestätigen Sie den Vorgang mit "Ja" oder brechen Sie den Vorgang mit "Nein" ab.<br />
-              3. Warten Sie bis der Vorgang abgeschlossen ist. Denn Status vom Vorgang können sie am Text unter dem "Reglungen aktualisieren" Knopf erkennen.<br />
-              4. Überprüfen Sie ob der Vorgang erfolgreich war oder nicht. Dies können sie am Text unter dem "Reglungen aktualisieren" Knopf erkennen.<br />
-              5. Wenn der Vorgang nicht erfolgreich war, versuchen Sie es zu einem späteren Zeitpunkt erneut.<br />
+              2. Warten Sie bis sich ein Popup öffnet.<br />
+              3. Bestätigen Sie den Vorgang mit "Ja" (Grün hinterlegter Knopf) oder brechen Sie den Vorgang mit "Nein" (Rot hinterlegter Knopf) ab.<br />
+              4. Warten Sie bis der Vorgang abgeschlossen ist. Denn Status vom Vorgang können sie am Text unter dem "Reglungen aktualisieren" Knopf erkennen.<br />
+              5. Überprüfen Sie ob der Vorgang erfolgreich war oder nicht. Dies können sie am Text unter dem "Reglungen aktualisieren" Knopf erkennen.<br />
+              6. Wenn der Vorgang nicht erfolgreich war, versuchen Sie es zu einem späteren Zeitpunkt erneut.<br />
               
               <h4>Rückmeldung vom Aktualisierungsprozess</h4>
               - Das Aktualisieren der Reglungen war erfolgreich: Die Regelungen wurden erfolgreich aktualisiert.<br />
@@ -88,7 +89,8 @@ export default function Home() {
               - Sollte dqs Aktualisieren der Regelungen nicht erfolgreich sein, versuchen Sie es nicht direkt nochmal sondern warten sie ein paar Minuten.
               Dies kann dem Server helfe, wenn die fehlschläge an einer zu hohen auslastung liegt oder die Daten im moment durch andere Ursachen nicht abrufbar sind.<br />
               - Sollte der Prozess öfter fehlschlagen, wenden Sie sich an den Administrator.<br />
-              
+              - Wenn sich das Popup nicht öffnet, kontrollieren sie ihre Internetverbindung und versuchen sie es nach kurzem warten erneut.<br />
+
             </p>
 
 

@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import styles from "../page.module.css";
-import { button_loggig_color, getButtonResult } from "../../../generic_functions/button_loggig";
+import { button_loggig_color} from "../../../generic_functions/button_loggig";
 
 export default function Startpage() {
-  const wert = 0;
+  const wert = 0; 
   let testwert = 1;
   const buttonresulterfolg = "Das Aktualisieren der Reglungen war erfolgreich.";
   const buttonresultfehler = "Das Aktualisieren der Reglungen war nicht erfolgreich.<br />Versuchen sie es zu einem späteren Zeitpunkt erneut!";
@@ -30,6 +30,8 @@ export default function Startpage() {
     //Bitte den Methodenaufruf zur Regelaktualisierung hier einfügen
     setButtonresult(buttonresultwarten);
     // Hier bitte die Methode einfügen, die den Wert zurückgibt, ob die Regelung erfolgreich aktualisiert wurde
+    //bzw. die auch die Regelungsktualisierung durchführt 
+    //1 für positive (erfolgreiches aktualisieren) und 0 für negative (fehlgeschlagene aktualisierung) rückmeldung
     if (testwert === 1) {
       setButtonresult(buttonresulterfolg);
     } else {

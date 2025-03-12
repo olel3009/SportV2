@@ -2,10 +2,12 @@
 //1 für positive und 0 für negative rückmeldung
 let dbresults = 0;
 //0 für aktuelles Datum und 1 für nicht aktuelles Datum welche keine hinterlegung triggert, 2 für hervorheben
-let other_date = 1;
+let other_date = 0;
 
 
 export function button_loggig_dbresults_changer(x: number): void {
+    //1 für positive und 0 für negative rückmeldung
+    //Dient zu testzwecken
     if (x == 1) {
         dbresults = 1;
     } else {
@@ -38,12 +40,15 @@ export function button_loggig_date(): number {
 export function button_loggig_dbresults(): number {
     // Hier bitte Datenbankabfrgae/Api aufruf machen, zum feststellen, ob in diesem Jahr schon mal aktualisiert wurde
 
+
     //Hier wird der Wert der Datenbankabfrage zurückgegeben, ob die Regelungen schon mal in diesem Jahr aktualisiert wurden
+    //1 für positive und 0 für negative rückmeldung
     return dbresults;
 }
 
 export function button_loggig_other_date_changer(x: number): void {
     //0 für aktuelles Datum und 1 für nicht aktuelles Datum welche keine hinterlegung triggert, 2 für hervorheben
+    //Dient zu testzwecken
     if (x == 1) {
         other_date = 0;
     } else {
@@ -70,11 +75,4 @@ export function button_loggig_color(): number {
     return result;
 }
 
-
-export function getButtonResult(): string {
-
-    let result = "Das Aktualisieren der Reglung war erfolgreich";
-
-    return result;
-}
 
