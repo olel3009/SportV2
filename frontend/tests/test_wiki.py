@@ -26,7 +26,7 @@ class wiki_test(unittest.TestCase):
         
     def test_nav_menu(self):
         self.driver.get("http://localhost:3000")
-        self.sites =[["Startseite", "/start_page"], ["Testseite", "/test_page"],["Wiki-Seite", "/wiki_page"]]
+        self.sites =[["Startseite", "/startpage"], ["Testseite", "/test_page"],["Wiki-Seite", "/wiki_page"]]
         for thing in self.sites:
             # Find the link to the page
             link = self.driver.find_element(By.LINK_TEXT, thing[0])
