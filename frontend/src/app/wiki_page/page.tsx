@@ -63,14 +63,32 @@ export default function Home() {
           </div>
           <div id="knopf_reglungsaktualisierung" className={styles.section}>
             <h2>09. Manuelle Aktualisierung der Regelungen durch Knopfdruck</h2>
-            <p>Der Knopf zur Aktualisierung der Regelungen ist unten auf der Startseite zu finden. Dieser trägt die Aufschrift "Regelungen aktualisieren". <br />
-              - Wenn dieser Knopf rot hervorgehoben ist, wurden die Regelungen dieses Jahr noch nicht aktualisiert und die ersten vier Wochen des Jahres sind noch nicht vorbei.<br />
-              - Wenn der Knopf weiß ist, also nicht hervorgehoben ist, wurden die Regelungen schon aktualisiert oder die ersten vier Wochen des Jahres sind vorbei.<br />
-              - Nach einem Klick auf dem Button erscheint ein Popup um den Vorgang der Regelungsaktualisierung zu bestätigen oder abzubrechen.<br />
-              - Nach dem Klick auf "Ja" wird der Vorgang durchgeführt und unter dem Button angezeigt ob dieser beim durchlaufen ist oder ob dieser erfolgreich war oder nicht.<br />
-              - Wenn die Nachricht, dass der Vorgang im Gange ist, angezeigt wird, ist der Vorgang des Aktualisieren im Gange und kann eventuell länger dauern.<br />
-              - Wenn der Vorgang der Regelungsaktualisierung abgeschlossen ist, wird eine Nachricht unter dem Knopf angezeigt ob dieser erfolgreich war oder fehlgeschlagen ist.<br />
-              - Nach dem Klick auf "Nein" wird der Vorgang abgebrochen und unter dem Button angezeigt, dass dieser abgebrochen wurde.<br />
+            <p>Der Knopf zur Aktualisierung der Regelungen ist unten auf der Startseite zu finden. Dieser trägt die Aufschrift "Regelungen aktualisieren". 
+              Dieser Knopf sorgt dafür das nach einer Bestätigung, dass akuelle Regelungen geladen werden.<br />
+              
+              <h4>Farbliche Bedeutung des Knopfes</h4>
+              - Rot: Regelungen wurden dieses Jahr noch nicht aktualisiert und die ersten vier Wochen des Jahres sind noch nicht vorbei.<br />
+              - Weiß: Regelungen wurden schon aktualisiert oder die ersten vier Wochen des Jahres sind vorbei.<br />
+              
+              <h4>Schritt für Schritt Anleitung</h4>
+              1. Zum Aktualisieren der Regelungen, klicken Sie auf den Knopf "Regelungen aktualisieren".<br />
+              2. Bestätigen Sie den Vorgang mit "Ja" oder brechen Sie den Vorgang mit "Nein" ab.<br />
+              3. Warten Sie bis der Vorgang abgeschlossen ist. Denn Status vom Vorgang können sie am Text unter dem "Reglungen aktualisieren" Knopf erkennen.<br />
+              4. Überprüfen Sie ob der Vorgang erfolgreich war oder nicht. Dies können sie am Text unter dem "Reglungen aktualisieren" Knopf erkennen.<br />
+              5. Wenn der Vorgang nicht erfolgreich war, versuchen Sie es zu einem späteren Zeitpunkt erneut.<br />
+              
+              <h4>Rückmeldung vom Aktualisierungsprozess</h4>
+              - Das Aktualisieren der Reglungen war erfolgreich: Die Regelungen wurden erfolgreich aktualisiert.<br />
+              - Das Aktualisieren der Reglungen war nicht erfolgreich: Die Regelungen konnten nicht aktualisiert werden.<br />
+              - Das Aktualisieren der Reglungen wird durchgeführt: Die Regelungen werden gerade aktualisiert.<br />
+              - Das Aktualisieren der Reglungen wurde abgebrochen: Die Regelungen wurden nicht aktualisiert, da sie den Prozess abgebrochen haben.<br />
+
+              <h4>Wichtige Hinweise</h4>
+              - Der Prozess kann nach der Bestätigung nicht abgebrochen werden.<br />
+              - Sollte dqs Aktualisieren der Regelungen nicht erfolgreich sein, versuchen Sie es nicht direkt nochmal sondern warten sie ein paar Minuten.
+              Dies kann dem Server helfe, wenn die fehlschläge an einer zu hohen auslastung liegt oder die Daten im moment durch andere Ursachen nicht abrufbar sind.<br />
+              - Sollte der Prozess öfter fehlschlagen, wenden Sie sich an den Administrator.<br />
+              
             </p>
 
 
