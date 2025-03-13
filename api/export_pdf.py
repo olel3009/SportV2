@@ -1,4 +1,3 @@
-import re
 from datetime import datetime
 from pypdf import PdfReader, PdfWriter
 from api.athlet import Athlete
