@@ -48,3 +48,5 @@ venv
 app.db
 pdfs/
 *.log
+api/logs
+!api/logs/logger.py
