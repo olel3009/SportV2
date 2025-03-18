@@ -1,6 +1,7 @@
 "use client";
 import { Athlete } from "../../models/athlete";
 import { getAllAthletes, addFeatToAthlete } from "../../../generic_functions/athlete_getters";
+import { getExercises } from "../../../generic_functions/calculation_functions";
 import styles from "../page.module.css";
 
 function AthleteSelect() {
@@ -13,6 +14,12 @@ function AthleteSelect() {
     );
   });
   return <select name="athlete" id="athlete" className={styles.basic_input}>{options}</select>;
+}
+
+function DisciplineSelect() {
+  const exercises = getExercises();
+  let options = Object.keys(exercises);
+  return <select name="discipline" id="discipline">{options}</select>;
 }
 
 function formatDate(date: Date): string {
@@ -51,6 +58,9 @@ export default function Home() {
   return (
     <div>
       <h1 className={styles.heading}>Leistungseintragung</h1>
+      <p className={styles.paragraph}>
+        <DisciplineSelect></DisciplineSelect>
+      </p>
       <div>
         <select name="uebung" id="uebung" className={styles.basic_input}>
           <option value="50mLauf">50-Meter Lauf</option>

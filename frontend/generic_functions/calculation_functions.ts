@@ -728,7 +728,22 @@ let basedata = `[
     }
 
 ]`;
-//Skip Geräteturnen, next is Laufen
+type DiscDict = { [key: string]: string[] };
+export function getExercises():DiscDict{
+    let exercises = JSON.parse(basedata);
+    let exercisesDict:DiscDict={};
+    for(let i=0; i<exercises.length; i++){
+        let discipline = exercises[i].discipline;
+        if(exercisesDict[discipline]==undefined){
+            exercisesDict[discipline]=[];
+        }
+        exercisesDict[discipline].push(exercises[i].name);
+    }
+    return exercisesDict;
+    
+    
+}
+
 export function calculateMedal(discipline:string, age:number, result:number, sex:string):string{
 //it is important to note that if the numbers in the expectation rise they must be attributed differently than if they were to fall
     let exerciseRegulations = JSON.parse(basedata);
