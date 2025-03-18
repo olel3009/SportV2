@@ -1,9 +1,4 @@
-import Image from "next/image";
-import styles from "../page.module.css";
-import { json } from "stream/consumers";
-import exp from "constants";
-
-
+import React from "react";
 
 export default function Home() {
   return (
@@ -23,3 +18,5 @@ export default function Home() {
     </div>
   );
 }
+
+
