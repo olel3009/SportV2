@@ -208,6 +208,65 @@ a.secondary {
   background-color: peachpuff;
 }
 
+.disciplinesContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; /* Adjust the gap between items as needed */
+}
+
+.feat {
+  justify-content: center;
+}
+
+.feat b{
+  text-decoration: none;
+  font-weight: bold;
+  color: black;
+  text-align: center;
+  
+}
+
+.featTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1em;
+  font-family: 'Arial', sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.featTable thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
+}
+
+.featTable th,
+.featTable td {
+  padding: 12px 15px;
+}
+
+.featTable tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.featTable tbody tr:nth-of-type(odd) {
+  background-color: #f3f3f3;
+}
+
+.featTable tbody tr:nth-of-type(even) {
+  background-color: #dddddd;
+}
+
+.featTable tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+
+.resultsSection{
+  justify-content: center;
+}
 
 
 
