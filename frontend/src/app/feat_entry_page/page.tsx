@@ -1,6 +1,6 @@
 "use client";
 import { Athlete } from "../../models/athlete";
-import { getAllAthletes, addFeatToAthlete } from "../../../generic_functions/athlete_getters";
+import { getAllAthletes, addFeatToAthlete }  from "../../../generic_functions/athlete_getters";
 import { getExercises } from "../../../generic_functions/calculation_functions";
 import styles from "../page.module.css";
 
@@ -16,10 +16,57 @@ function AthleteSelect() {
   return <select name="athlete" id="athlete" className={styles.basic_input}>{options}</select>;
 }
 
+let initSelect:string='';
 function DisciplineSelect() {
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = event.target.value;
+    const allExercises = document.querySelectorAll<HTMLElement>('[id^="exercise_"]');
+
+    allExercises.forEach(element => {
+        if (element.id === `exercise_${selectedValue}`) {
+            element.hidden=false;
+        } else {
+            element.hidden=true;
+        }
+    });
+};
   const exercises = getExercises();
+  console.log(exercises);
   let options = Object.keys(exercises);
-  return <select name="discipline" id="discipline">{options}</select>;
+  let optEl=options.map((option, index)=>{
+    if(initSelect==''){
+      initSelect=option;
+    }
+    return (
+      <option value={option} key={index}>
+        {option}
+      </option>
+    );
+  })
+  return <select name="discipline" id="discipline" onChange = {handleSelectChange} className={styles.basic_input}>{optEl}</select>;
+}
+
+function ExerciseSelect(){
+  const exercises = getExercises();
+  console.log(exercises);
+  let options = Object.keys(exercises);
+  let optEl=options.map((option, index)=>{
+    let currEx=exercises[option];
+    let thisSel=currEx.map((exer, index)=>{
+      return (
+        <option value={exer} key={index}>
+          {exer}
+        </option>
+      );
+    })
+    if(option==initSelect){
+      return <select name="exercise" id={"exercise_"+option} key={index} className={styles.basic_input}>{thisSel}</select>;
+    }else{
+      return <select name="exercise" id={"exercise_"+option} key={index} hidden className={styles.basic_input}>{thisSel}</select>;
+    }
+    
+  });
+  return <span>{optEl}</span>;
 }
 
 function formatDate(date: Date): string {
@@ -62,12 +109,7 @@ export default function Home() {
         <DisciplineSelect></DisciplineSelect>
       </p>
       <div>
-        <select name="uebung" id="uebung" className={styles.basic_input}>
-          <option value="50mLauf">50-Meter Lauf</option>
-          <option value="Hochsprung">Hochsprung</option>
-          <option value="Weitsprung">Weitsprung</option>
-          <option value="Kugelstossen">Kugelstossen</option>
-        </select>
+        <ExerciseSelect></ExerciseSelect>
         <AthleteSelect />
         <input
           name="datum"

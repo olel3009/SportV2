@@ -80,7 +80,7 @@ export function getAllAthletes() : Athlete[] {
   return JSON.parse(mockupData);
 } 
 
-function calculateMedal(score: number) : number {
+export function calculateMedal(score: number) : number {
  return 69;
 }
 
