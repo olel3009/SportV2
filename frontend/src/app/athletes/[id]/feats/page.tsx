@@ -6,7 +6,7 @@ import { getAthleteById } from "@/athlete_getters";
 import { useState } from "react";
 import { Feat } from "@/models/athlete";
 import { useEffect } from "react";
-import { DataTable } from "@/ui/DataTable";
+import { DataTable } from "@/components/DataTable";
 
 export default async function Page({ params }: {
   params: Promise<{ id: number }>
