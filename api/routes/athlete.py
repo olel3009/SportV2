@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify
 from database import db
 from database.models import Athlete as DBAthlete, Result as DBResult
+from database.schemas import AthleteSchema
 from api.export_pdf import fill_pdf_form
 
 bp_athlete = Blueprint('athlete', __name__)
@@ -9,11 +10,14 @@ bp_athlete = Blueprint('athlete', __name__)
 @bp_athlete.route('/athletes', methods=['POST'])
 def create_athlete():
     data = request.json
+    schema = AthleteSchema()
+    valid_data = schema.load(data)  # Falls invalid, ValidationError -> 400
+    
     new_athlete = DBAthlete(
-        first_name=data['first_name'],
-        last_name=data['last_name'],
-        birth_date=datetime.strptime(data['birth_date'], '%d-%m-%Y'),
-        gender=data['gender']
+        first_name=valid_data["first_name"],
+        last_name=valid_data["last_name"],
+        birth_date=valid_data["birth_date"],
+        gender=valid_data["gender"]
     )
     db.session.add(new_athlete)
     db.session.commit()

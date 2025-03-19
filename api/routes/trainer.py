@@ -2,19 +2,22 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify
 from database import db
 from database.models import Trainer
-from api.export_pdf import *
+from database.schemas import TrainerSchema
 
 bp_trainer = Blueprint('trainer', __name__)
 
 @bp_trainer.route('/trainers', methods=['POST'])
 def create_trainer():
     data = request.json
+    schema = TrainerSchema()
+    valid_data = schema.load(data)  # Falls invalid, ValidationError -> 400
+
     new_trainer = Trainer(
-        first_name=data['first_name'],
-        last_name=data['last_name'],
-        email=data['email'],
-        birth_date=datetime.strptime(data['birth_date'], '%d-%m-%Y'),
-        gender=data['gender']
+        first_name=valid_data["first_name"],
+        last_name=valid_data["last_name"],
+        email=valid_data["email"],
+        birth_date=valid_data["birth_date"],
+        gender=valid_data["gender"]
     )
     db.session.add(new_trainer)
     db.session.commit()
