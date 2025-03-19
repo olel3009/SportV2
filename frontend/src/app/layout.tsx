@@ -16,7 +16,7 @@ export default function RootLayout({
       <body>
         <SidebarProvider>
           <AppSidebar />
-            <main>
+            <main className='flex-1 overflow-auto'>
               <SidebarTrigger />
               {children}
             </main>

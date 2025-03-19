@@ -4,6 +4,9 @@ export interface Athlete {
     lastName: string;
     sex: "m" | "w" | "d";
     dateOfBirth: string;
+    goldMedals: number;
+    silverMedals: number;
+    bronzeMedals: number;
     disciplines?: string[];
     feats?: Array<Feat>
 }

@@ -12,6 +12,9 @@ let mockupData = `[
     "eMail": "ds@wasauchimmer.de",
     "dateOfBirth": "18.03.2014",
     "disciplines": ["Schnelligkeit", "Kraft"],
+    "goldMedals": 3,
+    "silverMedals": 0,
+    "bronzeMedals": 0,
     "feats": [
       {
         "discipline": "Schnelligkeit",
@@ -44,6 +47,9 @@ let mockupData = `[
     "eMail": "pD@wasauchimmer.de",
     "dateOfBirth": "10.08.2010",
     "disciplines": ["Schnelligkeit", "Kraft"],
+    "goldMedals": 2,
+    "silverMedals": 0,
+    "bronzeMedals": 0,
     "feats": [
       {
         "discipline": "Kraft",
@@ -76,6 +82,9 @@ let mockupData = `[
     "eMail": "anna.mueller@example.de",
     "dateOfBirth": "15.06.2005",
     "disciplines": ["Schnelligkeit", "Kraft"],
+    "goldMedals": 4,
+    "silverMedals": 2,
+    "bronzeMedals": 1,
     "feats": [
       {
         "discipline": "Schnelligkeit",
@@ -101,6 +110,9 @@ let mockupData = `[
     "eMail": "max.schneider@example.de",
     "dateOfBirth": "02.11.2002",
     "disciplines": ["Schnelligkeit", "Kraft"],
+    "goldMedals": 0,
+    "silverMedals": 3,
+    "bronzeMedals": 1,
     "feats": [
       {
         "discipline": "Schnelligkeit",
@@ -126,6 +138,9 @@ let mockupData = `[
     "eMail": "lisa.becker@example.de",
     "dateOfBirth": "30.01.2008",
     "disciplines": ["Kraft"],
+    "goldMedals": 0,
+    "silverMedals": 0,
+    "bronzeMedals": 0,
     "feats": [
       {
         "discipline": "Kraft",
@@ -144,6 +159,9 @@ let mockupData = `[
     "eMail": "thomas.wagner@example.de",
     "dateOfBirth": "05.05.2012",
     "disciplines": ["Schnelligkeit"],
+    "goldMedals": 0,
+    "silverMedals": 0,
+    "bronzeMedals": 1,
     "feats": [
       {
         "discipline": "Schnelligkeit",
@@ -162,6 +180,9 @@ let mockupData = `[
     "eMail": "sophie.fischer@example.de",
     "dateOfBirth": "21.03.2007",
     "disciplines": ["Schnelligkeit", "Kraft"],
+    "goldMedals": 1,
+    "silverMedals": 0,
+    "bronzeMedals": 0,
     "feats": [
       {
         "discipline": "Schnelligkeit",

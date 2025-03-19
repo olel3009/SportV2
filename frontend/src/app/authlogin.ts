@@ -27,7 +27,7 @@ export async function login(state: FormState, formData: FormData) {
     const password = formData.get('password') as string;
     if (LoginKontrolle(mail, password) == 2) {
         console.log("login successful")
-        redirect('/startpage')
+        redirect('/dashboard')
         return {
             message: 'Login successful',
             email: ['Anmeldung erfolgreich.'],
