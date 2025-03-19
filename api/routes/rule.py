@@ -37,8 +37,8 @@ def get_regeln():
         "distance": regel.distance,
         "time_in_seconds": regel.time_in_seconds,
         "points": regel.points,
-        "valid_start": regel.valid_start.strftime('%Y-%m-%d'),
-        "valid_end": regel.valid_end.strftime('%Y-%m-%d') if regel.valid_end else None,
+        "valid_start": regel.valid_start.strftime('%d-%m-%Y'),
+        "valid_end": regel.valid_end.strftime('%d-%m-%Y') if regel.valid_end else None,
         "version": regel.version,
         "created_at": regel.created_at,
         "updated_at": regel.updated_at
@@ -53,8 +53,8 @@ def update_regel(id):
     regel.distance = data.get('distance', regel.distance)
     regel.time_in_seconds = data.get('time_in_seconds', regel.time_in_seconds)
     regel.points = data.get('points', regel.points)
-    regel.valid_start = datetime.strptime(data['valid_start'], '%Y-%m-%d') if 'valid_start' in data else regel.valid_start
-    regel.valid_end = datetime.strptime(data['valid_end'], '%Y-%m-%d') if 'valid_end' in data else regel.valid_end
+    regel.valid_start = datetime.strptime(data['valid_start'], '%d-%m-%Y') if 'valid_start' in data else regel.valid_start
+    regel.valid_end = datetime.strptime(data['valid_end'], '%d-%m-%Y') if 'valid_end' in data else regel.valid_end
     regel.version += 1  # Version erhöhen
     db.session.commit()
     return jsonify({"message": "Regel aktualisiert"})

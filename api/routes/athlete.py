@@ -2,8 +2,8 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify
 from database import db
 from database.models import Athlete as DBAthlete, Result as DBResult
-from api.export_pdf import fill_pdf_form
 from database.schemas import AthleteSchema
+from api.export_pdf import fill_pdf_form
 
 bp_athlete = Blueprint('athlete', __name__)
 
