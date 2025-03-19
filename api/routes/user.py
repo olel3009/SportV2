@@ -1,13 +1,15 @@
 from flask import Blueprint, request, jsonify
 from database import db
 from database.models import User
-from api.export_pdf import *
+from database.schemas import UserSchema
 
 bp_user = Blueprint('user', __name__)
 
 @bp_user.route('/users', methods=['POST'])
 def create_user():
     data = request.json
+    schema = UserSchema()
+    valid_data = schema.load(data)  # Falls invalid, ValidationError -> 400
 
     if not data.get('email') or not data.get('password'):
         return jsonify({"error": "Email und Passwort sind erforderlich"}), 400
@@ -16,10 +18,10 @@ def create_user():
         return jsonify({"error": "Ein User kann entweder Trainer oder Athlet sein, aber nicht beides"}), 400
 
     new_user = User(
-        email=data['email'],
-        password=data['password'],  # In einer echten App: Hash-Speicherung verwenden!
-        trainer_id=data.get('trainer_id'),
-        athlete_id=data.get('athlete_id')
+        email=valid_data["email"],
+        password=valid_data["password"], 
+        trainer_id=valid_data.get("trainer_id"),
+        athlete_id=valid_data.get("athlete_id")
     )
 
     db.session.add(new_user)

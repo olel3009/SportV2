@@ -2,22 +2,25 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify
 from database import db
 from database.models import Regel
-from api.export_pdf import *
+from database.schemas import RuleSchema
 
 bp_rule = Blueprint('rule', __name__)
 
 @bp_rule.route('/regeln', methods=['POST'])
 def create_regel():
     data = request.json
+    schema = RuleSchema()
+    valid_data = schema.load(data)  # Falls invalid, ValidationError -> 400
+
     new_regel = Regel(
-        rulename=data['rulename'],
-        description=data.get('description'),
-        disciplin=data.get('disciplin'),
-        distance=data['distance'],
-        time_in_seconds=data['time_in_seconds'],
-        points=data['points'],
-        valid_start=datetime.strptime(data['valid_start'], '%Y-%m-%d'),
-        valid_end=datetime.strptime(data['valid_end'], '%Y-%m-%d') if 'valid_end' in data else None
+        rulename=valid_data["rulename"],
+        description=valid_data.get("description"),
+        disciplin=valid_data.get("disciplin"),
+        distance=valid_data["distance"],
+        time_in_seconds=valid_data["time_in_seconds"],
+        points=valid_data["points"],
+        valid_start=valid_data["valid_start"],
+        valid_end=valid_data["valid_end"]
     )
     db.session.add(new_regel)
     db.session.commit()

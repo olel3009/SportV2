@@ -1,4 +1,5 @@
-from flask import Flask
+from marshmallow import ValidationError
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -25,5 +26,12 @@ def create_app():
     
     for bp in [bp_user, bp_trainer, bp_result, bp_athlete, bp_rule]:
         app.register_blueprint(bp)
+
+    @app.errorhandler(ValidationError)
+    def handle_validation_error(err):
+        return jsonify({
+            "error": "Validation Error",
+            "messages": err.messages
+        }), 400
     
     return app
