@@ -59,6 +59,8 @@ export const columns: ColumnDef<Athlete>[] = [
       ),
       enableSorting: false,
       enableHiding: false,
+      enableGlobalFilter: false,
+      enableColumnFilter: false,
     },  
 
     // First Name
@@ -76,7 +78,8 @@ export const columns: ColumnDef<Athlete>[] = [
     // Sex
     {
       accessorKey: "sex",
-      header: "Geschlecht"
+      header: "Geschlecht",
+      enableGlobalFilter: false,
     },
 
     // Birthday
@@ -100,6 +103,7 @@ export const columns: ColumnDef<Athlete>[] = [
     {
       accessorKey: "goldMedals",
       header: ({column}) => sortedHeader(column, "Medaillen"),
+      enableGlobalFilter: false,
       cell: ({ row }) => {
         const allMedals = row.original.goldMedals + row.original.silverMedals + row.original.bronzeMedals
 
@@ -138,6 +142,8 @@ export const columns: ColumnDef<Athlete>[] = [
     // Action
     {
       id: "actions",
+      enableColumnFilter: false,
+      enableGlobalFilter: false,
       cell: ({ row }) => {
         return (
           <DropdownMenu>

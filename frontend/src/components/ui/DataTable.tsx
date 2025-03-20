@@ -38,7 +38,7 @@ export function DataTable<TData, TValue>({
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
       []
     )
-
+    const [globalFilter, setGlobalFilter] = React.useState<any>([])
     const [rowSelection, setRowSelection] = React.useState({})
 
     const table = useReactTable({
@@ -50,11 +50,13 @@ export function DataTable<TData, TValue>({
       getSortedRowModel: getSortedRowModel(),
       onColumnFiltersChange: setColumnFilters,
       getFilteredRowModel: getFilteredRowModel(),
+      onGlobalFilterChange: setGlobalFilter,
       onRowSelectionChange: setRowSelection,
       state: {
         sorting,
         columnFilters,
         rowSelection,
+        globalFilter
       }
     })
    
@@ -64,7 +66,8 @@ export function DataTable<TData, TValue>({
         {/* Filer input */}
         <div className="flex items-center py-4">
           <Input
-            placeholder="Filter"
+            placeholder="Suche..."
+            onChange={e => table.setGlobalFilter(String(e.target.value))}
           />
         </div>
 
