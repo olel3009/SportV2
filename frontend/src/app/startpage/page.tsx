@@ -71,9 +71,9 @@ export default function Startpage() {
         <div className={styles.popupOverlay}>
           <div className={styles.popup}>
             <h2>Regelungen aktualisieren</h2>
-            <h3>Wollen sie wirklich die Regelungen aktualisieren?</h3>
-            <button className={styles.button3} onClick={handleClosePopup}>Nein</button>
-            <button className={styles.button4} onClick={handleConfirm}>Ja</button>
+            <h3>Laden sie die PDF mit den Regelungen hoch und gebe das Jahr der Regelungen an. Danach den Vorgang bestätigen oder abbrechen.</h3>
+            <button className={styles.button3} onClick={handleClosePopup}>Abbrechen</button>
+            <button className={styles.button4} onClick={handleConfirm}>Bestätigen</button>
           </div>
         </div>
       )}
