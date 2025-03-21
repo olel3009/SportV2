@@ -53,3 +53,8 @@ jobs:
         run: xvfb-run -a python ./frontend/tests/login_page.py
       - name: Run Wiki Tests
         run: xvfb-run -a python ./frontend/tests/test_wiki.py
+
+      # 8. API-Tests mit Pytest
+      - name: Run API Tests
+        run: |
+          pytest api/tests --maxfail=1 --disable-warnings -v
