@@ -33,6 +33,7 @@ export default function Startpage() {
     setButtonresult(buttonresultabruch);
     setSelectedYear(currentYear.toString()); // Setzt das Jahr auf das aktuelle Jahr zurück
     setUploadedFile(null); // Entfernt die hochgeladene Datei
+    setErrorMessage(""); // Fehlermeldung zurücksetzen
 
   };
 
@@ -40,11 +41,11 @@ export default function Startpage() {
 
     if (!uploadedFile || !uploadedFile.name.endsWith('.pdf')) {
       setErrorMessage("Bitte laden Sie eine PDF-Datei hoch.");
-
+      return;
       
     }
     else {
-      setErrorMessage(""); // Fehlermeldung zurücksetzen
+    
     setShowPopup(false);
     // Hier kannst du die Logik für die Bestätigung hinzufügen
     //Bitte den Methodenaufruf zur Regelaktualisierung hier einfügen
@@ -61,6 +62,7 @@ export default function Startpage() {
     }
     setSelectedYear(currentYear.toString()); // Setzt das Jahr auf das aktuelle Jahr zurück
     setUploadedFile(null); // Entfernt die hochgeladene Datei
+    setErrorMessage(""); // Fehlermeldung zurücksetzen
   }
 
   };
