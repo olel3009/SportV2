@@ -31,7 +31,7 @@ class nav_menu_test(unittest.TestCase):
             # Find the link to the page
             link = self.driver.find_element(By.LINK_TEXT, thing[0])
             link.click()
-            sleep(1)
+            sleep(2)
             self.assertEqual(self.driver.current_url, "http://localhost:3000"+thing[1], "The link did not lead to the right page!")
             print("Navigated to "+thing[0]+"!")
     
