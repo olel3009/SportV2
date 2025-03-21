@@ -13,7 +13,7 @@ export default function Startpage() {
   const buttonresultabruch = "Das Aktualisieren der Reglungen wurde abgebrochen.";
 
   const currentYear = new Date().getFullYear(); // Aktuelles Jahr
-  const years = Array.from({ length: 5 }, (_, i) => currentYear - i); // Generiert das aktuelle Jahr und die letzten 4 Jahre
+  const years = Array.from({ length: 6 }, (_, i) => currentYear - i); // Generiert das aktuelle Jahr und die letzten 4 Jahre
 
   const [showPopup, setShowPopup] = useState(false);
   const [buttonresult, setButtonresult] = useState("");
