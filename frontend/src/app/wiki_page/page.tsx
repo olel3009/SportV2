@@ -61,46 +61,46 @@ export default function Home() {
             <h2>08. Liste aller Athleten</h2>
             <p>Hier könnte die Beschreibung stehen</p>
           </div>
-          <div id="knopf_reglungsaktualisierung" className={styles.section}>
+            <div id="knopf_reglungsaktualisierung" className={styles.section}>
             <h2>09. Manuelle Aktualisierung der Regelungen durch Knopfdruck</h2>
-            <p>Der Knopf zur Aktualisierung der Regelungen ist unten auf der Startseite zu finden. Dieser trägt die Aufschrift "Regelungen aktualisieren".
-              Dieser Knopf sorgt dafür das nach einer Bestätigung, dass akuelle Regelungen geladen werden.<br />
+            <p>Der Knopf zur Aktualisierung der Regelungen befindet sich unten auf der Startseite und trägt die Aufschrift "Regelungen aktualisieren".
+              Dieser Knopf sorgt dafür, dass nach einer Bestätigung die aktuellen Regelungen geladen werden.<br />
             </p>
 
             <h4>Farbliche Bedeutung des Knopfes</h4>
             <p>
-              - Rot: Regelungen wurden dieses Jahr noch nicht aktualisiert und die ersten vier Wochen des Jahres sind noch nicht vorbei.<br />
-              - Weiß: Regelungen wurden schon aktualisiert oder die ersten vier Wochen des Jahres sind vorbei.<br />
+              - Rot: Die Regelungen wurden in diesem Jahr noch nicht aktualisiert und die ersten vier Wochen des Jahres sind noch nicht vorbei.<br />
+              - Weiß: Die Regelungen wurden bereits aktualisiert oder die ersten vier Wochen des Jahres sind vorbei.<br />
             </p>
-            <h4>Schritt für Schritt Anleitung</h4>
+            <h4>Schritt-für-Schritt-Anleitung</h4>
             <p>
-              1. Zum Aktualisieren der Regelungen, klicken Sie auf den Knopf "Regelungen aktualisieren".<br />
-              2. Warten Sie bis sich ein Popup öffnet.<br />
-              3. Danach die PDF mit den Regelungen hochladen.<br />
-              4. Das Jahr auswählen.<br />
-              5. Bestätigen Sie den Vorgang mit "Bestätigen" (Grün hinterlegter Knopf) oder brechen Sie den Vorgang mit "Abbrechen" (Rot hinterlegter Knopf) ab.<br />
-              6. Warten Sie bis der Vorgang abgeschlossen ist. Denn Status vom Vorgang können sie am Text unter dem "Reglungen aktualisieren" Knopf erkennen.<br />
-              7. Überprüfen Sie ob der Vorgang erfolgreich war oder nicht. Dies können sie am Text unter dem "Reglungen aktualisieren" Knopf erkennen.<br />
-              8. Wenn der Vorgang nicht erfolgreich war, versuchen Sie es zu einem späteren Zeitpunkt erneut.<br />
+              1. Um die Regelungen zu aktualisieren, klicken Sie auf den Knopf "Regelungen aktualisieren".<br />
+              2. Warten Sie, bis sich ein Popup öffnet.<br />
+              3. Laden Sie anschließend die PDF mit den Regelungen hoch.<br />
+              4. Wählen Sie das Jahr aus.<br />
+              5. Bestätigen Sie den Vorgang mit "Bestätigen" (grün hinterlegter Knopf) oder brechen Sie den Vorgang mit "Abbrechen" (rot hinterlegter Knopf) ab.<br />
+              6. Warten Sie, bis der Vorgang abgeschlossen ist. Den Status des Vorgangs können Sie am Text unter dem "Regelungen aktualisieren"-Knopf erkennen.<br />
+              7. Überprüfen Sie, ob der Vorgang erfolgreich war oder nicht. Dies können Sie ebenfalls am Text unter dem "Regelungen aktualisieren"-Knopf erkennen.<br />
+              8. Falls der Vorgang nicht erfolgreich war, versuchen Sie es zu einem späteren Zeitpunkt erneut.<br />
             </p>
 
-            <h4>Rückmeldung vom Aktualisierungsprozess</h4>
+            <h4>Rückmeldungen vom Aktualisierungsprozess</h4>
             <p>
-              - Falsches Dateiformat/ keine Datei hochgeladen: Bitte laden Sie eine PDF-Datei hoch.<br />
-              - Das Aktualisieren der Reglungen war erfolgreich: Die Regelungen wurden erfolgreich aktualisiert.<br />
-              - Das Aktualisieren der Reglungen war nicht erfolgreich: Die Regelungen konnten nicht aktualisiert werden.<br />
-              - Das Aktualisieren der Reglungen wird durchgeführt: Die Regelungen werden gerade aktualisiert.<br />
-              - Das Aktualisieren der Reglungen wurde abgebrochen: Die Regelungen wurden nicht aktualisiert, da sie den Prozess abgebrochen haben.<br/>
+              - Falsches Dateiformat/keine Datei hochgeladen: Bitte laden Sie eine PDF-Datei hoch.<br />
+              - Das Aktualisieren der Regelungen war erfolgreich: Die Regelungen wurden erfolgreich aktualisiert.<br />
+              - Das Aktualisieren der Regelungen war nicht erfolgreich: Die Regelungen konnten nicht aktualisiert werden.<br />
+              - Das Aktualisieren der Regelungen wird durchgeführt: Die Regelungen werden gerade aktualisiert.<br />
+              - Das Aktualisieren der Regelungen wurde abgebrochen: Die Regelungen wurden nicht aktualisiert, da Sie den Prozess abgebrochen haben.<br/>
             </p>
 
             <h4>Wichtige Hinweise</h4>
             <p>
-              - Es können nur Regelungen aus der PDF gelesen werden, wenn diese dem Standart DinA4 Design des Deutschen Sportabzeichen Leistungskatalogs entsprechen.<br />
+              - Es können nur Regelungen aus der PDF gelesen werden, wenn diese dem Standard-DinA4-Design des Deutschen Sportabzeichen-Leistungskatalogs entsprechen.<br />
               - Der Prozess kann nach der Bestätigung nicht abgebrochen werden.<br />
-              - Sollte das Aktualisieren der Regelungen nicht erfolgreich sein, versuchen Sie es nicht direkt nochmal sondern warten sie ein paar Minuten.
-              Dies kann dem Server helfen, wenn das Fehlschlagen des Vorgangs an einer zu hohen Auslastung liegt oder die Daten durch eine andere Ursache nicht abrufbar sind.<br />
+              - Sollte das Aktualisieren der Regelungen nicht erfolgreich sein, versuchen Sie es nicht direkt erneut, sondern warten Sie ein paar Minuten.
+              Dies kann dem Server helfen, falls das Fehlschlagen des Vorgangs an einer zu hohen Auslastung liegt oder die Daten aus einer anderen Ursache nicht abrufbar sind.<br />
               - Sollte der Prozess öfter fehlschlagen, wenden Sie sich an den Administrator.<br />
-              - Wenn sich das Popup nicht öffnet, kontrollieren sie ihre Internetverbindung und versuchen sie es nach kurzem Warten erneut.<br />
+              - Wenn sich das Popup nicht öffnet, kontrollieren Sie Ihre Internetverbindung und versuchen Sie es nach kurzem Warten erneut.<br />
             </p>
 
           </div>

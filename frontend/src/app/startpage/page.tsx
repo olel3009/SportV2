@@ -141,7 +141,7 @@ export default function Startpage() {
                 <p>Hochgeladene Datei: {uploadedFile.name}</p>
               ) : (
                 <div className={styles.uploadIconContainer}>
-                  <p>Ziehe die PDF-Datei mit den Regelungen in das Feld oder klicken Sie auf das Feld und wähle eine PDF aus.</p>
+                    <p>Ziehen Sie die PDF-Datei mit den Regelungen in das Feld oder klicken Sie auf das Feld und wählen Sie eine PDF aus.</p>
                 </div>
               )}
               <input
