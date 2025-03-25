@@ -76,7 +76,7 @@ export default function Home() {
             <p>
               1. Um die Regelungen zu aktualisieren, klicken Sie auf den Knopf "Regelungen aktualisieren".<br />
               2. Warten Sie, bis sich ein Popup öffnet.<br />
-              3. Laden Sie anschließend die PDF mit den Regelungen hoch.<br />
+              3. Laden Sie anschließend die CSV mit den Regelungen im Standart-Design hoch.<br />
               4. Wählen Sie das Jahr aus.<br />
               5. Bestätigen Sie den Vorgang mit "Bestätigen" (grün hinterlegter Knopf) oder brechen Sie den Vorgang mit "Abbrechen" (rot hinterlegter Knopf) ab.<br />
               6. Warten Sie, bis der Vorgang abgeschlossen ist. Den Status des Vorgangs können Sie am Text unter dem "Regelungen aktualisieren"-Knopf erkennen.<br />
@@ -86,7 +86,7 @@ export default function Home() {
 
             <h4>Rückmeldungen vom Aktualisierungsprozess</h4>
             <p>
-              - Falsches Dateiformat/keine Datei hochgeladen: Bitte laden Sie eine PDF-Datei hoch.<br />
+              - Falsches Dateiformat/keine Datei hochgeladen: Bitte laden Sie eine CSV-Datei hoch.<br />
               - Das Aktualisieren der Regelungen war erfolgreich: Die Regelungen wurden erfolgreich aktualisiert.<br />
               - Das Aktualisieren der Regelungen war nicht erfolgreich: Die Regelungen konnten nicht aktualisiert werden.<br />
               - Das Aktualisieren der Regelungen wird durchgeführt: Die Regelungen werden gerade aktualisiert.<br />
@@ -95,7 +95,7 @@ export default function Home() {
 
             <h4>Wichtige Hinweise</h4>
             <p>
-              - Es können nur Regelungen aus der PDF gelesen werden, wenn diese dem Standard-DinA4-Design des Deutschen Sportabzeichen-Leistungskatalogs entsprechen.<br />
+              - Es können nur Regelungen aus der CSV gelesen werden, wenn diese dem Standard-Design entsprechen.<br />
               - Der Prozess kann nach der Bestätigung nicht abgebrochen werden.<br />
               - Sollte das Aktualisieren der Regelungen nicht erfolgreich sein, versuchen Sie es nicht direkt erneut, sondern warten Sie ein paar Minuten.
               Dies kann dem Server helfen, falls das Fehlschlagen des Vorgangs an einer zu hohen Auslastung liegt oder die Daten aus einer anderen Ursache nicht abrufbar sind.<br />

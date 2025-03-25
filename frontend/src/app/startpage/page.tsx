@@ -39,18 +39,19 @@ export default function Startpage() {
 
   const handleConfirm = () => {
 
-    if (!uploadedFile || !uploadedFile.name.endsWith('.pdf')) {
-      setErrorMessage("Bitte laden Sie eine PDF-Datei hoch.");
+    if (!uploadedFile || !uploadedFile.name.endsWith('.csv')) {
+      setErrorMessage("Bitte laden Sie eine CSV-Datei hoch.");
       return;
       
     }
     else {
     
     setShowPopup(false);
+    setButtonresult(buttonresultwarten);
     // Hier kannst du die Logik für die Bestätigung hinzufügen
     //Bitte den Methodenaufruf zur Regelaktualisierung hier einfügen
     
-    setButtonresult(buttonresultwarten);
+    
     // Hier bitte die Methode einfügen, die den Wert zurückgibt, ob die Regelung erfolgreich aktualisiert wurde
     //bzw. die auch die Regelungsktualisierung durchführt 
     //1 für positive (erfolgreiches aktualisieren) und 0 für negative (fehlgeschlagene aktualisierung) rückmeldung
@@ -143,12 +144,12 @@ export default function Startpage() {
                 <p>Hochgeladene Datei: {uploadedFile.name}</p>
               ) : (
                 <div className={styles.uploadIconContainer}>
-                    <p>Ziehen Sie die PDF-Datei mit den Regelungen in das Feld oder klicken Sie auf das Feld und wählen Sie eine PDF aus.</p>
+                    <p>Ziehen Sie die CSV-Datei mit den Regelungen in das Feld oder klicken Sie auf das Feld und wählen Sie eine CSV-Datei aus.</p>
                 </div>
               )}
               <input
                 type="file"
-                accept=".pdf"
+                accept=".csv"
                 onChange={handleFileChange}
                 className={styles.fileInput}
                 ref={fileInputRef} // Referenz für das Input-Feld
