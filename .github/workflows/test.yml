@@ -44,13 +44,10 @@ jobs:
           npm run build
         working-directory: ./frontend
 
-      - name: Start Frontend
-        run: |
-          npm start
-        working-directory: ./frontend
 
       - name: Start Frontend in Background
         run: |
+          npm start &
           echo $! > process.pid
           echo "Background process started with PID $(cat process.pid)."
         working-directory: ./frontend
