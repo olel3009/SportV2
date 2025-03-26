@@ -141,10 +141,12 @@ export default function Startpage() {
                 />
               </div>
               {uploadedFile ? (
-                <p>Hochgeladene Datei: {uploadedFile.name}</p>
+                <p>Hochgeladene Datei: {uploadedFile.name} <br/>Wenn Sie eine falsche datei hochgeladen haben, laden Sie eine neue Datei hoch. 
+                Die neue Datei ersätzt die alte Datei.</p>
               ) : (
                 <div className={styles.uploadIconContainer}>
-                    <p>Ziehen Sie die CSV-Datei mit den Regelungen in das Feld oder klicken Sie auf das Feld und wählen Sie eine CSV-Datei aus.</p>
+                    <p>Ziehen Sie die CSV-Datei mit den Regelungen in das Feld oder klicken Sie auf das Feld und wählen Sie eine CSV-Datei aus. <br/>
+                      Es ist nur eine CSV-Datei gleichzeitig möglich. </p>
                 </div>
               )}
               <input
