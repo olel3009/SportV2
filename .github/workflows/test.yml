@@ -39,9 +39,15 @@ jobs:
         working-directory: ./frontend
       
       # 6. Start your front-end dev server in the background
+      - name: Build Frontend
+        run: | 
+          npm run build
+        working-directory: ./frontend
+
+
       - name: Start Frontend in Background
         run: |
-          npm run dev &
+          npm start &
           echo $! > process.pid
           echo "Background process started with PID $(cat process.pid)."
         working-directory: ./frontend

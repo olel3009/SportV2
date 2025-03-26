@@ -312,6 +312,8 @@ a.secondary {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  
+  
 }
 
 .popup {
@@ -320,6 +322,10 @@ a.secondary {
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1001;
+  max-width: 600px; /* Maximale Breite */
+  max-height: 80%; /* Maximale Höhe */
+  overflow-y: auto; /* Aktiviert Scrollen, wenn der Inhalt die maximale Höhe überschreitet */
+  
 }
 
 .popupContent {
@@ -372,4 +378,67 @@ a.secondary {
 
 .button4:hover {
   background-color: peachpuff;
+}
+
+.dragDropArea {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  margin: auto;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  
+}
+
+.dragDropArea.dragging {
+  background-color: #f0f0f0;
+}
+
+.fileInput {
+  display: none;
+}
+
+.yearSelect {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.yearSelect label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.yearSelect select {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
+.uploadIconContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #666; /* Textfarbe */
+  padding: 20px; /* Abstand innerhalb des Containers */
+  margin: auto;
+}
+
+.uploadIconContainer img {
+  width: auto; /* Breite des Icons */
+  height: 20vh; /* Höhe des Icons */
+  
+}
+
+.uploadIconContainer p {
+  font-size: 14px; /* Schriftgröße des Textes */
+  margin: 0; /* Kein zusätzlicher Abstand */
+}
+.errorMessage {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
 }
