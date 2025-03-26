@@ -54,7 +54,21 @@ jobs:
       - name: Run Wiki Tests
         run: xvfb-run -a python ./frontend/tests/test_wiki.py
 
-      # 8. API-Tests mit Pytest
-      - name: Run API Tests
+      # 8. Set enviroment variable
+      - name: Set environment
         run: |
-          pytest api/tests --maxfail=1 --disable-warnings -v
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            echo "Using PowerShell to set PYTHONPATH"
+            echo "PYTHONPATH=${{ github.workspace }}" >> $Env:GITHUB_ENV
+          else
+            echo "Using Bash to set PYTHONPATH"
+            echo "PYTHONPATH=${{ github.workspace }}" >> $GITHUB_ENV
+          fi
+
+      # 8. Create pdfs folder
+      - name: Create pdfs folder
+        run: mkdir -p api/pdfs
+
+      # 9. API-Tests with Pytest
+      - name: Run API Tests
+        run: pytest --ignore=frontend/ --maxfail=1 --disable-warnings -v
