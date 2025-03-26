@@ -60,4 +60,4 @@ jobs:
 
       # 8. API-Tests with Pytest
       - name: Run API Tests
-        run: pytest api/tests --maxfail=1 --disable-warnings -v
+        run: pytest --ignore=frontend/ --maxfail=1 --disable-warnings -v
