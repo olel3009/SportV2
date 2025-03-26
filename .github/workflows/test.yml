@@ -58,6 +58,10 @@ jobs:
             echo "PYTHONPATH=${{ github.workspace }}" >> $GITHUB_ENV
           fi
 
-      # 8. API-Tests with Pytest
+      # 8. Create pdfs folder
+      - name: Create pdfs folder
+        run: mkdir -p api/pdfs
+
+      # 9. API-Tests with Pytest
       - name: Run API Tests
         run: pytest --ignore=frontend/ --maxfail=1 --disable-warnings -v
