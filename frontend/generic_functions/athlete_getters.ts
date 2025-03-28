@@ -1,8 +1,7 @@
 //Fügen Sie hier alle Funktionen ein, die Athleten abrufen, damit sie im bereits vorhandenen Code verwendet werden können
 //Auf diese Weise müssen wir, wenn die API fertig ist, nur die Logik hier ändern und nicht an anderer Stelle im Code
 //Außerdem werden diese Funktionen mit ziemlicher Sicherheit mehr als einmal verwendet, daher ist es gut, sie woanders zu platzieren
-//Mockupdaten immer gerne erweitern!
-import {Athlete} from "../src/models/athlete"
+import {Athlete, Feat} from "../src/models/athlete"
 let mockupData = `[
   {
     "id": 420,
@@ -214,3 +213,72 @@ export function getAthleteById(id: number) : Athlete | undefined {
 export function getAllAthletes() : Athlete[] {
   return JSON.parse(mockupData);
 } 
+
+export function calculateMedal(score: number) : number {
+ return 69;
+}
+
+
+export function addFeatToAthlete(athleteId: number, exercise: string, date: string, result: string) {
+  let athlete = getAthleteById(athleteId);
+  if(!athlete){
+    return;
+  }
+  if(exercise==''){
+    alert("Bitte eine Übung auswählen!");
+    return;
+  }
+  if(date==''){
+    alert("Bitte ein Datum eingeben!");
+    return;
+  }
+  if(result==''){
+    alert("Bitte ein Ergebnis eingeben!");
+    return;
+  }
+  console.log("before: "+athlete.feats);
+  let discipline: string;
+  let exToDisc = [["50mLauf"], ["Hochsprung", "Weitsprung"], ["Kugelstossen"]];
+  if (exToDisc[0].includes(exercise)){
+    discipline = "Schnelligkeit"; 
+  }else if(exToDisc[1].includes(exercise)){
+    discipline = "Koordination";
+  }else if(exToDisc[2].includes(exercise)){
+    discipline = "Kraft";
+  }else{
+    discipline = "Sonstiges";
+  }
+  let score = calculateMedal(result.length); 
+  let newFeat:Feat = {
+    discipline: discipline,
+    exercise: exercise,
+    date: date,
+    result: result,
+    score: score
+  };
+  if(athlete.feats){
+    let repeat = false;
+    let overwrite=false;
+    athlete.feats.forEach(feat=>{
+      if(feat.date==date&&feat.exercise==exercise){
+        repeat=true;
+      }
+    });
+    if(repeat){
+      overwrite = confirm("Diese Übung wurde für diesen Tag bereits eingetragen, überschreiben?");
+    }
+    if(repeat){
+      if(overwrite){
+        athlete.feats.push(newFeat);
+        alert("Neue Leistung Eingetragen!")
+      }
+    }else{
+      athlete.feats.push(newFeat);
+      alert("Neue Leistung Eingetragen!")
+    }
+  }else{
+    athlete.feats = [newFeat];
+    alert("Neue Leistung Eingetragen!")
+  }
+  console.log("after: "+athlete.feats);
+}

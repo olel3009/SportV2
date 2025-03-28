@@ -31,7 +31,7 @@ function LoginForm() {
     <div className="flex flex-col gap-6">
       
       {(state?.errors?.email || state?.errors?.password) &&
-        <Error message="Die angegebene E-Mail oder das Passwort ist falsch."></Error>
+        <Error message="Die angegebene E-Mail oder das Passwort sind falsch."></Error>
       }
 
       <Card>

@@ -79,6 +79,7 @@ export const columns: ColumnDef<Athlete>[] = [
     {
       accessorKey: "sex",
       header: "Geschlecht",
+      cell: ({row}) => row.original.sex.toUpperCase(),
       enableGlobalFilter: false,
     },
 
