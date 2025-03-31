@@ -1,22 +1,9 @@
 'use client'
 
-
-
 export default function Startpage() {
   return (
-    <div>
-        <div><h1>Testseite</h1></div>
-        <p>Nur hier um zu existieren</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
-        <p>Dies ist mehr Content</p>
+    <div className="flex w-full justify-center">
+        <h1 className="text-4xl">Testseite</h1>
     </div>
   );
 }

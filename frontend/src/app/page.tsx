@@ -76,7 +76,7 @@ function LoginForm() {
 
 export default function Login() {
   return (
-    <div className="flex items-center justify-center md:px-10">
+    <div className="flex items-center h-full justify-center md:px-10">
       <div className="w-full max-w-sm">
         <LoginForm />
       </div>

@@ -24,6 +24,11 @@ const items = [
     icon: Users
   },
   {
+    title: "Leistung",
+    url: "/feat_entry_page",
+    icon: Users
+  },
+  {
     title: "Einstellungen",
     url: "/settings",
     icon: Settings
