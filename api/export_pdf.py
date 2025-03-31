@@ -1,9 +1,17 @@
 import re
 from datetime import datetime
 from pypdf import PdfReader, PdfWriter
-from api.athlet import Athlete
+from athlet import Athlete, PerformanceData
+
+perf1 = PerformanceData("Laufen Ausdauer", "2025", "06:30", 3)
+perf2 = PerformanceData("Laufen Schnelligkeit", "2025", "00:40", 2)
+athlet1 = Athlete("Max","Mustermann","m","2001-01-13", [perf1, perf2])
+athlet2 = Athlete("Mix","Mastermann","m","2005-01-23", [perf1, perf2])
+athlet3 = Athlete("Mux","Mistermann","m","2011-01-30", [perf1, perf2])
+Gruppe1 = [athlet1, athlet2, athlet3]
 
 PDF_TEMPLATE = r"api/data/DSA_Einzelpruefkarte_2025_SCREEN.pdf"
+GROUP_TEMPLATE = r"api\data\DSA_Gruppenpruefkarte_2025_SCREEN.pdf"
 
 def fill_pdf_form(athlete: Athlete) -> str:
     """
@@ -80,4 +88,81 @@ def fill_pdf_form(athlete: Athlete) -> str:
     destination = rf"api/pdfs/{athlete.last_name}_{athlete.first_name}_DSA_Einzelpruefkarte.pdf"
     with open(destination, "wb") as f:
         writer.write(f)
-    return f"PDF erstellt unter {destination}"
+    return f"PDF für eine einzelkarte erstellt unter {destination}"
+
+def fill_out_group(athletenIds: list[Athlete]) -> str:
+    """ 
+    Nimmt eine Liste von athleten und schreibt dessen Daten 
+    in die Felder der PDF "DSA_Gruppenpruefkarte.pdf"
+    Gibt den Pfad zur ausgefüllten PDF zurück.
+    """
+    try:
+        reader = PdfReader(GROUP_TEMPLATE)
+    except FileNotFoundError:
+        return f"Fehler: PDF-Vorlage {GROUP_TEMPLATE} nicht gefunden."
+    writer = PdfWriter()
+    writer.append(reader)
+    
+    performances = {
+        "Ausdauer":{
+            1 : "Laufen",
+            2 : "10km Lauf",
+            3 : "Dauer-/Geländelauf",
+            4 : "7,5km Walking/Nordic Walking",
+            5 : "Schwimmen",
+            6 : "Radfahren",
+            "A" : "Sportartspezifisches Abzeichen",
+        },
+        "Kraft":{
+            1:"Schlagball/Wurfball",
+            2:"Medizinball",
+            3:"Kugelstoßen",
+            4:"Steinstoßen",
+            5:"Standweitsprung",
+            6:"erweiteter Leistungskatalog",
+            7:"Gerätturnen",
+            "A":"Sportartspezifisches Abzeichen",
+        },
+        "Schnelligkeit":{
+            1:"Laufen",
+            2:"Schwimmen",
+            3:"Radfahren",
+            4:"Gerätturnen",
+        },
+        "Koordination":{
+            1:"Hochsprung",
+            2:"Weitsprung",
+            3:"Zonenweitsprung",
+            4:"Drehwurf",
+            5:"Schleuderball",
+            6:"Seilspringen",
+            7:"Gerätturnen",
+            "A":"Sportartspezifisches Abzeichen",
+        }
+    }
+    for athlete, i in zip(athletenIds, range(1,len(athletenIds)+1)):
+        field_values = {
+            f"name{i}": f"{athlete.last_name} {athlete.first_name}",
+            f"sex{i}" : athlete.gender,
+            f"birthdate{i}": athlete.birth_date,
+            f"age{i}" : (int(datetime.today().year) - int(datetime.strptime(athlete.birth_date, "%Y-%m-%d").year))
+        }
+        sum = 0
+        for perf in athlete.performances:
+            prefix = perf.disciplin.split()[0]
+            suffix = perf.disciplin.split()[-1]
+            field_values.update({f"Punkte_{suffix}{str(i)}" : str(perf.points)})
+            for key in performances[suffix].keys():
+                if performances[suffix][key] == prefix:
+                    field_values.update({f"ZdÜ_{suffix}{str(i)}" : key})
+            field_values.update({f"{suffix}{str(i)}" : prefix})
+            sum = sum + perf.points
+            field_values.update({f"Gesamtpunktzahl{i}" : sum})
+        writer.update_page_form_field_values(writer.pages[0], field_values, auto_regenerate=False)
+    destination = rf"api/pdfs/{...}_DSA_Gruppenpruefkarte.pdf"
+    with open(destination, "wb") as f:
+        writer.write(f)
+    return f"PDF für eine Gruppenkarte erstellt unter {destination}"
+
+if __name__ == "__main__":
+    fill_out_group(Gruppe1)
