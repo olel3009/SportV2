@@ -31,15 +31,23 @@ import {
   DialogHeader,
   DialogTitle
 } from "./ui/dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
-function AthleteSelect({ id = -1 }: { id?: number }) {
+function AthleteSelect({
+  value,
+  onChange,
+  id = -1
+}: {
+  value: string;
+  onChange: (val: string) => void;
+  id?: number;
+}) {
   const athletes: Athlete[] = getAllAthletes();
   const athleteSet = id !== -1;
 
   return (
-    <Select defaultValue={athleteSet ? id.toString() : ""} disabled={athleteSet}>
+    <Select value={value} onValueChange={onChange} disabled={athleteSet}>
       <SelectTrigger id="athlete">
         <SelectValue placeholder="Athlet wählen" />
       </SelectTrigger>
@@ -54,22 +62,18 @@ function AthleteSelect({ id = -1 }: { id?: number }) {
   )
 }
 
-let initSelect: string = '';
-function DisciplineSelect() {
+function DisciplineSelect({
+  value,
+  onChange
+}: {
+  value: string;
+  onChange: (val: string) => void;
+}) {
   const exercises = getExercises();
   const options = Object.keys(exercises);
-  initSelect = options[0];
-
-  const handleChange = (value: string) => {
-    const allExercises = document.querySelectorAll<HTMLElement>('[id^="exercise_"]')
-    allExercises.forEach((el) => {
-      el.hidden = el.id !== `exercise_${value}`;
-    });
-    initSelect = value;
-  };
 
   return (
-    <Select onValueChange={handleChange} defaultValue={options[0]}>
+    <Select value={value} onValueChange={onChange}>
       <SelectTrigger id="discipline">
         <SelectValue placeholder="Disziplin wählen" />
       </SelectTrigger>
@@ -84,33 +88,33 @@ function DisciplineSelect() {
   )
 }
 
-function ExerciseSelect() {
+function ExerciseSelect({
+  discipline,
+  value,
+  onChange
+}: {
+  discipline: string;
+  value: string;
+  onChange: (val: string) => void;
+}) {
   const exercises = getExercises();
-  let options = Object.keys(exercises);
+  const currentExercise = exercises[discipline] || [];
 
   return (
-    <>
-      {options.map((option, index) => {
-        const currEx = exercises[option];
-        return (
-          <div id={`exercise_${option}`} key={index} hidden={option !== initSelect}>
-            <Select defaultValue={currEx[0]}>
-              <SelectTrigger id="uebung">
-                <SelectValue placeholder="Übung wählen" />
-              </SelectTrigger>
-              <SelectContent>
-                {currEx.map((exer, i) => (
-                  <SelectItem value={exer} key={i}>
-                    {exer}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        )
-      })}
-    </>
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger id="uebung">
+        <SelectValue placeholder="Übung wählen" />
+      </SelectTrigger>
+      <SelectContent>
+        {currentExercise.map((exer, i) => (
+          <SelectItem value={exer} key={i}>
+            {exer}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   )
+
 }
 
 function formatDate(date: Date): string {
@@ -120,49 +124,64 @@ function formatDate(date: Date): string {
   return `${day}.${month}.${year}`;
 }
 
+let [ueb, dat, erg] = "";
+let ath = 0;
 const submit = () => {
-  // Safely cast each element to its correct type
-  const uebungSelect = document.getElementById("uebung") as SelectTriggerProps | null;
-  const athleteSelect = document.getElementById("athlete") as SelectTriggerProps | null;
-  const datumInput = document.getElementById("datum") as SelectTriggerProps | null;
-  const ergebnisInput = document.getElementById("ergebnis") as SelectTriggerProps | null;
-
-  if (!uebungSelect || !athleteSelect || !datumInput || !ergebnisInput) {
-    console.error("Some elements were not found in the DOM.");
-    return;
-  }
-
-  // Use .value instead of getAttribute("value")
-  let ueb = String(uebungSelect.value);
-  let ath = Number(athleteSelect.value);
-  let dat = String(datumInput.value);
-  let erg = String(ergebnisInput.value);
-
   console.log("Uebung:", ueb, "Athlet:", ath, "Datum:", dat, "Ergebnis:", erg);
   addFeatToAthlete(ath, ueb, dat, erg);
-};
+}
 
 function FeatEntryContent({ id = -1 }: { id?: number }) {
   const today = new Date();
   const formatted = formatDate(today);
-  const [date, setDate] = useState<Date | undefined>();
+  const exercises = getExercises();
+  const allDisciplines = Object.keys(exercises)
+
+  const [selectedAthlete, setSelectedAthlete] = useState("");
+  const [selectedDiscipline, setSelectedDiscipline] = useState("");
+  const [selectedExercise, setSelectedExercise] = useState("");
+  const [result, setResult] = useState("");
+  const [date, setDate] = useState(formatted);
+
+  useEffect(() => {
+    if (allDisciplines.length > 0) {
+      setSelectedDiscipline(allDisciplines[0]);
+      const firstExercise = exercises[allDisciplines[0]]?.[0] ?? "";
+      setSelectedExercise(firstExercise);
+    }
+
+    if (id !== -1) setSelectedAthlete(id.toString())
+  }, []);
+
+  useEffect(() => {
+    ueb = selectedExercise;
+    dat = date;
+    erg = result;
+    ath = Number(selectedAthlete)
+  }, [selectedAthlete, result, date, selectedExercise])
+
+  const handleDisciplineChange = (newDiscipline: string) => {
+    setSelectedDiscipline(newDiscipline);
+    const firstExercise = exercises[newDiscipline]?.[0] ?? "";
+    setSelectedExercise(firstExercise);
+  };
 
   return (
     <div className="flex flex-col gap-4">
 
       <div className="grid gap-2">
         <Label>Athlet</Label>
-        <AthleteSelect id={id} />
+        <AthleteSelect id={id} value={selectedAthlete} onChange={setSelectedAthlete} />
       </div>
 
       <div className="grid gap-2">
         <Label>Disziplin</Label>
-        <DisciplineSelect />
+        <DisciplineSelect value={selectedDiscipline} onChange={handleDisciplineChange} />
       </div>
 
       <div className="grid gap-2">
         <Label>Übung</Label>
-        <ExerciseSelect />
+        <ExerciseSelect discipline={selectedDiscipline} value={selectedExercise} onChange={setSelectedExercise} />
       </div>
 
       <div className="grid gap-2">
@@ -172,19 +191,22 @@ function FeatEntryContent({ id = -1 }: { id?: number }) {
           id="datum"
           placeholder="Datum des Ergebnis"
           defaultValue={formatted}
+          onChange={e => setDate(e.target.value)}
         />
       </div>
 
       <div className="grid gap-2">
         <Label htmlFor="ergebnis">Ergebnis</Label>
-        <Input id="ergebnis" placeholder="Ergebnis" />
+        <Input id="ergebnis" placeholder="Ergebnis" onChange={e => setResult(e.target.value)}/>
       </div>
 
     </div>
   )
 }
 
-export function FeatEntryDialog( {athlete, id}: {athlete: string, id: number} ) {
+
+// Exported Components
+export function FeatEntryDialog({ athlete, id }: { athlete: string, id: number }) {
   return (
     <DialogContent onClick={e => e.stopPropagation()}>
       <DialogHeader>
@@ -193,7 +215,7 @@ export function FeatEntryDialog( {athlete, id}: {athlete: string, id: number} ) 
           <span>{`Dokumentieren Sie einen neuen Leistungswert für ${athlete}`}</span>
         </DialogDescription>
       </DialogHeader>
-      <FeatEntryContent id={id}/>
+      <FeatEntryContent id={id} />
       <DialogFooter>
         <DialogClose asChild>
           <Button
