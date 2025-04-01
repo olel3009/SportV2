@@ -1,4 +1,4 @@
-import { LayoutPanelTop, Users, Settings } from "lucide-react"
+import { LayoutPanelTop, Users, Settings, ChartNoAxesCombined } from "lucide-react"
 
 import { 
     Sidebar, 
@@ -24,9 +24,9 @@ const items = [
     icon: Users
   },
   {
-    title: "Leistung",
+    title: "Leistungseintrag",
     url: "/feat_entry_page",
-    icon: Users
+    icon: ChartNoAxesCombined
   },
   {
     title: "Einstellungen",
@@ -37,7 +37,7 @@ const items = [
 
 export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarContent>
 
         <SidebarGroup>

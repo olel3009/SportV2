@@ -14,6 +14,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger, 
+} from "./ui/dialog"
+import { FeatEntryCard, FeatEntryDialog} from "./featentry"
+import { DialogTitle } from "@radix-ui/react-dialog"
 
 
 function sortedHeader(column: Column<any, any>, headerName: string) {
@@ -147,18 +155,28 @@ export const columns: ColumnDef<Athlete>[] = [
       enableGlobalFilter: false,
       cell: ({ row }) => {
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Editieren</DropdownMenuItem>
-              <DropdownMenuItem>Als CSV exportieren</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Dialog>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                <DropdownMenuItem>Editieren</DropdownMenuItem>
+                <DropdownMenuItem>Als CSV exportieren</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DialogTrigger asChild>
+                  <DropdownMenuItem><span>Neue Leistung eintragen</span></DropdownMenuItem>
+                </DialogTrigger>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <FeatEntryDialog athlete={row.original.firstName + " " + row.original.lastName} id={row.original.id}/>
+
+          </Dialog>
         )
       }
     },
