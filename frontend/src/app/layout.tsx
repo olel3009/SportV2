@@ -1,23 +1,9 @@
-"use client"
 import React, { ReactNode } from 'react'
 import Link from "next/link";
-import styles from "./page.module.css";
+import '@/app/globals.css'
 import { usePathname, useSearchParams } from 'next/navigation'
-
-
-let sites: string[][] = [["Startseite", "/startpage"], ["Testseite", "/test_page"], ["Wiki-Seite", "/wiki_page"]];  
-
-function Nav_Menu() {
-  const path = usePathname();
-  let links = sites.map((site, index) => {
-    if(site[1]==path){
-      return<Link href={site[1]} key={index} className={styles.navbutt +" "+ styles.active}>{site[0]}</Link>
-    }
-    return<Link href={site[1]} key={index} className={styles.navbutt}>{site[0]}</Link>
-  });
-  return <nav key = 'navMen' className={styles.navbar}>{links}</nav>;
-}
-
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/app-sidebar';
 
 export default function RootLayout({
   children,
@@ -25,18 +11,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="de">
+    <html>
       <body>
-        <div className={styles.back_layer}>
-          <Nav_Menu />
-          <div className={styles.page}>
-            <main className={styles.main}>
-              <div className={styles.content}>
-                {children}
-              </div>
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset>
+            <main className='flex flex-col w-full h-full'>
+              <SidebarTrigger />
+              {children}
             </main>
-          </div>
-        </div>
+          </SidebarInset>
+        </SidebarProvider>
       </body>
     </html>
   )
