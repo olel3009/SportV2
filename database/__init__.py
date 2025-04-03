@@ -1,4 +1,5 @@
-from flask import Flask
+from marshmallow import ValidationError
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -16,9 +17,21 @@ def create_app():
     # Extensions initialisieren
     db.init_app(app)
     migrate.init_app(app, db)
+    
+    from api.routes.athlete import bp_athlete
+    from api.routes.user import bp_user
+    from api.routes.trainer import bp_trainer
+    from api.routes.result import bp_result 
+    from api.routes.rule import bp_rule
+    
+    for bp in [bp_user, bp_trainer, bp_result, bp_athlete, bp_rule]:
+        app.register_blueprint(bp)
 
-    # Blueprint oder Routen registrieren
-    from database.routes import bp as routes_bp
-    app.register_blueprint(routes_bp)
-
+    @app.errorhandler(ValidationError)
+    def handle_validation_error(err):
+        return jsonify({
+            "error": "Validation Error",
+            "messages": err.messages
+        }), 400
+    
     return app
