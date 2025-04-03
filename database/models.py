@@ -26,6 +26,7 @@ class Athlete(db.Model):
     last_name = db.Column(db.String(100), nullable=False)
     birth_date = db.Column(db.Date, nullable=False)
     gender = db.Column(db.Enum('m', 'f', 'd', name='gender_enum'), nullable=False)
+    swim_certificate = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

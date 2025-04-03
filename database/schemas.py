@@ -18,6 +18,9 @@ class AthleteSchema(Schema):
     last_name = fields.Str(required=True, validate=Length(min=1, max=100))
     birth_date = fields.Date(required=True, format="%d-%m-%Y")
     gender = fields.Str(required=True, validate=OneOf(["m", "f", "d"]))
+    swim_certificate = fields.Bool(missing=False)
+    created_at = fields.DateTime(dump_only=True)
+    updated_at = fields.DateTime(dump_only=True)
 
 
 # Result-Schema

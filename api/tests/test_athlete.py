@@ -16,6 +16,53 @@ def test_create_athlete(client):
     assert data["message"] == "Athlet hinzugefügt"
     assert "id" in data  # Merkt euch die ID für weitere Tests
 
+def test_create_athlete_default_swim_certificate(client):
+    """
+    Testet das Anlegen eines neuen Athleten per POST /athletes
+    OHNE Angabe von swim_certificate -> sollte default = false sein
+    """
+    response = client.post("/athletes", json={
+        "first_name": "Max",
+        "last_name": "Mustermann",
+        "birth_date": "01-01-2000",  # TT-MM-YYYY
+        "gender": "m"
+        # swim_certificate nicht mitgeschickt => default false
+    })
+    assert response.status_code == 201
+    data = response.get_json()
+    assert data["message"] == "Athlet hinzugefügt"
+    assert "id" in data
+    new_id = data["id"]
+
+    # Prüfen, ob swim_certificate tatsächlich false ist:
+    get_resp = client.get("/athletes")
+    all_athletes = get_resp.get_json()
+    created = next((a for a in all_athletes if a["id"] == new_id), None)
+    assert created is not None
+    assert created["swim_certificate"] == False
+
+def test_create_athlete_with_swim_certificate_true(client):
+    """
+    Testet das Anlegen eines neuen Athleten mit swim_certificate = true
+    """
+    response = client.post("/athletes", json={
+        "first_name": "Anna",
+        "last_name": "Schwimmer",
+        "birth_date": "02-02-2002",
+        "gender": "f",
+        "swim_certificate": True
+    })
+    assert response.status_code == 201
+    data = response.get_json()
+    assert data["message"] == "Athlet hinzugefügt"
+    new_id = data["id"]
+
+    # Prüfen, ob swim_certificate = true in der DB
+    get_resp = client.get("/athletes")
+    all_athletes = get_resp.get_json()
+    created = next((a for a in all_athletes if a["id"] == new_id), None)
+    assert created is not None
+    assert created["swim_certificate"] == True
 
 def test_get_athletes(client):
     """
@@ -39,6 +86,7 @@ def test_get_athletes(client):
     first = data[0]
     assert "id" in first
     assert "first_name" in first
+    assert "swim_certificate" in first
 
 
 def test_update_athlete(client):
@@ -69,6 +117,36 @@ def test_update_athlete(client):
     assert updated is not None
     assert updated["first_name"] == "ErikA-Lena"
 
+def test_update_athlete_swim_certificate(client):
+    """
+    Testet das Aktualisieren eines Athleten per PUT /athletes/<id>
+    inklusive Ändern von swim_certificate.
+    """
+    # 1) Athlet anlegen
+    create_resp = client.post("/athletes", json={
+        "first_name": "Peter",
+        "last_name": "Lustig",
+        "birth_date": "04-04-1990",
+        "gender": "m",
+        "swim_certificate": False
+    })
+    assert create_resp.status_code == 201
+    athlete_id = create_resp.get_json()["id"]
+
+    # 2) Update: swim_certificate -> true
+    response = client.put(f"/athletes/{athlete_id}", json={
+        "swim_certificate": True
+    })
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["message"] == "Athlet aktualisiert"
+
+    # 3) Prüfen, ob geändert
+    get_resp = client.get("/athletes")
+    all_athletes = get_resp.get_json()
+    updated = next((x for x in all_athletes if x["id"] == athlete_id), None)
+    assert updated is not None
+    assert updated["swim_certificate"] == True
 
 def test_delete_athlete(client):
     """
