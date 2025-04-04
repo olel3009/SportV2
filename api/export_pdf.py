@@ -16,10 +16,8 @@ def fill_pdf_form(athlete: Athlete) -> str:
         return f"Fehler: PDF-Vorlage {PDF_TEMPLATE} nicht gefunden."
     writer = PdfWriter()
     writer.append(reader)
-    # -----------------------
+
     # 1) Geburtsdatum in T1, T2, M1, M2, J1, J2, J3, J4 splitten
-    #    Beispiel:  "DD-MM-YYYY" -> T1=1, T2=2, M1=0, M2=6, J1=2, J2=0, J3=2, J4=3
-    # -----------------------
     birth_str = ""
     if isinstance(athlete.birth_date, datetime):
         birth_str = athlete.birth_date.strftime("%d-%m-%Y") 
@@ -35,9 +33,8 @@ def fill_pdf_form(athlete: Athlete) -> str:
     T1, T2 = day[0], day[1]
     M1, M2 = month[0], month[1]
     J1, J2, J3, J4 = year[0], year[1], year[2], year[3]
-    # -----------------------
+
     # 2) Athlete-Name, Geschlecht etc.
-    # -----------------------
     field_values = {
         # Geburtsdatum
         "T1": T1,
@@ -53,11 +50,9 @@ def fill_pdf_form(athlete: Athlete) -> str:
         "surname": athlete.last_name,
         "sex": athlete.gender,  # z.B. "m"
     }
-    # -----------------------
+
     # 3) PerformanceData eintragen
-    #    
-    # -----------------------
-    # Wir erlauben bis zu 4 Einträge 
+    # bis zu 4 Einträge 
     for i, perf in enumerate(athlete.performances[:4]):
        
         index = i + 1
@@ -68,14 +63,10 @@ def fill_pdf_form(athlete: Athlete) -> str:
         field_values[f"date {prefix}"]      = str(perf.year)
         field_values[f"{prefix}"]    = str(perf.result)
         field_values[f"P{points} {suffix}"]    = str("x")
-    # -----------------------
     # 4) Felder wirklich ins PDF schreiben
-    # -----------------------
     page = writer.pages[0]
     writer.update_page_form_field_values(page, field_values, auto_regenerate=False)
-    # -----------------------
     # 5) Ausgefüllte PDF speichern
-    # -----------------------
     destination = rf"api/pdfs/{athlete.last_name}_{athlete.first_name}_DSA_Einzelpruefkarte.pdf"
     with open(destination, "wb") as f:
         writer.write(f)
