@@ -8,7 +8,7 @@ def test_create_athlete(client):
     response = client.post("/athletes", json={
         "first_name": "Max",
         "last_name": "Mustermann",
-        "birth_date": "01-01-2000",  # TT-MM-YYYY
+        "birth_date": "01-01-2000",  
         "gender": "m"
     })
     assert response.status_code == 201
@@ -24,7 +24,7 @@ def test_create_athlete_default_swim_certificate(client):
     response = client.post("/athletes", json={
         "first_name": "Max",
         "last_name": "Mustermann",
-        "birth_date": "01-01-2000",  # TT-MM-YYYY
+        "birth_date": "01-01-2000",  
         "gender": "m"
         # swim_certificate nicht mitgeschickt => default false
     })

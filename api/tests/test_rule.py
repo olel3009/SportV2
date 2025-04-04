@@ -13,6 +13,7 @@ def test_create_rule(client):
     response = client.post("/rules", json={
         "discipline_id": discipline_id,
         "rule_name": "Kraftübung",
+        "unit": "points",
         "min_age": 18,
         "max_age": 40,
         "threshold_bronze_m": 10.0,
@@ -42,6 +43,7 @@ def test_get_rules(client):
     client.post("/rules", json={
         "discipline_id": discipline_id,
         "rule_name": "Testregel",
+        "unit": "points",
         "min_age": 20,
         "max_age": 30,
         "threshold_bronze_m": 5.0,
@@ -76,6 +78,7 @@ def test_update_rule(client):
     create_resp = client.post("/rules", json={
         "discipline_id": discipline_id,
         "rule_name": "Kraftübung",
+        "unit": "points",
         "min_age": 18,
         "max_age": 40,
         "threshold_bronze_m": 5.0,
@@ -114,6 +117,7 @@ def test_delete_rule(client):
     create_resp = client.post("/rules", json={
         "discipline_id": discipline_id,
         "rule_name": "DeleteTest",
+        "unit": "points",
         "min_age": 25,
         "max_age": 35,
         "threshold_bronze_m": 3.0,

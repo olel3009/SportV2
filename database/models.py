@@ -30,9 +30,6 @@ class Athlete(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Relationship to results
-    results = db.relationship('Result', backref='athlete', lazy=True)
-
     def __repr__(self):
         return f"<Athlete {self.first_name} {self.last_name}>"
 
@@ -41,16 +38,31 @@ class Result(db.Model):
     __tablename__ = 'results'
 
     id = db.Column(db.Integer, primary_key=True)
+    # Verknüpfung mit Athlete
     athlete_id = db.Column(db.Integer, db.ForeignKey('athletes.id'), nullable=False)
+    # Verknüpfung mit Rule
+    rule_id = db.Column(db.Integer, db.ForeignKey('rule.id'), nullable=False)
+
+    # Jahr der Prüfung 
     year = db.Column(db.Integer, nullable=False)
+    # Alter des Athleten im Prüfungsjahr
     age = db.Column(db.Integer, nullable=False)
-    disciplin = db.Column(db.String(255), nullable=False)
-    result = db.Column(db.String(50), nullable=False)  # Erzielte Zeit, Strecke oder Punkte
-    points = db.Column(db.Integer, nullable=False) # Ergebnis Punkt von 1-3
-    medal = db.Column(db.Enum('Bronze', 'Silber', 'Gold', name='medal_enum'), nullable=True)
-    version = db.Column(db.Integer, nullable=False, default=1)
+
+    # Ergebnis (z.B. Zeit in Sekunden, Distanz in Meter, Punkte, ...)
+    result = db.Column(db.Float, nullable=False)
+    # Enum kann "Bronze", "Silber", "Gold" oder NULL sein
+    medal = db.Column(
+        db.Enum('Bronze', 'Silber', 'Gold', name='medal_enum'),
+        nullable=True
+    )
+
+    # Zeitstempel
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships 
+    athlete = db.relationship('Athlete', backref=db.backref('results', lazy=True))
+    rule = db.relationship('Rule', backref=db.backref('results', lazy=True))
 
     def __repr__(self):
         return f"<Result Athlete ID: {self.athlete_id}, Year: {self.year}, Result: {self.result}>"
@@ -60,10 +72,11 @@ class Discipline(db.Model):
     __tablename__ = 'discipline'
 
     id = db.Column(db.Integer, primary_key=True)
-    group_name = db.Column(db.String(255), nullable=False)
+    group = db.Column(
+        db.Enum('Ausdauer', 'Kraft', 'Schnelligkeit', 'Koordination', name='group_enum'),
+        nullable=False
+    )
     discipline_name = db.Column(db.String(255), nullable=False)
-    # unit kann 'points', 'distance', 'time' oder 'amount' sein
-    unit = db.Column(db.Enum('points', 'distance', 'time', 'amount', name='unit_enum'), nullable=False)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -82,6 +95,7 @@ class Rule(db.Model):
     discipline = db.relationship('Discipline', backref=db.backref('rules', lazy=True))
 
     rule_name = db.Column(db.String(255), nullable=False)
+    unit = db.Column(db.Enum('points', 'distance', 'time', 'amount', name='unit_enum'), nullable=False)
 
     # Altersgrenzen
     min_age = db.Column(db.Integer, nullable=False)

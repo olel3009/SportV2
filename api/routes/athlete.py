@@ -86,7 +86,8 @@ def export_athlete_pdf(athlete_id):
         first_name=db_athlete.first_name,
         last_name=db_athlete.last_name,
         gender=db_athlete.gender,
-        birth_date=db_athlete.birth_date,  # datetime.date
+        birth_date=db_athlete.birth_date,
+        swim_certificate=db_athlete.swim_certificate,
         performances=[]
     )
 

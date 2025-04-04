@@ -25,14 +25,29 @@ class AthleteSchema(Schema):
 
 # Result-Schema
 class ResultSchema(Schema):
-    athlete_id = fields.Int(required=True)              # FK auf Athlete
+    # ID nur ausgeben, nicht vom Client annehmen
+    id = fields.Int(dump_only=True)
+
+    # Fremdschlüssel
+    athlete_id = fields.Int(required=True)
+    rule_id = fields.Int(required=True)
+
+    # Jahr der Prüfung
     year = fields.Int(required=True, validate=Range(min=1900, max=2100))
-    age = fields.Int(required=True, validate=Range(min=1, max=120))
-    disciplin = fields.Str(required=True, validate=Length(min=1, max=255))
-    result = fields.Str(required=True, validate=Length(min=1, max=100))
-    points = fields.Int(required=True, validate=Range(min=1, max=3))
-    medal = fields.Str(required=True, validate=OneOf(["Bronze", "Silber", "Gold"]))
-    version = fields.Int(missing=1)  
+
+    # Alter wird intern berechnet (year - athlete.birth_year),
+    age = fields.Int(dump_only=True)
+
+    result = fields.Float(required=True, validate=Range(min=0))
+
+    medal = fields.Str(
+        required=False,
+        allow_none=True,
+        validate=OneOf(["Bronze", "Silber", "Gold"]),
+        missing=None
+    )
+
+    # Zeitstempel nur zum Ausgeben
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
@@ -40,22 +55,14 @@ class ResultSchema(Schema):
 class DisciplineSchema(Schema):
     id = fields.Int(dump_only=True)
 
-    # Beispiel: "Endurance", "Strength", "Speed", "Coordination" etc.
-    group_name = fields.Str(
+    group = fields.Str(
         required=True,
-        validate=Length(min=1, max=255)
+        validate=OneOf(["Ausdauer", "Kraft", "Schnelligkeit", "Koordination"])
     )
 
-    # Beispiel: "Running", "Swimming", "Cycling" etc.
     discipline_name = fields.Str(
         required=True,
         validate=Length(min=1, max=255)
-    )
-
-    # Kann 'points', 'distance', 'time' oder 'amount' sein
-    unit = fields.Str(
-        required=True,
-        validate=OneOf(["points", "distance", "time", "amount"])
     )
 
     # Timestamps nur zum Ausgeben
@@ -71,6 +78,11 @@ class RuleSchema(Schema):
     rule_name = fields.Str(
         required=True,
         validate=Length(min=1, max=255)
+    )
+
+    unit = fields.Str(
+        required=True,
+        validate=OneOf(["points", "distance", "time", "amount"])
     )
 
     min_age = fields.Int(

@@ -23,6 +23,7 @@ def create_rule():
     new_rule = Rule(
         discipline_id=valid_data['discipline_id'],
         rule_name=valid_data['rule_name'],
+        unit=valid_data['unit'],
         min_age=valid_data['min_age'],
         max_age=valid_data['max_age'],
 
@@ -65,6 +66,8 @@ def update_rule(id):
         rule.discipline_id = valid_data['discipline_id']
     if 'rule_name' in valid_data:
         rule.rule_name = valid_data['rule_name']
+    if 'unit' in valid_data:
+        rule.unit = valid_data['unit']
     if 'min_age' in valid_data:
         rule.min_age = valid_data['min_age']
     if 'max_age' in valid_data:

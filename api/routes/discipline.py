@@ -13,9 +13,8 @@ def create_discipline():
     valid_data = schema.load(data)  # Falls invalid -> ValidationError -> 400
 
     new_disc = Discipline(
-        group_name=valid_data['group_name'],
-        discipline_name=valid_data['discipline_name'],
-        unit=valid_data['unit']
+        group=valid_data['group'],
+        discipline_name=valid_data['discipline_name']
     )
     db.session.add(new_disc)
     db.session.commit()
@@ -39,12 +38,10 @@ def update_discipline(id):
     schema = DisciplineSchema(partial=True)
     valid_data = schema.load(data)
 
-    if 'group_name' in valid_data:
-        disc.group_name = valid_data['group_name']
+    if 'group' in valid_data:
+        disc.group = valid_data['group']
     if 'discipline_name' in valid_data:
         disc.discipline_name = valid_data['discipline_name']
-    if 'unit' in valid_data:
-        disc.unit = valid_data['unit']
 
     db.session.commit()
     return jsonify({"message": "Discipline updated"})
