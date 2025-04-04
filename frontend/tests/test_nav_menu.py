@@ -22,8 +22,8 @@ class nav_menu_test(unittest.TestCase):
         
         # Navigate to your target URL but fail the test if it takes too long
         self.driver.set_page_load_timeout(10)
-        self.driver.get("http://localhost:3000")
-        self.sites =[["Startseite", "/"], ["Testseite", "/test_page"]]
+        self.driver.get("http://localhost:3000/")
+        self.sites =[["Startseite", "/startpage"], ["Testseite", "/test_page"]]
     
     def test_nav_menu(self):
 
@@ -31,7 +31,7 @@ class nav_menu_test(unittest.TestCase):
             # Find the link to the page
             link = self.driver.find_element(By.LINK_TEXT, thing[0])
             link.click()
-            sleep(1)
+            sleep(2)
             self.assertEqual(self.driver.current_url, "http://localhost:3000"+thing[1], "The link did not lead to the right page!")
             print("Navigated to "+thing[0]+"!")
     

@@ -1,43 +1,85 @@
 "use client"
-import styles from "./page.module.css";
 import { login, signup } from "./authlogin";
 import { useActionState } from 'react'
 
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { AlertCircle } from "lucide-react";
 
+function Error({message}: {message: string}) {
+  return (
+    <Card className="bg-red-50 border border-red-200 text-red-700">
+      <CardContent className="flex items-center gap-2 py-3">
+        <AlertCircle className="h-5 w-5 text-red-600"/>
+        <span>{message}</span>
+      </CardContent>
+    </Card>
+  )
+}
 
-
-
-export default function Login() {
+function LoginForm() {
   const [state, action, pending] = useActionState(login, undefined)
   return (
-    <div className={styles.page}>
-      <h1>Login</h1>
-      <div className="login-box">
-        <form action={action}>
-          <div>
-            <label htmlFor="email">E-mail Adresse: <br /></label>
-            <input id="email" name="email" type="email" placeholder="E-mail Adresse" />
-          </div>
-          {state?.errors?.email && <p>{state.errors.email}</p>}
-          <p><br /></p>
-          <div>
-            <label htmlFor="password">Password: <br /></label>
-            <input id="password" name="password" type="password" placeholder="Password" />
-          </div>
-          {state?.errors?.password && (
-            <div>
-              <p>Password:</p>
-              <ul>
-                {state.errors.password.map((error: any) => (
-                  <li key={error}>- {error}</li>
-                ))}
-              </ul>
+    <div className="flex flex-col gap-6">
+      
+      {(state?.errors?.email || state?.errors?.password) &&
+        <Error message="Die angegebene E-Mail oder das Passwort sind falsch."></Error>
+      }
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2x1">Login</CardTitle>
+          <CardDescription>
+            Geben Sie zum Einloggen ihre E-Mail Adresse an
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form action={action}>
+            <div className="flex flex-col gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="email">E-Mail</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="m.mustermann@beispiel.de"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="password">Passwort</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full">
+                Login
+              </Button>
             </div>
-          )}
-          <p><br /></p>
-          <button disabled={pending} id="loginbutton" type="submit" name="loginbutton">Login</button>
-        </form>
-      </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
+}
+
+export default function Login() {
+  return (
+    <div className="flex items-center h-full justify-center md:px-10">
+      <div className="w-full max-w-sm">
+        <LoginForm />
+      </div>
+    </div>
+  )
 }

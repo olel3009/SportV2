@@ -1,20 +1,25 @@
 from flask import Blueprint, request, jsonify
+from marshmallow import ValidationError
 from database import db
 from database.models import Result
+from database.schemas import ResultSchema
 
 bp_result = Blueprint('result', __name__)
 
 @bp_result.route('/results', methods=['POST'])
 def create_result():
     data = request.json
+    schema = ResultSchema()
+    valid_data = schema.load(data)  # Falls invalid, ValidationError -> 400
+    
     new_result = Result(
-        athlete_id=data['athlete_id'],
-        year=data['year'],
-        age=data['age'],
-        disciplin=data['disciplin'],
-        result=data['result'],
-        points=data['points'],
-        medal=data['medal'],
+        athlete_id=valid_data["athlete_id"],
+        year=valid_data["year"],
+        age=valid_data["age"],
+        disciplin=valid_data["disciplin"],
+        result=valid_data["result"],
+        points=valid_data["points"],
+        medal=valid_data["medal"],
     )
     db.session.add(new_result)
     db.session.commit()
