@@ -36,32 +36,89 @@ class ResultSchema(Schema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
+# Discplin-Schema
+class DisciplineSchema(Schema):
+    id = fields.Int(dump_only=True)
 
-# Rule-Schema
-class RuleSchema(Schema):
-    rulename = fields.Str(required=True, validate=Length(min=1, max=255))
-    description = fields.Str(required=False, allow_none=True)
-    disciplin = fields.Str(required=True, validate=Length(min=1, max=255))
-    distance = fields.Int(required=True, validate=Range(min=0))
-    time_in_seconds = fields.Int(required=True, validate=Range(min=0))
-    points = fields.Int(required=True, validate=Range(min=1, max=3))
-    valid_start = fields.Date(required=True, format="%d-%m-%Y")
-    valid_end = fields.Date(required=False, allow_none=True, format="%d-%m-%Y")
-    version = fields.Int(missing=1)
+    # Beispiel: "Endurance", "Strength", "Speed", "Coordination" etc.
+    group_name = fields.Str(
+        required=True,
+        validate=Length(min=1, max=255)
+    )
+
+    # Beispiel: "Running", "Swimming", "Cycling" etc.
+    discipline_name = fields.Str(
+        required=True,
+        validate=Length(min=1, max=255)
+    )
+
+    # Kann 'points', 'distance', 'time' oder 'amount' sein
+    unit = fields.Str(
+        required=True,
+        validate=OneOf(["points", "distance", "time", "amount"])
+    )
+
+    # Timestamps nur zum Ausgeben
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
-    # Beispiel: valid_end >= valid_start
-    @validates("valid_end")
-    def validate_dates(self, value):
-        if value is None:
-            return
-        if "valid_start" in self.context:
-            start = self.context["valid_start"]
-            if value < start:
-                raise ValidationError("valid_end darf nicht vor valid_start liegen.")
+# Rule-Schema
+class RuleSchema(Schema):
+    id = fields.Int(dump_only=True)
 
+    discipline_id = fields.Int(required=True)
 
+    rule_name = fields.Str(
+        required=True,
+        validate=Length(min=1, max=255)
+    )
+
+    min_age = fields.Int(
+        required=True,
+        validate=Range(min=0)  # z. B. kein negatives Alter
+    )
+    max_age = fields.Int(
+        required=True,
+        validate=Range(min=0)
+    )
+
+    # Thresholds für Bronze/Silber/Gold (männlich)
+    threshold_bronze_m = fields.Float(required=True, validate=Range(min=0))
+    threshold_silver_m = fields.Float(required=True, validate=Range(min=0))
+    threshold_gold_m = fields.Float(required=True, validate=Range(min=0))
+
+    # Thresholds für Bronze/Silber/Gold (weiblich)
+    threshold_bronze_f = fields.Float(required=True, validate=Range(min=0))
+    threshold_silver_f = fields.Float(required=True, validate=Range(min=0))
+    threshold_gold_f = fields.Float(required=True, validate=Range(min=0))
+
+    action = fields.Str(
+        required=True,
+        validate=Length(min=1, max=255)
+    )
+
+    valid_start = fields.Date(required=True, format="%Y-%m-%d")
+    valid_end = fields.Date(required=False, allow_none=True, format="%Y-%m-%d")
+
+    # Version startet mit 1, wenn nicht angegeben
+    version = fields.Int(missing=1)
+
+    # Timestamps nur zum Ausgeben
+    created_at = fields.DateTime(dump_only=True)
+    updated_at = fields.DateTime(dump_only=True)
+
+    @validates_schema
+    def validate_data(self, data, **kwargs):
+        """
+        - valid_end darf nicht vor valid_start liegen (falls valid_end vorhanden).
+        - min_age darf nicht größer als max_age sein.
+        """
+        if data.get("valid_end") and data.get("valid_start") and data["valid_end"] < data["valid_start"]:
+            raise ValidationError("valid_end kann nicht vor valid_start sein.")
+
+        if data.get("max_age") and data.get("min_age") and data["min_age"] > data["max_age"]:
+            raise ValidationError("min_age kann nich größer als max_age.")
+        
 # User-Schema
 class UserSchema(Schema):
     email = fields.Str(required=True, validate=Length(min=5, max=255))
