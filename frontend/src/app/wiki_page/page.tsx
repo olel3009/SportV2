@@ -158,7 +158,7 @@ export default function Home() {
         </div>
         <div id="knopf_reglungsaktualisierung" className="mb-8">
           <h2 className="text-xl font-semibold">09. Manuelle Aktualisierung der Reglungen durch Knopfdruck</h2>
-          <p>Der Knopf zur Aktualisierung der Regelungen befindet sich unten auf der Startseite und trägt die Aufschrift "Regelungen aktualisieren".
+          <p>Der Knopf zur Aktualisierung der Regelungen befindet sich unten auf der Startseite und trägt die Aufschrift "Regelungen aktualisieren".<br />
               Dieser Knopf sorgt dafür, dass nach einer Bestätigung die aktuellen Regelungen geladen werden.<br />
             </p>
 
@@ -192,7 +192,7 @@ export default function Home() {
             <p>
               - Es können nur Regelungen aus der CSV gelesen werden, wenn diese dem Standard-Design entsprechen.<br />
               - Der Prozess kann nach der Bestätigung nicht abgebrochen werden.<br />
-              - Sollte das Aktualisieren der Regelungen nicht erfolgreich sein, versuchen Sie es nicht direkt erneut, sondern warten Sie ein paar Minuten.
+              - Sollte das Aktualisieren der Regelungen nicht erfolgreich sein, versuchen Sie es nicht direkt erneut, sondern warten Sie ein paar Minuten.<br />
               Dies kann dem Server helfen, falls das Fehlschlagen des Vorgangs an einer zu hohen Auslastung liegt oder die Daten aus einer anderen Ursache nicht abrufbar sind.<br />
               - Sollte der Prozess öfter fehlschlagen, wenden Sie sich an den Administrator.<br />
               - Wenn sich das Popup nicht öffnet, kontrollieren Sie Ihre Internetverbindung und versuchen Sie es nach kurzem Warten erneut.<br />
