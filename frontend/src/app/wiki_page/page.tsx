@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="flex h-screen">
       {/* Inhaltsverzeichnis Sidebar */}
-      <div className="w-64 bg-white border-r border-gray-300 p-4 sticky top-10">
+      <div className="w-64 bg-white border-r border-gray-300 p-4 fixed h-full">
         <h2 className="text-lg font-bold mb-4">Inhaltsverzeichnis</h2>
         <ul className="space-y-2">
           <li>
@@ -121,7 +121,7 @@ export default function Home() {
       </div>
 
       {/* Hauptinhalt */}
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex-1 p-6 overflow-y-auto ml-64">
         <h1 className="text-2xl font-bold mb-6">Wiki-Seite</h1>
         <div id="leistungen_ergebnisse_athlet_diziplin" className="mb-8">
           <h2 className="text-xl font-semibold">01. Ansicht von Leistungen und Ergebnissen pro Athlet und Disziplin</h2>
