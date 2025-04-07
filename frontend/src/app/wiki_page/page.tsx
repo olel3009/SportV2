@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="flex h-screen">
       {/* Inhaltsverzeichnis Sidebar */}
-      <div className="w-64 bg-white border-r border-gray-300 p-4 h-screen ">
+      <div className="w-64 bg-white border-r border-gray-300 p-4 sticky top-10">
         <h2 className="text-lg font-bold mb-4">Inhaltsverzeichnis</h2>
         <ul className="space-y-2">
           <li>
