@@ -1,6 +1,6 @@
 from datetime import datetime
 from pypdf import PdfReader, PdfWriter
-from athlet import Athlete, PerformanceData
+from api.athlet import Athlete, PerformanceData
 
 perf1 = PerformanceData("Laufen Ausdauer", "2025", "06:30", 3)
 perf2 = PerformanceData("Laufen Schnelligkeit", "2025", "00:40", 2)
