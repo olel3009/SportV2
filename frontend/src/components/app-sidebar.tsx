@@ -1,4 +1,4 @@
-import { LayoutPanelTop, Users, Settings, ChartNoAxesCombined } from "lucide-react"
+import { LayoutPanelTop, Users, Settings, ChartNoAxesCombined, BookOpenText } from "lucide-react"
 
 import { 
     Sidebar, 
@@ -27,6 +27,11 @@ const items = [
     title: "Leistungseintrag",
     url: "/feat_entry_page",
     icon: ChartNoAxesCombined
+  },
+  {
+    title: "Wiki",
+    url: "/wiki_page",
+    icon: BookOpenText
   },
   {
     title: "Einstellungen",
