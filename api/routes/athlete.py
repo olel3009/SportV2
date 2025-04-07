@@ -17,7 +17,8 @@ def create_athlete():
         first_name=valid_data["first_name"],
         last_name=valid_data["last_name"],
         birth_date=valid_data["birth_date"],
-        gender=valid_data["gender"]
+        gender=valid_data["gender"],
+        swim_certificate=valid_data["swim_certificate"]
     )
     db.session.add(new_athlete)
     db.session.commit()
@@ -26,24 +27,37 @@ def create_athlete():
 @bp_athlete.route('/athletes', methods=['GET'])
 def get_athletes():
     athletes = DBAthlete.query.all()
-    return jsonify([{
-        "id": athlete.id,
-        "first_name": athlete.first_name,
-        "last_name": athlete.last_name,
-        "birth_date": athlete.birth_date.strftime('%d-%m-%Y'),
-        "gender": athlete.gender,
-        "created_at": athlete.created_at,
-        "updated_at": athlete.updated_at
-    } for athlete in athletes])
+    result = []
+    for ath in athletes:
+        result.append({
+            "id": ath.id,
+            "first_name": ath.first_name,
+            "last_name": ath.last_name,
+            "birth_date": ath.birth_date.strftime("%d-%m-%Y"),
+            "gender": ath.gender,
+            "swim_certificate": ath.swim_certificate,
+            "created_at": ath.created_at,
+            "updated_at": ath.updated_at
+        })
+    return jsonify(result)
 
 @bp_athlete.route('/athletes/<int:id>', methods=['PUT'])
 def update_athlete(id):
     athlete = DBAthlete.query.get_or_404(id)
     data = request.json
-    athlete.first_name = data.get('first_name', athlete.first_name)
-    athlete.last_name = data.get('last_name', athlete.last_name)
-    athlete.birth_date = datetime.strptime(data['birth_date'], '%d-%m-%Y') if 'birth_date' in data else athlete.birth_date
-    athlete.gender = data.get('gender', athlete.gender)
+
+    if "first_name" in data:
+        athlete.first_name = data["first_name"]
+    if "last_name" in data:
+        athlete.last_name = data["last_name"]
+    if "birth_date" in data:
+        athlete.birth_date = datetime.strptime(data["birth_date"], "%d-%m-%Y").date()
+    if "gender" in data:
+        athlete.gender = data["gender"]
+    # NEUES FELD
+    if "swim_certificate" in data:
+        athlete.swim_certificate = data["swim_certificate"]
+
     db.session.commit()
     return jsonify({"message": "Athlet aktualisiert"})
 
@@ -72,7 +86,8 @@ def export_athlete_pdf(athlete_id):
         first_name=db_athlete.first_name,
         last_name=db_athlete.last_name,
         gender=db_athlete.gender,
-        birth_date=db_athlete.birth_date,  # datetime.date
+        birth_date=db_athlete.birth_date,
+        swim_certificate=db_athlete.swim_certificate,
         performances=[]
     )
 

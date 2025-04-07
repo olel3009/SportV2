@@ -26,11 +26,9 @@ class Athlete(db.Model):
     last_name = db.Column(db.String(100), nullable=False)
     birth_date = db.Column(db.Date, nullable=False)
     gender = db.Column(db.Enum('m', 'f', 'd', name='gender_enum'), nullable=False)
+    swim_certificate = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    # Relationship to results
-    results = db.relationship('Result', backref='athlete', lazy=True)
 
     def __repr__(self):
         return f"<Athlete {self.first_name} {self.last_name}>"
@@ -40,39 +38,91 @@ class Result(db.Model):
     __tablename__ = 'results'
 
     id = db.Column(db.Integer, primary_key=True)
+    # Verknüpfung mit Athlete
     athlete_id = db.Column(db.Integer, db.ForeignKey('athletes.id'), nullable=False)
+    # Verknüpfung mit Rule
+    rule_id = db.Column(db.Integer, db.ForeignKey('rule.id'), nullable=False)
+
+    # Jahr der Prüfung 
     year = db.Column(db.Integer, nullable=False)
+    # Alter des Athleten im Prüfungsjahr
     age = db.Column(db.Integer, nullable=False)
-    disciplin = db.Column(db.String(255), nullable=False)
-    result = db.Column(db.String(50), nullable=False)  # Erzielte Zeit, Strecke oder Punkte
-    points = db.Column(db.Integer, nullable=False) # Ergebnis Punkt von 1-3
-    medal = db.Column(db.Enum('Bronze', 'Silber', 'Gold', name='medal_enum'), nullable=False)
-    version = db.Column(db.Integer, nullable=False, default=1)
+
+    # Ergebnis (z.B. Zeit in Sekunden, Distanz in Meter, Punkte, ...)
+    result = db.Column(db.Float, nullable=False)
+    # Enum kann "Bronze", "Silber", "Gold" oder NULL sein
+    medal = db.Column(
+        db.Enum('Bronze', 'Silber', 'Gold', name='medal_enum'),
+        nullable=True
+    )
+
+    # Zeitstempel
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships 
+    athlete = db.relationship('Athlete', backref=db.backref('results', lazy=True))
+    rule = db.relationship('Rule', backref=db.backref('results', lazy=True))
 
     def __repr__(self):
         return f"<Result Athlete ID: {self.athlete_id}, Year: {self.year}, Result: {self.result}>"
 
-# Regeln-Modell
-class Regel(db.Model):
-    __tablename__ = 'regeln'
+# Disciplin-Modell
+class Discipline(db.Model):
+    __tablename__ = 'discipline'
 
     id = db.Column(db.Integer, primary_key=True)
-    rulename = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.Text, nullable=True)
-    disciplin = db.Column(db.String(255), nullable=True)
-    distance = db.Column(db.Integer, nullable=False)
-    time_in_seconds = db.Column(db.Integer, nullable=False)
-    points = db.Column(db.Integer, nullable=False)
-    valid_start = db.Column(db.Date, nullable=False)
-    valid_end = db.Column(db.Date, nullable=True)
-    version = db.Column(db.Integer, nullable=False, default=1)
+    group = db.Column(
+        db.Enum('Ausdauer', 'Kraft', 'Schnelligkeit', 'Koordination', name='group_enum'),
+        nullable=False
+    )
+    discipline_name = db.Column(db.String(255), nullable=False)
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def __repr__(self):
-        return f"<Regel {self.reglename}, Disziplin: {self.disziplin}>"
+        return f"<Discipline {self.discipline_name}, Unit: {self.unit}>"
+
+# Regel-Modell
+class Rule(db.Model):
+    __tablename__ = 'rule'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    # Fremdschlüssel auf discipline
+    discipline_id = db.Column(db.Integer, db.ForeignKey('discipline.id'), nullable=False)
+    discipline = db.relationship('Discipline', backref=db.backref('rules', lazy=True))
+
+    rule_name = db.Column(db.String(255), nullable=False)
+    unit = db.Column(db.Enum('points', 'distance', 'time', 'amount', name='unit_enum'), nullable=False)
+
+    # Altersgrenzen
+    min_age = db.Column(db.Integer, nullable=False)
+    max_age = db.Column(db.Integer, nullable=False)
+
+    # Thresholds für Bronze/Silber/Gold je Geschlecht (male/female)
+    threshold_bronze_m = db.Column(db.Float, nullable=False)
+    threshold_silver_m = db.Column(db.Float, nullable=False)
+    threshold_gold_m = db.Column(db.Float, nullable=False)
+
+    threshold_bronze_f = db.Column(db.Float, nullable=False)
+    threshold_silver_f = db.Column(db.Float, nullable=False)
+    threshold_gold_f = db.Column(db.Float, nullable=False)
+
+    action = db.Column(db.String(255), nullable=False)
+
+    valid_start = db.Column(db.Date, nullable=False)
+    valid_end = db.Column(db.Date, nullable=True)
+
+    # Version, startet mit 1
+    version = db.Column(db.Integer, nullable=False, default=1)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Rule {self.rule_name}, Version: {self.version}>"
 
 class User(db.Model):
     __tablename__ = 'users'
