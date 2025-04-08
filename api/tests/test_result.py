@@ -22,6 +22,8 @@ def create_test_rule(client,
                      valid_start="2025-01-01", 
                      valid_end="2025-12-31",
                      unit="time",
+                     description_m="Kraftübung 80g",
+                     description_f="Kraftübung 80g",
                      threshold_bronze_m=30.0,
                      threshold_silver_m=25.0,
                      threshold_gold_m=20.0,
@@ -43,7 +45,9 @@ def create_test_rule(client,
         "action": action,
         "valid_start": valid_start,  
         "valid_end": valid_end,      
-        "unit": unit
+        "unit": unit,
+        "description_m": description_m,
+        "description_f": description_f,
     })
     assert resp.status_code == 201
     rule_data = resp.get_json()

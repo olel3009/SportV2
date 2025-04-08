@@ -14,6 +14,8 @@ def test_create_rule(client):
         "discipline_id": discipline_id,
         "rule_name": "Kraftübung",
         "unit": "points",
+        "description_m": "Kraftübung 80g",
+        "description_f": "Kraftübung 70g",
         "min_age": 18,
         "max_age": 40,
         "threshold_bronze_m": 10.0,
@@ -22,7 +24,6 @@ def test_create_rule(client):
         "threshold_bronze_f": 8.0,
         "threshold_silver_f": 10.0,
         "threshold_gold_f": 13.0,
-        "action": "Gewichtheben max. 50kg",
         "valid_start": "2025-01-01",
         "valid_end": "2025-12-31"
     })
@@ -44,6 +45,8 @@ def test_get_rules(client):
         "discipline_id": discipline_id,
         "rule_name": "Testregel",
         "unit": "points",
+        "description_m": "Kraftübung 80g",
+        "description_f": "Kraftübung 70g",
         "min_age": 20,
         "max_age": 30,
         "threshold_bronze_m": 5.0,
@@ -52,7 +55,6 @@ def test_get_rules(client):
         "threshold_bronze_f": 4.0,
         "threshold_silver_f": 5.0,
         "threshold_gold_f": 6.0,
-        "action": "Nur ein Test",
         "valid_start": "2026-01-01",
         "valid_end": "2026-12-31"
     })
@@ -79,6 +81,8 @@ def test_update_rule(client):
         "discipline_id": discipline_id,
         "rule_name": "Kraftübung",
         "unit": "points",
+        "description_m": "Kraftübung 80g",
+        "description_f": "Kraftübung 70g",
         "min_age": 18,
         "max_age": 40,
         "threshold_bronze_m": 5.0,
@@ -87,7 +91,6 @@ def test_update_rule(client):
         "threshold_bronze_f": 4.0,
         "threshold_silver_f": 8.0,
         "threshold_gold_f": 12.0,
-        "action": "Gewichtheben max. 60kg",
         "valid_start": "2025-01-01",
         "valid_end": "2025-12-31"
     })
@@ -96,7 +99,7 @@ def test_update_rule(client):
 
     # 2) Update
     update_resp = client.put(f"/rules/{rule_id}", json={
-        "action": "Gewichtheben max. 65kg",
+        "description_m": "Gewichtheben max. 65kg",
         "max_age": 50
     })
     assert update_resp.status_code == 200
@@ -118,6 +121,8 @@ def test_delete_rule(client):
         "discipline_id": discipline_id,
         "rule_name": "DeleteTest",
         "unit": "points",
+        "description_m": "Kraftübung 80g",
+        "description_f": "Kraftübung 70g",
         "min_age": 25,
         "max_age": 35,
         "threshold_bronze_m": 3.0,
@@ -126,7 +131,6 @@ def test_delete_rule(client):
         "threshold_bronze_f": 2.0,
         "threshold_silver_f": 4.0,
         "threshold_gold_f": 6.0,
-        "action": "Nur ein Test zum Löschen",
         "valid_start": "2030-01-01"
     })
     assert create_resp.status_code == 201
