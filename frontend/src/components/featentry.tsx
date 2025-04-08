@@ -43,8 +43,12 @@ function AthleteSelect({
   onChange: (val: string) => void;
   id?: number;
 }) {
-  const athletes: Athlete[] = getAllAthletes();
+  const [athletes, setAthletes] = useState<Athlete[]>([])
   const athleteSet = id !== -1;
+
+  useEffect(() => {
+    getAllAthletes().then(setAthletes)
+  }, [])
 
   return (
     <Select value={value} onValueChange={onChange} disabled={athleteSet}>
