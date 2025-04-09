@@ -41,6 +41,12 @@ def get_users():
         "updated_at": user.updated_at
     } for user in users])
 
+@bp_user.route('/users/<int:id>', methods=['GET'])
+def get_user_id(id):
+    user = User.query.get_or_404(id)
+    schema = UserSchema()
+    return jsonify(schema.dump(user))
+
 # UPDATE User
 @bp_user.route('/users/<int:id>', methods=['PUT'])
 def update_user(id):

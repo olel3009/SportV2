@@ -54,9 +54,15 @@ def get_rules():
     result = schema.dump(all_rules)
     return jsonify(result)
 
+@bp_rule.route('/rules/<int:id>', methods=['GET'])
+def get_rule(id):
+    rule = Rule.query.get_or_404(id)
+    schema = RuleSchema()
+    return jsonify(schema.dump(rule))
+
 # UPDATE Rule
 @bp_rule.route('/rules/<int:id>', methods=['PUT'])
-def update_rule(id):
+def update_rule_id(id):
     rule = Rule.query.get_or_404(id)
     data = request.json
 

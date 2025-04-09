@@ -27,6 +27,12 @@ def get_disciplines():
     result = schema.dump(all_disc)
     return jsonify(result)
 
+@bp_discipline.route('/disciplines/<int:id>', methods=['GET'])
+def get_discipline_id(id):
+    discipline = Discipline.query.get_or_404(id)
+    schema = DisciplineSchema()
+    return jsonify(schema.dump(discipline))
+
 # UPDATE Discipline
 @bp_discipline.route('/disciplines/<int:id>', methods=['PUT'])
 def update_discipline(id):

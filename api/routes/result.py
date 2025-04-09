@@ -91,6 +91,12 @@ def get_results():
     schema = ResultSchema(many=True)
     return jsonify(schema.dump(results))
 
+@bp_result.route('/results/<int:id>', methods=['GET'])
+def get_result_id(id):
+    result = Result.query.get_or_404(id)
+    schema = ResultSchema()
+    return jsonify(schema.dump(result))
+
 @bp_result.route('/results/<int:id>', methods=['PUT'])
 def update_result(id):
     result_obj = Result.query.get_or_404(id)
