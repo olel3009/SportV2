@@ -55,14 +55,9 @@ class ResultSchema(Schema):
 class DisciplineSchema(Schema):
     id = fields.Int(dump_only=True)
 
-    group = fields.Str(
-        required=True,
-        validate=OneOf(["Ausdauer", "Kraft", "Schnelligkeit", "Koordination"])
-    )
-
     discipline_name = fields.Str(
         required=True,
-        validate=Length(min=1, max=255)
+        validate=OneOf(["Ausdauer", "Kraft", "Schnelligkeit", "Koordination"])
     )
 
     # Timestamps nur zum Ausgeben
@@ -76,6 +71,16 @@ class RuleSchema(Schema):
     discipline_id = fields.Int(required=True)
 
     rule_name = fields.Str(
+        required=True,
+        validate=Length(min=1, max=255)
+    )
+
+    description_m = fields.Str(
+        required=True,
+        validate=Length(min=1, max=255)
+    )
+
+    description_f = fields.Str(
         required=True,
         validate=Length(min=1, max=255)
     )
@@ -103,11 +108,6 @@ class RuleSchema(Schema):
     threshold_bronze_f = fields.Float(required=True, validate=Range(min=0))
     threshold_silver_f = fields.Float(required=True, validate=Range(min=0))
     threshold_gold_f = fields.Float(required=True, validate=Range(min=0))
-
-    action = fields.Str(
-        required=True,
-        validate=Length(min=1, max=255)
-    )
 
     valid_start = fields.Date(required=True, format="%Y-%m-%d")
     valid_end = fields.Date(required=False, allow_none=True, format="%Y-%m-%d")

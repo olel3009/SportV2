@@ -72,11 +72,10 @@ class Discipline(db.Model):
     __tablename__ = 'discipline'
 
     id = db.Column(db.Integer, primary_key=True)
-    group = db.Column(
+    discipline_name = db.Column(
         db.Enum('Ausdauer', 'Kraft', 'Schnelligkeit', 'Koordination', name='group_enum'),
         nullable=False
     )
-    discipline_name = db.Column(db.String(255), nullable=False)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -96,6 +95,8 @@ class Rule(db.Model):
 
     rule_name = db.Column(db.String(255), nullable=False)
     unit = db.Column(db.Enum('points', 'distance', 'time', 'amount', name='unit_enum'), nullable=False)
+    description_m = db.Column(db.String(255), nullable=False)
+    description_f = db.Column(db.String(255), nullable=False)
 
     # Altersgrenzen
     min_age = db.Column(db.Integer, nullable=False)
@@ -109,8 +110,6 @@ class Rule(db.Model):
     threshold_bronze_f = db.Column(db.Float, nullable=False)
     threshold_silver_f = db.Column(db.Float, nullable=False)
     threshold_gold_f = db.Column(db.Float, nullable=False)
-
-    action = db.Column(db.String(255), nullable=False)
 
     valid_start = db.Column(db.Date, nullable=False)
     valid_end = db.Column(db.Date, nullable=True)

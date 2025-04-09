@@ -41,6 +41,12 @@ def get_athletes():
         })
     return jsonify(result)
 
+@bp_athlete.route('/athletes/<int:id>', methods=['GET'])
+def get_athlete_id(id):
+    athlete = DBAthlete.query.get_or_404(id)
+    schema = AthleteSchema()
+    return jsonify(schema.dump(athlete))
+
 @bp_athlete.route('/athletes/<int:id>', methods=['PUT'])
 def update_athlete(id):
     athlete = DBAthlete.query.get_or_404(id)

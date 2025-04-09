@@ -13,7 +13,6 @@ def create_discipline():
     valid_data = schema.load(data)  # Falls invalid -> ValidationError -> 400
 
     new_disc = Discipline(
-        group=valid_data['group'],
         discipline_name=valid_data['discipline_name']
     )
     db.session.add(new_disc)
@@ -28,6 +27,12 @@ def get_disciplines():
     result = schema.dump(all_disc)
     return jsonify(result)
 
+@bp_discipline.route('/disciplines/<int:id>', methods=['GET'])
+def get_discipline_id(id):
+    discipline = Discipline.query.get_or_404(id)
+    schema = DisciplineSchema()
+    return jsonify(schema.dump(discipline))
+
 # UPDATE Discipline
 @bp_discipline.route('/disciplines/<int:id>', methods=['PUT'])
 def update_discipline(id):
@@ -38,8 +43,6 @@ def update_discipline(id):
     schema = DisciplineSchema(partial=True)
     valid_data = schema.load(data)
 
-    if 'group' in valid_data:
-        disc.group = valid_data['group']
     if 'discipline_name' in valid_data:
         disc.discipline_name = valid_data['discipline_name']
 

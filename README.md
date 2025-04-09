@@ -6,7 +6,7 @@ Managementtool zur Leistsungserfassung von Athleten
 Erstellen:
 - python -m venv venv  
 
-Aktievierbar durch:
+Aktivierbar durch:
 - Windows: .\venv\Scripts\activate
 - Linux: ./venv/bin/activate.sh  
 
@@ -17,7 +17,10 @@ Pakete installieren:
 - Virtuelles Environment erstellen und/oder aktivieren
 - flask --app database/migrate.py run
 - Nach erfolgreichem Migrieren mit `Strg + C` abbrechen.
-- flask --app run.py run
+- Wenn die Testdaten verwendet werden möchten, voherige beiden Schritte überspringen. Stattdessen: 
+- Windows: python .\database\seed_db.py
+- Linux: python ./database/seed_db.py
+- Abschließend App starten: flask --app run.py run
 
 ## Starten des Frontends
 - cd /frontend
