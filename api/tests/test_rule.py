@@ -109,7 +109,7 @@ def test_update_rule(client):
     get_all = client.get("/rules").get_json()
     updated = next((r for r in get_all if r["id"] == rule_id), None)
     assert updated is not None
-    assert updated["action"] == "Gewichtheben max. 65kg"
+    assert updated["description_m"] == "Gewichtheben max. 65kg"
 
 def test_delete_rule(client):
     """

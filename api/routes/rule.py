@@ -37,7 +37,6 @@ def create_rule():
         threshold_silver_f=valid_data['threshold_silver_f'],
         threshold_gold_f=valid_data['threshold_gold_f'],
 
-        action=valid_data['action'],
         valid_start=valid_data['valid_start'],
         valid_end=valid_data.get('valid_end'),
         version=new_version

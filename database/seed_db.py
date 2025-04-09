@@ -1,15 +1,18 @@
 from datetime import date
-from database import db
+from database import db, create_app
 from database.models import Trainer, Athlete, Discipline, Rule, Result
 
 def seed_test_data():
-    # Erstelle mehrere Trainer
-    trainers = [
+    with app.app_context():
+        db.drop_all() 
+        db.create_all()
+        # Erstelle mehrere Trainer
+        trainers = [
         Trainer(first_name="Ole", last_name="Leister", email="ole.leister@trainer.de" , birth_date=date(2003,1,1), gender="m"),
         Trainer(first_name="Carlo", last_name="Bockermann", email="carlo.bockermann@trainer.de" , birth_date=date(2003,1,1), gender="m"),
     ]
-    # Erstelle mehrere Athleten
-    athletes = [
+        # Erstelle mehrere Athleten
+        athletes = [
         Athlete(first_name="Lena", last_name="Müller", birth_date=date(2010,1,1), gender="f", swim_certificate=False),
         Athlete(first_name="Tom", last_name="Schmidt", birth_date=date(2009,1,1), gender="m", swim_certificate=False),
         Athlete(first_name="Alex", last_name="Klein", birth_date=date(2011,1,1), gender="m", swim_certificate=False),
@@ -32,21 +35,21 @@ def seed_test_data():
         Athlete(first_name="Clara", last_name="Werner", birth_date=date(2011,1,1), gender="f", swim_certificate=True),
         Athlete(first_name="Luis", last_name="Schäfer", birth_date=date(2009,1,1), gender="m", swim_certificate=False),
     ]
-    # Erstelle mehrere Disziplinen
-    disciplines = [
-        Discipline(group_name="Ausdauer"),
-        Discipline(group_name="Kraft"),
-        Discipline(group_name="Schnelligkeit"),
-        Discipline(group_name="Koordination")
+        # Erstelle mehrere Disziplinen
+        disciplines = [
+        Discipline(discipline_name="Ausdauer"),
+        Discipline(discipline_name="Kraft"),
+        Discipline(discipline_name="Schnelligkeit"),
+        Discipline(discipline_name="Koordination")
     ]
-    # Füge alle Athleten und Disziplinen zur Session hinzu
-    db.session.add_all(trainers)
-    db.session.add_all(athletes)
-    db.session.add_all(disciplines)
-    db.session.commit()
+        # Füge alle Athleten und Disziplinen zur Session hinzu
+        db.session.add_all(trainers)
+        db.session.add_all(athletes)
+        db.session.add_all(disciplines)
+        db.session.commit()
 
-    # Erstelle Rules für die Disziplinen
-    rules = [
+        # Erstelle Rules für die Disziplinen
+        rules = [
         Rule(discipline_id=disciplines[0].id, rule_name="800m Lauf, 6-7", unit="time",
         description_m="800m Lauf", description_f="800m Lauf",
         min_age=6, max_age=7,
@@ -216,11 +219,11 @@ def seed_test_data():
         valid_start=date(2025,1,1), valid_end=date(2025,12,31), version = 1
     )
     ]
-    db.session.add_all(rules)
-    db.session.commit()
+        db.session.add_all(rules)
+        db.session.commit()
     
-    # Optional: Mehrere Result-Datensätze anlegen
-    results = [ 
+        # Optional: Mehrere Result-Datensätze anlegen
+        results = [ 
         Result(athlete_id=athletes[0].id, rule_id=rules[4].id,
         year=2025, age=2025 - athletes[0].birth_date.year,
         result=2.45, medal="Gold"
@@ -304,12 +307,12 @@ def seed_test_data():
         Result(athlete_id=athletes[20].id, rule_id=rules[10].id,
         year=2025, age=2025 - athletes[20].birth_date.year,
         result=25.00, medal="Silber"
-    ),
-        Result(athlete_id=athletes[21].id, rule_id=rules[17].id,
-        year=2025, age=2025 - athletes[21].birth_date.year,
-        result=29.00, medal="Bronze"
-    ),
+    )
     ]
-    db.session.add_all(results)
-    db.session.commit()
-    print("Testdaten eingefügt.")
+        db.session.add_all(results)
+        db.session.commit()
+        print("Testdatensätze wurden erfolgreich eingefügt.")
+
+app = create_app()
+if __name__ == '__main__':
+    seed_test_data()
