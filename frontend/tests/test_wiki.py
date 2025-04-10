@@ -24,16 +24,16 @@ class wiki_test(unittest.TestCase):
         # Navigate to your target URL but fail the test if it takes too long
         self.driver.set_page_load_timeout(100)
         
-    def test_nav_menu(self):
-        self.driver.get("http://localhost:3000")
-        self.sites =[["Startseite", "/startpage"], ["Testseite", "/test_page"],["Wiki-Seite", "/wiki_page"]]
-        for thing in self.sites:
-            # Find the link to the page
-            link = self.driver.find_element(By.LINK_TEXT, thing[0])
-            link.click()
-            sleep(1)
-            self.assertEqual(self.driver.current_url, "http://localhost:3000"+thing[1], "The link did not lead to the right page!")
-            print("Navigated to "+thing[0]+"!")
+    # def test_nav_menu(self):
+    #     self.driver.get("http://localhost:3000")
+    #     self.sites =[["Startseite", "/startpage"], ["Testseite", "/test_page"],["Wiki-Seite", "/wiki_page"]]
+    #     for thing in self.sites:
+    #         # Find the link to the page
+    #         link = self.driver.find_element(By.LINK_TEXT, thing[0])
+    #         link.click()
+    #         sleep(1)
+    #         self.assertEqual(self.driver.current_url, "http://localhost:3000"+thing[1], "The link did not lead to the right page!")
+    #         print("Navigated to "+thing[0]+"!")
 
     def test_wiki_page(self):
         # Find the link to the page

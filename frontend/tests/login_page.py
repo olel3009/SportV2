@@ -32,7 +32,8 @@ class BasicSeleniumTest(unittest.TestCase):
         sleep(1)
 
         # Überprüfen, ob die Weiterleitung zur Startseite erfolgt ist
-        self.assertIn("startpage", driver.current_url, "Weiterleitung nicht erfolgreich")
+        self.assertIn("dashboard", driver.current_url, "Weiterleitung war nicht erfolgreich")
+        print("Login mit richtigen Daten war erfolgreich!")
 
     def test_login_page_wrong_password(self):
         driver = self.driver
@@ -43,7 +44,8 @@ class BasicSeleniumTest(unittest.TestCase):
         sleep(1)
         
         # Überprüfen, ob die Weiterleitung zur Startseite nicht erfolgt ist
-        self.assertNotIn("startpage", driver.current_url, "Es wurde weitergeleitet auf die Startpage")
+        self.assertNotIn("dashboard", driver.current_url, "Es wurde weitergeleitet auf die Dashboard")
+        print("Login mit falschem Passwort war nicht erfolgreich, wie erwartet.")
         
 
     def test_login_page_wrong_email(self):
@@ -55,7 +57,8 @@ class BasicSeleniumTest(unittest.TestCase):
         sleep(1)
         
         # Überprüfen, ob die Weiterleitung zur Startseite nicht erfolgt ist
-        self.assertNotIn("startpage", driver.current_url, "Es wurde weitergeleitet auf die Startpage")
+        self.assertNotIn("dashboard", driver.current_url, "Es wurde weitergeleitet auf die Dashboard")
+        print("Login mit falscher E-Mail war nicht erfolgreich, wie erwartet.")
         
 
 
