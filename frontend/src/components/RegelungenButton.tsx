@@ -54,7 +54,14 @@ export default function RegelungenButton() {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      setUploadedFile(event.target.files[0]);
+      const file = event.target.files[0];
+      if (file.name.endsWith(".csv")) {
+        setUploadedFile(file);
+        setErrorMessage(""); // Entfernt vorherige Fehlermeldungen
+      } else {
+        
+        setErrorMessage("Bitte laden Sie eine gültige CSV-Datei hoch."); // Fehlermeldung für ungültige Dateien
+      }
     }
   };
 
