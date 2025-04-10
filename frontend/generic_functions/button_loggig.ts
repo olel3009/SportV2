@@ -73,6 +73,7 @@ export function button_loggig_color(): number {
         }
     }
     return result;
+    //return 1;
 }
 
 
