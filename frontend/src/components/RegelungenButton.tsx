@@ -8,12 +8,12 @@ import { FileUp } from "lucide-react";
 import { button_loggig_color } from '@/button_loggig';
 
 export default function RegelungenButton() {
-    const buttonresulterfolg = "Das Aktualisieren der Reglungen war erfolgreich.";
-    const buttonresultfehler = "Das Aktualisieren der Reglungen war nicht erfolgreich.<br />Versuchen sie es zu einem späteren Zeitpunkt erneut!";
-    const buttonresultwarten = "Das Aktualisieren der Reglungen wird durchgeführt.<br />Bitte warten sie einen Moment.";
-    const buttonresultabruch = "Das Aktualisieren der Reglungen wurde abgebrochen.";
-  
-    const wert = 0;
+  const buttonresulterfolg = "Das Aktualisieren der Reglungen war erfolgreich.";
+  const buttonresultfehler = "Das Aktualisieren der Reglungen war nicht erfolgreich.<br />Versuchen sie es zu einem späteren Zeitpunkt erneut!";
+  const buttonresultwarten = "Das Aktualisieren der Reglungen wird durchgeführt.<br />Bitte warten sie einen Moment.";
+  const buttonresultabruch = "Das Aktualisieren der Reglungen wurde abgebrochen.";
+
+  const wert = 0;
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
 
@@ -54,7 +54,14 @@ export default function RegelungenButton() {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      setUploadedFile(event.target.files[0]);
+      const file = event.target.files[0];
+      if (file.name.endsWith(".csv")) {
+        setUploadedFile(file);
+        setErrorMessage(""); // Entfernt vorherige Fehlermeldungen
+      } else {
+        
+        setErrorMessage("Bitte laden Sie eine gültige CSV-Datei hoch."); // Fehlermeldung für ungültige Dateien
+      }
     }
   };
 
@@ -95,6 +102,26 @@ export default function RegelungenButton() {
           <div
             className="relative border border-dashed border-gray-300 p-4 rounded-md mb-4 cursor-pointer flex flex-col items-center justify-center h-48"
             onClick={() => fileInputRef.current?.click()}
+            onDragOver={(e) => {
+              e.preventDefault(); // Verhindert das Standardverhalten des Browsers
+              e.stopPropagation();
+              e.dataTransfer.dropEffect = "copy"; // Zeigt an, dass Dateien kopiert werden können
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+
+              if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                const file = e.dataTransfer.files[0];
+                if (file.name.endsWith(".csv")) {
+                  setUploadedFile(file);
+                  setErrorMessage(""); // Entfernt vorherige Fehlermeldungen
+                } else {
+                  setErrorMessage("Bitte laden Sie eine gültige CSV-Datei hoch.");
+                }
+
+              }
+            }}
           >
             <FileUp className="absolute w-40 h-40 text-gray-200" />
             {uploadedFile ? (
