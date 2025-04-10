@@ -24,6 +24,7 @@ class BasicSeleniumTest(unittest.TestCase):
 
 
     def test_login_page(self):
+        # Testn mit korrektem Passwort und E-Mail
         driver = self.driver
         driver.get("http://localhost:3000")
         driver.find_element(By.ID, "email").send_keys("test@test.com")
@@ -35,7 +36,8 @@ class BasicSeleniumTest(unittest.TestCase):
         self.assertIn("dashboard", driver.current_url, "Weiterleitung war nicht erfolgreich")
         print("Login mit richtigen Daten war erfolgreich!")
 
-    def test_login_page_wrong_password(self):
+
+        # Testen mit falschem Passwort   
         driver = self.driver
         driver.get("http://localhost:3000")
         driver.find_element(By.ID, "email").send_keys("test@test.com")
@@ -46,9 +48,8 @@ class BasicSeleniumTest(unittest.TestCase):
         # Überprüfen, ob die Weiterleitung zur Startseite nicht erfolgt ist
         self.assertNotIn("dashboard", driver.current_url, "Es wurde weitergeleitet auf die Dashboard")
         print("Login mit falschem Passwort war nicht erfolgreich, wie erwartet.")
-        
 
-    def test_login_page_wrong_email(self):
+        # Testen mit falscher E-Mail
         driver = self.driver
         driver.get("http://localhost:3000")
         driver.find_element(By.ID, "email").send_keys("wrong@test.com")
