@@ -37,6 +37,12 @@ def get_trainers():
         "updated_at": trainer.updated_at
     } for trainer in trainers])
 
+@bp_trainer.route('/trainers/<int:id>', methods=['GET'])
+def get_trainer_id(id):
+    trainer = Trainer.query.get_or_404(id)
+    schema = TrainerSchema()
+    return jsonify(schema.dump(trainer))
+
 @bp_trainer.route('/trainers/<int:id>', methods=['PUT'])
 def update_trainer(id):
     trainer = Trainer.query.get_or_404(id)
