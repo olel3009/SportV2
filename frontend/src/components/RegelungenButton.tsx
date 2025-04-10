@@ -5,13 +5,20 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { FileUp } from "lucide-react";
+import { button_loggig_color } from '@/button_loggig';
 
 export default function RegelungenButton() {
+    const buttonresulterfolg = "Das Aktualisieren der Reglungen war erfolgreich.";
+    const buttonresultfehler = "Das Aktualisieren der Reglungen war nicht erfolgreich.<br />Versuchen sie es zu einem späteren Zeitpunkt erneut!";
+    const buttonresultwarten = "Das Aktualisieren der Reglungen wird durchgeführt.<br />Bitte warten sie einen Moment.";
+    const buttonresultabruch = "Das Aktualisieren der Reglungen wurde abgebrochen.";
+  
+    const wert = 0;
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 6 }, (_, i) => currentYear - i);
 
   const [showPopup, setShowPopup] = useState(false);
-  const [buttonResult, setButtonResult] = useState("");
+  const [buttonresult, setButtonResult] = useState("");
   const [selectedYear, setSelectedYear] = useState(currentYear.toString());
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -57,10 +64,21 @@ export default function RegelungenButton() {
 
   return (
     <div>
-      <Button variant="default" onClick={handleButtonClick}>
-        Regelungen aktualisieren
-      </Button>
-      <p dangerouslySetInnerHTML={{ __html: buttonResult }}></p>
+      {button_loggig_color() === wert ? (
+        <div>
+          <Button variant="default" onClick={handleButtonClick}>
+            Regelungen aktualisieren
+          </Button>
+          <p dangerouslySetInnerHTML={{ __html: buttonresult }}></p>
+        </div>
+      ) : (
+        <div>
+          <Button variant="destructive" onClick={handleButtonClick}>
+            Regelungen aktualisieren
+          </Button>
+          <p dangerouslySetInnerHTML={{ __html: buttonresult }}></p>
+        </div>
+      )}
 
       <Dialog
         open={showPopup}
