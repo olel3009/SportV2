@@ -144,7 +144,7 @@ def fill_out_group(athletenIds: list[Athlete]) -> str:
             f"name{i}": f"{athlete.last_name} {athlete.first_name}",
             f"sex{i}" : athlete.gender,
             f"birthdate{i}": athlete.birth_date,
-            f"age{i}" : (int(datetime.today().year) - int(datetime.strptime(athlete.birth_date, "%Y-%m-%d").year))
+            #f"age{i}" : (int(datetime.today().year) - int(datetime.date(athlete.birth_date, "%Y-%m-%d").year))
         }
         sum = 0
         for perf in athlete.performances:

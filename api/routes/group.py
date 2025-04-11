@@ -2,18 +2,17 @@ from flask import Flask, request, jsonify, Blueprint
 from database import db
 from database.models import Athlete as DBAthlete, Result as DBResult
 from api.export_pdf import fill_out_group
-from api.athlet import Athlete, PerformanceData, SwimmingCertificate
+from api.athlet import Athlete, PerformanceData
 
-import athlete
-
-app = Flask(__name__)
+bp_group = Blueprint("group", __name__)
 
 #Gruppe wird als Liste von Athleten ID's übergeben
 
-@app.route('/gruppen/export/pdf', methods=['GET'])
-def export_group_pdf(ath_group: list):
+@bp_group.route('/gruppen/export/pdf', methods=['GET'])
+def export_group_pdf():
     db_group = []
-    for ath in ath_group:
+    ids_str: list = request.args.get("ids")
+    for ath in ids_str:
         #Datenbank-Abfrage des jeweiligen Athleten
         db_athlete = DBAthlete.query.get_or_404(ath)
         

@@ -23,8 +23,9 @@ def create_app():
     from api.routes.trainer import bp_trainer
     from api.routes.result import bp_result 
     from api.routes.rule import bp_rule
+    from api.routes.group import bp_group
     
-    for bp in [bp_user, bp_trainer, bp_result, bp_athlete, bp_rule]:
+    for bp in [bp_user, bp_trainer, bp_result, bp_athlete, bp_rule, bp_group]:
         app.register_blueprint(bp)
 
     @app.errorhandler(ValidationError)
