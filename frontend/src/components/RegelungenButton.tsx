@@ -50,6 +50,9 @@ export default function RegelungenButton() {
     setTimeout(() => {
       setButtonResult("Das Aktualisieren der Regelungen war erfolgreich.");
     }, 2000);
+    setSelectedYear(currentYear.toString());
+    setUploadedFile(null);
+    setErrorMessage("");
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
