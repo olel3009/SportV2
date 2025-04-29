@@ -1,5 +1,6 @@
 'use client';
 
+import * as Tooltip from "@radix-ui/react-tooltip";
 import React, { useRef, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -62,7 +63,7 @@ export default function RegelungenButton() {
         setUploadedFile(file);
         setErrorMessage(""); // Entfernt vorherige Fehlermeldungen
       } else {
-        
+
         setErrorMessage("Bitte laden Sie eine gültige CSV-Datei hoch."); // Fehlermeldung für ungültige Dateien
       }
     }
@@ -76,20 +77,56 @@ export default function RegelungenButton() {
     <div>
       {button_loggig_color() === wert ? (
         <div>
-          <Button variant="default" onClick={handleButtonClick}>
-            Regelungen aktualisieren
-          </Button>
-          <p dangerouslySetInnerHTML={{ __html: buttonresult }}></p>
+
+
+
+          <Tooltip.Provider>
+            <Tooltip.Root>
+              <Tooltip.Trigger asChild>
+                <Button variant="default" onClick={handleButtonClick}>
+                  Regelungen aktualisieren
+                </Button>
+
+              </Tooltip.Trigger>
+              <p dangerouslySetInnerHTML={{ __html: buttonresult }}></p>
+              <Tooltip.Content
+                side="right" // Tooltip wird rechts angezeigt
+                align="center" // Zentriert den Tooltip vertikal zur Maus
+                sideOffset={10} // Abstand zwischen Tooltip und Maus
+                className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+              >
+                Klicken Sie hier, um die Regelungen zu aktualisieren
+                <Tooltip.Arrow className="fill-gray-800" />
+              </Tooltip.Content>
+            </Tooltip.Root>
+          </Tooltip.Provider>
         </div>
+
+
       ) : (
         <div>
-          <Button variant="destructive" onClick={handleButtonClick}>
-            Regelungen aktualisieren
-          </Button>
-          <p dangerouslySetInnerHTML={{ __html: buttonresult }}></p>
+          <Tooltip.Provider>
+            <Tooltip.Root>
+              <Tooltip.Trigger asChild>
+                <Button variant="destructive" onClick={handleButtonClick}>
+                  Regelungen aktualisieren
+                </Button>
+
+              </Tooltip.Trigger>
+              <p dangerouslySetInnerHTML={{ __html: buttonresult }}></p>
+              <Tooltip.Content
+                side="right" // Tooltip wird rechts angezeigt
+                align="center" // Zentriert den Tooltip vertikal zur Maus
+                sideOffset={10} // Abstand zwischen Tooltip und Maus
+                className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+              >
+                Klicken Sie hier, um die Regelungen zu aktualisieren
+                <Tooltip.Arrow className="fill-gray-800" />
+              </Tooltip.Content>
+            </Tooltip.Root>
+          </Tooltip.Provider>
         </div>
       )}
-
       <Dialog
         open={showPopup}
         onOpenChange={(isOpen) => {
@@ -101,8 +138,14 @@ export default function RegelungenButton() {
             <DialogTitle>Regelungen aktualisieren</DialogTitle>
           </DialogHeader>
 
+
           {/* Drag-and-Drop-Bereich */}
-          <div
+
+
+          <Tooltip.Provider>
+            <Tooltip.Root>
+              <Tooltip.Trigger asChild>
+              <div
             className="relative border border-dashed border-gray-300 p-4 rounded-md mb-4 cursor-pointer flex flex-col items-center justify-center h-48"
             onClick={() => fileInputRef.current?.click()}
             onDragOver={(e) => {
@@ -150,6 +193,23 @@ export default function RegelungenButton() {
             />
           </div>
 
+              </Tooltip.Trigger>
+              
+              <Tooltip.Content
+                side="left" // Tooltip wird rechts angezeigt
+                align="center" // Zentriert den Tooltip vertikal zur Maus
+                sideOffset={10} // Abstand zwischen Tooltip und Maus
+                className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+              >
+                Hier Klicken um Datei Explorer zu öffnen, um eine Datei hochzuladen. 
+                <Tooltip.Arrow className="fill-gray-800" />
+              </Tooltip.Content>
+            </Tooltip.Root>
+          </Tooltip.Provider>
+
+
+          
+
           <div className="mb-4">
             <label className="block text-base font-medium text-gray-700 mb-2">
               Jahr auswählen:
@@ -173,12 +233,52 @@ export default function RegelungenButton() {
           {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
 
           <DialogFooter>
-            <Button variant="destructive" onClick={handleClosePopup}>
+
+
+          <Tooltip.Provider>
+            <Tooltip.Root>
+              <Tooltip.Trigger asChild>
+              <Button variant="destructive" onClick={handleClosePopup}>
               Abbrechen
             </Button>
-            <Button variant="default" className="bg-green-500 hover:bg-green-600 text-white" onClick={handleConfirm}>
+
+              </Tooltip.Trigger>
+              <Tooltip.Content
+                side="left" // Tooltip wird rechts angezeigt
+                align="center" // Zentriert den Tooltip vertikal zur Maus
+                sideOffset={10} // Abstand zwischen Tooltip und Maus
+                className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+              >
+                Hier Klicken um den Vorgang Abzubrechen. 
+                <Tooltip.Arrow className="fill-gray-800" />
+              </Tooltip.Content>
+            </Tooltip.Root>
+          </Tooltip.Provider>
+
+            
+          <Tooltip.Provider>
+            <Tooltip.Root>
+              <Tooltip.Trigger asChild>
+              <Button variant="default" className="bg-green-500 hover:bg-green-600 text-white" onClick={handleConfirm}>
               Bestätigen
             </Button>
+
+              </Tooltip.Trigger>
+              <Tooltip.Content
+                side="right" // Tooltip wird rechts angezeigt
+                align="center" // Zentriert den Tooltip vertikal zur Maus
+                sideOffset={10} // Abstand zwischen Tooltip und Maus
+                className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+              >
+                Hier Klicken um den Vorgang des Aktualisierens zu starten. 
+                <Tooltip.Arrow className="fill-gray-800" />
+              </Tooltip.Content>
+            </Tooltip.Root>
+          </Tooltip.Provider>
+          
+
+
+            
           </DialogFooter>
         </DialogContent>
       </Dialog>
