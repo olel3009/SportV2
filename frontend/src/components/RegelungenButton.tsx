@@ -182,25 +182,41 @@ export default function RegelungenButton() {
               <Tooltip.Arrow className="fill-gray-800" />
             </Tooltip.Content>
           </Tooltip.Root>
-          <div className="mb-4">
-            <label className="block text-base font-medium text-gray-700 mb-2">
-              Jahr auswählen:
-            </label>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+
+
+            <Tooltip.Root>
+            <Tooltip.Trigger asChild>
+              <div className="mb-4">
+              <label className="block text-base font-medium text-gray-700 mb-2">
+                Jahr auswählen:
+              </label>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="w-full">
                   {selectedYear}
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
                 {years.map((year) => (
                   <DropdownMenuItem key={year} onClick={() => handleYearChange(year.toString())}>
-                    {year}
+                  {year}
                   </DropdownMenuItem>
                 ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              </div>
+            </Tooltip.Trigger>
+            <Tooltip.Content
+              side="top" // Tooltip wird oberhalb des Buttons angezeigt
+              align="center" // Zentriert den Tooltip horizontal zum Button
+              sideOffset={-6} // Abstand zwischen Tooltip und Button
+              className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+            >
+              Auf den Knopf drücken um ein Jahr auszuwählen
+              <Tooltip.Arrow className="fill-gray-800" />
+            </Tooltip.Content>
+            </Tooltip.Root>
+
           {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
           <DialogFooter>
             <Tooltip.Root>
