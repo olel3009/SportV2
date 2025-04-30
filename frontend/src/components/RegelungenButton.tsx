@@ -209,10 +209,10 @@ export default function RegelungenButton() {
             <Tooltip.Content
               side="top" // Tooltip wird oberhalb des Buttons angezeigt
               align="center" // Zentriert den Tooltip horizontal zum Button
-              sideOffset={-6} // Abstand zwischen Tooltip und Button
+              sideOffset={-10} // Abstand zwischen Tooltip und Button
               className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
             >
-              Auf den Knopf drücken um ein Jahr auszuwählen
+              Auf den Knopf drücken um ein Jahr auszuwählen.
               <Tooltip.Arrow className="fill-gray-800" />
             </Tooltip.Content>
             </Tooltip.Root>
