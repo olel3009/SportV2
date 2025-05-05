@@ -12,11 +12,48 @@ export interface Athlete {
 }
 
 export interface Feat {
-    discipline: string;
-    exercise: string; 
-    date: string;
-    result: string;
-    score: number;
+    id: number;
+    athlete_id: number;
+    rule_id: number;
+    year: number;
+    age: number;
+    result: number;
+    medal: string;
+    created_at: string;
+    updated_at: string;
+    ruling: Rule|undefined;
+}
+
+export interface Rule{
+    id: number;
+
+    discipline_id: number;
+
+    rule_name: string;
+
+    description_m: string;
+    description_f: string;
+
+    unit: string;
+
+    min_age: number;
+    max_age: number;
+
+    thresh_bronze_m: number;
+    thresh_silver_m: number;
+    thresh_gold_m: number;
+
+    thresh_bronze_f: number;
+    thresh_silver_f: number;
+    thresh_gold_f: number;
+
+    valid_start: Date;
+    valid_end: Date;
+
+    version:number;
+
+    created_at:Date;
+    updated_at:Date;
 }
 
 export interface Exercise {

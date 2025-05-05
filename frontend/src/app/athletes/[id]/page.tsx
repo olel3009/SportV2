@@ -1,6 +1,6 @@
 import { useParams } from "next/navigation";
 import { Athlete, Feat } from "@/models/athlete";
-import { getAthleteById } from "@/athlete_getters";
+import { getAthleteById, getFeatsById } from "@/athlete_getters";
 import Link from "next/link";
 import { Undo2 } from "lucide-react";
 import {
@@ -34,6 +34,7 @@ export default async function Page({
 }: {
   params: Promise<{ id: string }>;
 }) {
+<<<<<<< HEAD
   const id = parseInt((await params).id);
   const athlete = await getAthleteById(id);
   function mapSex(sex: string) {
@@ -42,6 +43,18 @@ export default async function Page({
     if (sex === "w") return "Weiblich";
     if (sex === "d") return "Divers";
   }
+=======
+    const id = parseInt((await params).id);
+    const athlete = await getAthleteById(id);
+    const feats= await getFeatsById(id);
+    console.log(feats);
+    function mapSex(sex: string) {
+        sex = sex.toLocaleLowerCase();
+        if (sex === "m") return "Männlich";
+        if (sex === "w") return "Weiblich";
+        if (sex === "d") return "Divers";
+    }
+>>>>>>> 4f842af06da82a9c5dc27f3f492d93f255541963
 
   if (athlete === undefined)
     return (
