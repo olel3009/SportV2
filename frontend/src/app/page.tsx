@@ -1,6 +1,7 @@
 "use client"
 import { login, signup } from "./authlogin";
 import { useActionState } from 'react'
+import ErrorDisplay from "@/components/ErrorDisplay";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,24 +15,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertCircle } from "lucide-react";
 
-function Error({message}: {message: string}) {
-  return (
-    <Card className="bg-red-50 border border-red-200 text-red-700">
-      <CardContent className="flex items-center gap-2 py-3">
-        <AlertCircle className="h-5 w-5 text-red-600"/>
-        <span>{message}</span>
-      </CardContent>
-    </Card>
-  )
-}
-
 function LoginForm() {
   const [state, action, pending] = useActionState(login, undefined)
   return (
     <div className="flex flex-col gap-6">
       
       {(state?.errors?.email || state?.errors?.password) &&
-        <Error message="Die angegebene E-Mail oder das Passwort sind falsch."></Error>
+        <ErrorDisplay message="Die angegebene E-Mail oder das Passwort sind falsch."></ErrorDisplay>
       }
 
       <Card>
