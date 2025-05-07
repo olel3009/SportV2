@@ -1,9 +1,10 @@
 from datetime import datetime
 from flask import Blueprint, request, jsonify
 from database import db
-from database.models import Athlete as DBAthlete, Result as DBResult
-from database.schemas import AthleteSchema
+from database.models import Athlete as DBAthlete, Result as DBResult, Rule as DBRule
+from database.schemas import AthleteSchema, DisciplineSchema, ResultSchema, RuleSchema
 from api.export_pdf import fill_pdf_form
+from sqlalchemy.orm import joinedload
 
 bp_athlete = Blueprint('athlete', __name__)
 
@@ -115,3 +116,59 @@ def export_athlete_pdf(athlete_id):
         "message": "Export erfolgreich",
         "pdf_feedback": pdf_feedback
     })
+
+@bp_athlete.route('/athletes/<int:athlete_id>/results', methods=['GET'])
+def get_athletes_results(athlete_id):
+
+    db_athlete = DBAthlete.query.get_or_404(athlete_id)
+
+    db_results = DBResult.query.options(
+        joinedload(DBResult.rule).joinedload(DBRule.discipline) #
+    ).filter(
+        DBResult.athlete_id == athlete_id
+    ).all()
+
+    if not db_results:
+        return jsonify([]), 200
+    
+    response_data = []
+
+    result_schema = ResultSchema()
+    rule_schema = RuleSchema()
+    discipline_schema = DisciplineSchema() 
+
+    for result in db_results:
+
+        serialized_result = result_schema.dump(result) #
+
+        rule = result.rule
+
+        if rule:
+             serialized_rule = rule_schema.dump(rule) #
+
+             discipline = rule.discipline
+
+             if discipline:
+                 serialized_discipline = discipline_schema.dump(discipline)
+
+                 if 'discipline_id' in serialized_rule:
+                     del serialized_rule['discipline_id']
+
+                 serialized_rule['discipline'] = serialized_discipline
+             else:
+                 serialized_rule['discipline'] = None
+                 print(f"Warning: Discipline data missing for rule ID {rule.id}")
+
+             if 'rule_id' in serialized_result:
+                 del serialized_result['rule_id']
+
+             serialized_result['rule'] = serialized_rule
+        else:
+             if 'rule_id' in serialized_result:
+                 del serialized_result['rule_id']
+             serialized_result['rule'] = None
+             print(f"Warning: Rule data missing for result ID {result.id} (Rule ID: {result.rule_id if hasattr(result, 'rule_id') else 'N/A'})")
+
+        response_data.append(serialized_result)
+
+    return jsonify(response_data), 200
