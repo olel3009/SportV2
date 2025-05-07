@@ -63,31 +63,56 @@ export async function signup(state: FormState, formData: FormData) {
     const validatedFields = SignupFormSchema.safeParse({
         email: formData.get('email'),
         password: formData.get('password'),
+        password2: formData.get('password2'),
     })
     const mail = formData.get('email') as string;
     const password = formData.get('password') as string;
+    const password2 = formData.get('password2') as string;
     // If any form fields are invalid, return early
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
         }
     }
-    if (userExists(mail) == false) {
 
+    if (userExists(mail) == false) {
+        if (password != password2) {
+            return {
+                errors: {
+                    password: ['Die Passwörter sind nicht gleich'],
+                
+                
+                }
+            }
+            }else{
         if (createUser(mail, password) == true) {
             console.log("Signup Erfolgreich")
+            redirect('/dashboard')
             return {
                 message: 'Signup Erfolgreich',
+                
             }
         }
-    } else {
-        console.log("login failed")
+
+            else {
+        console.log("SignUp Fehlgeschlagen")
         if (userExists(mail) == true) {
             return {
                 errors: {
                     email: ['Ein Account mit dieser E-Mail Adresse existiert bereits'],
                 }
             }
+        }else {
+
+
+            return {
+                errors: {
+                    email: ['SignUp Fehlgeschlagen'],
+                }
+            }
         }
     }
+    }
+    }
+    
 }

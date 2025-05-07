@@ -1,9 +1,7 @@
 "use client"
-import { login, signup } from "./authlogin";
+import { login, signup } from '@/app/authlogin';
 import { useActionState } from 'react'
-import { useRouter } from "next/navigation";
-
-
+import { SignupFormSchema, FormState, LoginFormSchema } from '@/app/definitions'
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -27,23 +25,21 @@ function Error({message}: {message: string}) {
   )
 }
 
-function LoginForm() {
+function SignUpForm() {
   const [state, action, pending] = useActionState(signup, undefined)
-  const router = useRouter(); // Router-Hook initialisieren
-
   return (
     <div className="flex flex-col gap-6">
       
       {(state?.errors?.email || state?.errors?.password) &&
-        <Error message="Die angegebene E-Mail Adress oder das Passwort sind falsch."></Error>
+        <Error message="Die angegebene E-Mail Adresse ist fehlerhaft oder es existiert schon ein Accout unter dieser E-Mail Adreese
+         oder die Passwörter stimmen nicht über ein."></Error>
       }
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-2x1">Login</CardTitle>
+          <CardTitle className="text-2x1">SignUp</CardTitle>
           <CardDescription>
-            Geben Sie zum Einloggen ihre E-Mail Adresse und ihr Passwort an.<br/>
-            Falls Sie noch kein Account haben, drücken Sie auf den SignUp-Knopf.
+            Geben Sie zum Registrieren ihre E-Mail Adresse und ein Passwort an und bestätigen Sie dieses Passwort.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -68,22 +64,19 @@ function LoginForm() {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full" id= "loginbutton">
-                Login
-              </Button>
+              <div className="grid gap-2">
+                <Label htmlFor="password">Passwort Bestätigung</Label>
+                <Input
+                  id="password2"
+                  name="password2"
+                  type="password"
+                  required
+                />
+              </div>
 
-              <Button
-                type="button"
-                className="w-full"
-                id="signupbutton"
-                onClick={() => {
-                  router.push("/signup");
-                }}
-              >
+              <Button type="submit" className="w-full" id= "signupbutton">
                 SignUp
               </Button>
-
-              
             </div>
           </form>
         </CardContent>
@@ -92,11 +85,11 @@ function LoginForm() {
   );
 }
 
-export default function Login() {
+export default function Signup() {
   return (
     <div className="flex items-center h-full justify-center md:px-10">
       <div className="w-full max-w-sm">
-        <LoginForm />
+        <SignUpForm/>
       </div>
     </div>
   )
