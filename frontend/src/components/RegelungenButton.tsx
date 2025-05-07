@@ -185,40 +185,69 @@ export default function RegelungenButton() {
 
 
             <Tooltip.Root>
-            <Tooltip.Trigger asChild>
-              <div className="mb-4">
-              <label className="block text-base font-medium text-gray-700 mb-2">
-                Jahr auswählen:
-              </label>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="w-full">
-                  {selectedYear}
-                </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                {years.map((year) => (
-                  <DropdownMenuItem key={year} onClick={() => handleYearChange(year.toString())}>
-                  {year}
-                  </DropdownMenuItem>
-                ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              </div>
-            </Tooltip.Trigger>
-            <Tooltip.Content
-              side="top" // Tooltip wird oberhalb des Buttons angezeigt
-              align="center" // Zentriert den Tooltip horizontal zum Button
-              sideOffset={-10} // Abstand zwischen Tooltip und Button
-              className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
-            >
-              Auf den Knopf drücken um ein Jahr auszuwählen.
-              <Tooltip.Arrow className="fill-gray-800" />
-            </Tooltip.Content>
+              <Tooltip.Trigger asChild>
+                <div className="mb-4">
+                  <label className="block text-base font-medium text-gray-700 mb-2">
+                    Jahr auswählen:
+                  </label>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="w-full">
+                        {selectedYear}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      {years.map((year) => (
+                        <DropdownMenuItem key={year} onClick={() => handleYearChange(year.toString())}>
+                          {year}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </Tooltip.Trigger>
+              <Tooltip.Content
+                side="top"
+                align="center"
+                sideOffset={-10}
+                className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+              >
+                Auf den Knopf drücken um ein Jahr auszuwählen.
+                <Tooltip.Arrow className="fill-gray-800" />
+              </Tooltip.Content>
             </Tooltip.Root>
 
           {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
+          
+          
+          
+          
           <DialogFooter>
+
+
+          <Tooltip.Root>
+              <Tooltip.Trigger asChild>
+              <a href="/Leistungsuebersicht_beispiel.csv" download>
+                <Button>
+                  Beispiel CSV
+                </Button>
+               </a>
+                
+              </Tooltip.Trigger>
+              <Tooltip.Content
+                side="left" // Tooltip wird rechts angezeigt
+                align="center" // Zentriert den Tooltip vertikal zur Maus
+                sideOffset={10} // Abstand zwischen Tooltip und Maus
+                className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+              >
+                Hier Klicken um eine Beispiel CSV-Datei Herunterzuladen.
+                <Tooltip.Arrow className="fill-gray-800" />
+              </Tooltip.Content>
+            </Tooltip.Root>
+
+
+
+
             <Tooltip.Root>
               <Tooltip.Trigger asChild>
                 <Button variant="destructive" onClick={handleClosePopup}>
