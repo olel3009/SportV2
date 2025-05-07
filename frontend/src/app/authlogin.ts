@@ -22,7 +22,7 @@ export async function login(state: FormState, formData: FormData) {
     }
 
     //Test Login Data and test return
-    
+
     const mail = formData.get('email') as string;
     const password = formData.get('password') as string;
     if (LoginKontrolle(mail, password) == 2) {
@@ -80,39 +80,39 @@ export async function signup(state: FormState, formData: FormData) {
             return {
                 errors: {
                     password: ['Die Passwörter sind nicht gleich'],
-                
-                
+
+
                 }
             }
-            }else{
-        if (createUser(mail, password) == true) {
-            console.log("Signup Erfolgreich")
-            redirect('/dashboard')
-            return {
-                message: 'Signup Erfolgreich',
-                
+        } else {
+            if (createUser(mail, password) == true) {
+                console.log("Signup Erfolgreich")
+                redirect('/dashboard')
+                return {
+                    message: 'Signup Erfolgreich',
+
+                }
             }
-        }
 
             else {
-        console.log("SignUp Fehlgeschlagen")
-        if (userExists(mail) == true) {
-            return {
-                errors: {
-                    email: ['Ein Account mit dieser E-Mail Adresse existiert bereits'],
-                }
-            }
-        }else {
+                console.log("SignUp Fehlgeschlagen")
+                if (userExists(mail) == true) {
+                    return {
+                        errors: {
+                            email: ['Ein Account mit dieser E-Mail Adresse existiert bereits'],
+                        }
+                    }
+                } else {
 
 
-            return {
-                errors: {
-                    email: ['SignUp Fehlgeschlagen'],
+                    return {
+                        errors: {
+                            email: ['SignUp Fehlgeschlagen'],
+                        }
+                    }
                 }
             }
         }
     }
-    }
-    }
-    
+
 }
