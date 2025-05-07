@@ -59,6 +59,10 @@ export default async function Page({
         if (sex === "w") return "Weiblich";
         if (sex === "d") return "Divers";
     }
+   let usedExercises:number[]=[];
+   let idIndex=1;
+   let temp:number;
+   let tabMap:number[]=[];
 
   if (athlete === undefined)
     return (
@@ -99,9 +103,11 @@ export default async function Page({
 
               const disc = disciplines.find(d => d.id === index + 1);
               if (!disc) return null;                       // guard against not found
-
+              temp=idIndex;
+              idIndex+=1;
+              tabMap[disc.id]=temp;
               return (
-                <TabSwitcher key={disc.id} tabId={disc.id}>
+                <TabSwitcher key={disc.id} tabId={temp}>
                   <div className="p-2">{disc.name}</div>
                 </TabSwitcher>
               );
@@ -118,12 +124,18 @@ export default async function Page({
                 console.log(relFeats);
                 return <div key={disc.id+"_tab"}>
                 {relFeats?.map(feat=>{
+                  if(usedExercises.includes(feat.rule_id)){
+                    return null;
+                  }else{
+                    usedExercises.push(feat.rule_id);
+                  }
                   let discName:string|undefined='';
                   if(athlete.sex=='w'){
                      discName=feat.ruling?.description_f;
                   }else{
                      discName=feat.ruling?.description_m;
                   }
+                  discName+=" "+feat.ruling?.min_age+" - "+feat.ruling?.max_age;
                   let tabKey:string;
                   if(discName){
                     tabKey=disc.id+discName;
@@ -131,7 +143,7 @@ export default async function Page({
                     tabKey=disc.id+'_tab';
                   }
                   return (
-                    <TabContent key={tabKey} id={disc.id}><details><summary>{discName}</summary>Hier genauere Details über Disziplin/Übung</details></TabContent>
+                    <TabContent key={tabKey} id={tabMap[disc.id]}><details><summary>{discName}</summary>Hier genauere Details über Disziplin/Übung</details></TabContent>
                   );
                 })}
                 </div>
