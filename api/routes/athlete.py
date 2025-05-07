@@ -43,9 +43,23 @@ def get_athletes():
 
 @bp_athlete.route('/athletes/<int:id>', methods=['GET'])
 def get_athlete_id(id):
+    # 1) Athleten‐Datensatz laden oder 404
     athlete = DBAthlete.query.get_or_404(id)
     schema = AthleteSchema()
-    return jsonify(schema.dump(athlete))
+    data = schema.dump(athlete)
+
+    # 3) Query‐Parameter auslesen (Default = "false")
+    show = request.args.get('show_results', 'false').lower() == 'true'
+
+    if show:
+        # 4) nur wenn show_results=true, Medaillen zählen
+        data.update({
+            "total_bronze": DBResult.query.filter_by(athlete_id=id, medal='Bronze').count(),
+            "total_silver": DBResult.query.filter_by(athlete_id=id, medal='Silber').count(),
+            "total_gold":   DBResult.query.filter_by(athlete_id=id, medal='Gold').count(),
+        })
+
+    return jsonify(data), 200
 
 @bp_athlete.route('/athletes/<int:id>', methods=['PUT'])
 def update_athlete(id):
