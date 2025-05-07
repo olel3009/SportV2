@@ -15,12 +15,12 @@ export interface Feat {
     id: number;
     athlete_id: number;
     rule_id: number;
-    year: number;
-    age: number;
+    year: number|undefined;
+    age: number|undefined;
     result: number;
-    medal: string;
-    created_at: string;
-    updated_at: string;
+    medal: string|undefined;
+    created_at: string|undefined;
+    updated_at: string|undefined;
     ruling: Rule|undefined;
 }
 

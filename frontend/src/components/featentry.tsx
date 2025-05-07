@@ -1,9 +1,9 @@
 "use client";
-import { Athlete } from "@/models/athlete";
-import { getAllAthletes, addFeatToAthlete } from "@/../generic_functions/athlete_getters";
-import { getExercises } from "@/../generic_functions/calculation_functions";
+import { Athlete, Rule } from "@/models/athlete";
+import { getAllAthletes, addFeatToAthlete, getAllDisciplines, getAllRules, getRulesByDisciplineId } from "@/../generic_functions/athlete_getters";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useMemo } from "react";
 import {
   Select,
   SelectContent,
@@ -66,15 +66,24 @@ function AthleteSelect({
   )
 }
 
-function DisciplineSelect({
+export function DisciplineSelect({
   value,
   onChange
 }: {
   value: string;
   onChange: (val: string) => void;
 }) {
-  const exercises = getExercises();
-  const options = Object.keys(exercises);
+  const [options, setOptions] = useState<{ id: number; name: string }[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    getAllDisciplines()
+      .then((data) => setOptions(data))
+      .catch((err) => setError(err.message));
+  }, []);
+
+  if (error) return <div className="text-red-600">Failed to load: {error}</div>;
+  if (!options) return <div>Loading disciplines…</div>;
 
   return (
     <Select value={value} onValueChange={onChange}>
@@ -82,27 +91,37 @@ function DisciplineSelect({
         <SelectValue placeholder="Disziplin wählen" />
       </SelectTrigger>
       <SelectContent>
-        {options.map((option, index) => (
-          <SelectItem value={option} key={index}>
-            {option}
+        {options.map((opt) => (
+          <SelectItem value={String(opt.id)} key={opt.id}>
+            {opt.name}
           </SelectItem>
         ))}
       </SelectContent>
     </Select>
-  )
+  );
 }
 
-function ExerciseSelect({
-  discipline,
+export function ExerciseSelect({
+  disciplineId,
   value,
   onChange
 }: {
-  discipline: string;
+  disciplineId: string;
   value: string;
   onChange: (val: string) => void;
 }) {
-  const exercises = getExercises();
-  const currentExercise = exercises[discipline] || [];
+  const [exercises, setExercises] = useState<{ id: number; rule_name: string }[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!disciplineId) return;
+    getRulesByDisciplineId(Number(disciplineId))
+      .then((data) => setExercises(data ?? []))
+      .catch((err) => setError(err.message));
+  }, [disciplineId]);
+
+  if (error) return <div className="text-red-600">Fehler: {error}</div>;
+  if (!exercises) return <div>Loading exercises…</div>;
 
   return (
     <Select value={value} onValueChange={onChange}>
@@ -110,102 +129,185 @@ function ExerciseSelect({
         <SelectValue placeholder="Übung wählen" />
       </SelectTrigger>
       <SelectContent>
-        {currentExercise.map((exer, i) => (
-          <SelectItem value={exer} key={i}>
-            {exer}
+        {exercises.map((exer) => (
+          <SelectItem value={String(exer.id)} key={exer.id}>
+            {exer.rule_name}
           </SelectItem>
         ))}
       </SelectContent>
     </Select>
-  )
-
+  );
 }
 
-function formatDate(date: Date): string {
+function formatDate(date: Date): number {
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0'); // months are zero-based
-  const year = String(date.getFullYear());
-  return `${day}.${month}.${year}`;
+  const year = date.getFullYear();
+  //return `${day}.${month}.${year}`;
+  return year;
 }
 
-let [ueb, dat, erg] = "";
+let uebID=0
+let dat=0
+let erg = "";
 let ath = 0;
 const submit = () => {
-  console.log("Uebung:", ueb, "Athlet:", ath, "Datum:", dat, "Ergebnis:", erg);
-  addFeatToAthlete(ath, ueb, dat, erg);
+  console.log("Uebung:", uebID, "Athlet:", ath, "Datum:", dat, "Ergebnis:", erg);
+  addFeatToAthlete(ath, uebID, dat, erg);
 }
 
-function FeatEntryContent({ id = -1 }: { id?: number }) {
+export function FeatEntryContent({ id = -1 }: { id?: number }) {
   const today = new Date();
   const formatted = formatDate(today);
-  const exercises = getExercises();
-  const allDisciplines = Object.keys(exercises)
+  let resDesc="erg in whatever";
 
+  // fetched data
+  const [exercises, setExercises] = useState<Rule[]>([]);
+  const [disciplines, setDisciplines] = useState<Discipline[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // form state
   const [selectedAthlete, setSelectedAthlete] = useState("");
   const [selectedDiscipline, setSelectedDiscipline] = useState("");
   const [selectedExercise, setSelectedExercise] = useState("");
   const [result, setResult] = useState("");
-  const [date, setDate] = useState(formatted);
+  const [date, setDate] = useState<number>(formatted);
 
+  // load rules + disciplines once
   useEffect(() => {
-    if (allDisciplines.length > 0) {
-      setSelectedDiscipline(allDisciplines[0]);
-      const firstExercise = exercises[allDisciplines[0]]?.[0] ?? "";
-      setSelectedExercise(firstExercise);
-    }
+    let cancelled = false;
+    ;(async () => {
+      try {
+        const [allRules, allDisc] = await Promise.all([
+          getAllRules(),
+          getAllDisciplines(),
+        ]);
+        if (cancelled) return;
 
-    if (id !== -1) setSelectedAthlete(id.toString())
-  }, []);
+        setExercises(allRules);
+        setDisciplines(allDisc);
 
+        // default discipline → first discipline
+        if (allDisc.length > 0) {
+          const firstDis = allDisc[0].id;
+          setSelectedDiscipline(String(firstDis));
+
+          // default exercise → first matching that discipline
+          const firstEx = allRules.find((r) => r.discipline_id === firstDis);
+          setSelectedExercise(firstEx ? String(firstEx.id) : "");
+        }
+
+        // default athlete if passed in
+        if (id !== -1) {
+          setSelectedAthlete(String(id));
+        }
+      } catch (err: any) {
+        if (!cancelled) setError(err.message);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
+  
+
+  // sync out to your module-scope vars
   useEffect(() => {
-    ueb = selectedExercise;
+    uebID = Number(selectedExercise);
     dat = date;
     erg = result;
-    ath = Number(selectedAthlete)
-  }, [selectedAthlete, result, date, selectedExercise])
+    ath = Number(selectedAthlete);
+  }, [selectedAthlete, selectedDiscipline, selectedExercise, result, date]);
 
   const handleDisciplineChange = (newDiscipline: string) => {
     setSelectedDiscipline(newDiscipline);
-    const firstExercise = exercises[newDiscipline]?.[0] ?? "";
-    setSelectedExercise(firstExercise);
+    // pick first exercise in that discipline
+    const firstEx:Rule|undefined = exercises.find(
+      (ex) => ex.discipline_id === Number(newDiscipline)
+    );
+    setSelectedExercise(firstEx ? String(firstEx.id) : "");
   };
 
-  return (
-    <div className="flex flex-col gap-4">
+  const currentRule = exercises.find(
+    (r) => r.id === Number(selectedExercise)
+  );
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(
+      "Uebung:",
+      uebID,
+      "Athlet:",
+      ath,
+      "Datum:",
+      dat,
+      "Ergebnis:",
+      erg
+    );
+    addFeatToAthlete(ath, uebID, dat, erg);
+  };
+  
+
+  if (loading) return <div>Loading form…</div>;
+  if (error) return <div className="text-red-600">Error: {error}</div>;
+
+  return (
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <div className="grid gap-2">
         <Label>Athlet</Label>
-        <AthleteSelect id={id} value={selectedAthlete} onChange={setSelectedAthlete} />
+        <AthleteSelect
+          id={id}
+          value={selectedAthlete}
+          onChange={setSelectedAthlete}
+        />
       </div>
 
       <div className="grid gap-2">
         <Label>Disziplin</Label>
-        <DisciplineSelect value={selectedDiscipline} onChange={handleDisciplineChange} />
+        <DisciplineSelect
+          value={selectedDiscipline}
+          onChange={handleDisciplineChange}
+        />
       </div>
 
       <div className="grid gap-2">
         <Label>Übung</Label>
-        <ExerciseSelect discipline={selectedDiscipline} value={selectedExercise} onChange={setSelectedExercise} />
+        <ExerciseSelect
+          disciplineId={selectedDiscipline}
+          value={selectedExercise}
+          onChange={setSelectedExercise}
+        />
       </div>
 
       <div className="grid gap-2">
         <Label htmlFor="datum">Datum</Label>
         <Input
-          name="datum"
           id="datum"
+          name="datum"
+          type="number"
           placeholder="Datum des Ergebnis"
-          defaultValue={formatted}
-          onChange={e => setDate(e.target.value)}
+          value={date}
+          onChange={(e) => setDate(Number(e.target.value))}
         />
       </div>
 
       <div className="grid gap-2">
-        <Label htmlFor="ergebnis">Ergebnis</Label>
-        <Input id="ergebnis" placeholder="Ergebnis" onChange={e => setResult(e.target.value)}/>
+        <Label htmlFor="ergebnis">
+          Ergebnis {currentRule ? `(${currentRule.unit})` : ""}
+        </Label>
+        <Input
+          id="ergebnis"
+          placeholder={`Ergebnis in ${currentRule?.unit ?? ""}`}
+          value={result}
+          onChange={(e) => setResult(e.target.value)}
+        />
       </div>
 
-    </div>
-  )
+    </form>
+  );
 }
 
 
