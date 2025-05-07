@@ -56,6 +56,11 @@ export interface Rule{
     updated_at:Date;
 }
 
+export interface Discipline{
+    id:number;
+    name:string;
+}
+
 export interface Exercise {
     name: string; //eg. "800 m Lauf", "Schwimmen" usw.
     discipline: string; //eg. "Schnelligkeit", "Kraft" usw.

@@ -1,7 +1,7 @@
 //Fügen Sie hier alle Funktionen ein, die Athleten abrufen, damit sie im bereits vorhandenen Code verwendet werden können
 //Auf diese Weise müssen wir, wenn die API fertig ist, nur die Logik hier ändern und nicht an anderer Stelle im Code
 //Außerdem werden diese Funktionen mit ziemlicher Sicherheit mehr als einmal verwendet, daher ist es gut, sie woanders zu platzieren
-import { Athlete, Feat, Rule } from "../src/models/athlete";
+import { Athlete, Feat, Rule, Discipline } from "../src/models/athlete";
 
 let mockupData = `[
   {
@@ -263,7 +263,7 @@ export async function getFeatsById(id: number): Promise<Feat[] | undefined> {
   return all.filter(a => a.athlete_id === id);
 }
 
-export async function getAllFeats(forOne:boolean, id:number|null=null): Promise<Feat[]> {
+export async function getAllFeats(forOne:boolean=false, id:number|null=null): Promise<Feat[]> {
   const res = await fetch("http://127.0.0.1:5000/results", {
     cache: "no-store"
   });
@@ -374,6 +374,34 @@ export async function getAllRules(): Promise<Rule[]> {
     created_at:raw.created_at,
     updated_at:raw.updated_at,
   }));
+
+  return mapped;
+}
+
+type RawDiscipline ={
+  id:number;
+  discipline_name:string;
+  created_at:Date;
+  updated_at:Date;
+}
+
+
+export async function getAllDisciplines(): Promise<Discipline[]> {
+  const res = await fetch("http://127.0.0.1:5000/disciplines", {
+    cache: "no-store"
+  });
+  if (!res.ok) {
+    throw new Error(`API call failed: ${res.status}`);
+  }
+
+  const data: RawDiscipline[] = await res.json();
+
+  //Mapping
+  let mapped: Discipline[] = data.map((raw) => ({
+    id: raw.id,
+    name: raw.discipline_name
+  }));
+
 
   return mapped;
 }

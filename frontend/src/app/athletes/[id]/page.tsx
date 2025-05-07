@@ -1,9 +1,11 @@
 import { useParams } from "next/navigation";
 import { Athlete, Feat } from "@/models/athlete";
-import { getAthleteById, getFeatsById } from "@/athlete_getters";
+import { getAllDisciplines, getAthleteById, getFeatsById } from "@/athlete_getters";
 import Link from "next/link";
 import { Undo2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardTab, TabSwitcher, TabContent } from "./tab_cards";
+import { boolean } from "zod";
 
 const getAge = (dateString: string) => {
   const [day, month, year] = dateString.split('.').map(Number)
@@ -27,7 +29,20 @@ export default async function Page({ params }: {
     const id = parseInt((await params).id);
     const athlete = await getAthleteById(id);
     const feats= await getFeatsById(id);
+    const disciplines= await getAllDisciplines();
+    console.log(disciplines);
     console.log(feats);
+    let actDiscIds:boolean[]=[false, false, false, false];
+    feats?.forEach(feat => {
+      // first, safely pull out discipline_id
+      const id = feat?.ruling?.discipline_id;
+    
+      // make sure it's a real number in [1..4]
+      if (typeof id === "number" && id >= 1 && id <= actDiscIds.length) {
+        actDiscIds[id - 1] = true;
+      }
+    });
+    console.log(actDiscIds);
     function mapSex(sex: string) {
         sex = sex.toLocaleLowerCase();
         if (sex === "m") return "Männlich";
@@ -45,12 +60,60 @@ export default async function Page({ params }: {
           <CardDescription>{athlete.dateOfBirth} - {getAge(athlete.dateOfBirth)} Jahre</CardDescription>
         </CardHeader>
         <CardContent>
-
+  
         </CardContent>
       </Card>
       <p>Geburtsdatum: {athlete.dateOfBirth}</p>
       <p>Geschlecht: {mapSex(athlete.sex)}</p>
       <Link href={`/feats_result_page?id=${id}`}>Disziplinen:</Link>
+      <div className="m-8 bg-gray-200 rounded-sm shadow-lg">
+          <CardTab>
+            <div>
+            {actDiscIds.map((yes, index) => {
+              if (!yes) return null;                        // skip inactive ones
+
+              const disc = disciplines.find(d => d.id === index + 1);
+              if (!disc) return null;                       // guard against not found
+
+              return (
+                <TabSwitcher key={disc.id} tabId={disc.id}>
+                  <div className="p-2">{disc.name}</div>
+                </TabSwitcher>
+              );
+            })}
+            </div>
+            <div className="p-2">
+              {actDiscIds.map((yes, index) => {
+                if (!yes) return null;                        // skip inactive ones
+
+                const disc = disciplines.find(d => d.id === index + 1);
+                if (!disc) return null;                       // guard against not found
+
+                let relFeats:Feat[]|undefined=feats?.filter(a=>a.ruling?.discipline_id==index+1);
+                console.log(relFeats);
+                return <div key={disc.id+"_tab"}>
+                {relFeats?.map(feat=>{
+                  let discName:string|undefined='';
+                  if(athlete.sex=='w'){
+                     discName=feat.ruling?.description_f;
+                  }else{
+                     discName=feat.ruling?.description_m;
+                  }
+                  let tabKey:string;
+                  if(discName){
+                    tabKey=disc.id+discName;
+                  }else{
+                    tabKey=disc.id+'_tab';
+                  }
+                  return (
+                    <TabContent key={tabKey} id={disc.id}><details><summary>{discName}</summary>Hier genauere Details über Disziplin/Übung</details></TabContent>
+                  );
+                })}
+                </div>
+              })}
+            </div>
+          </CardTab>
+        </div>
       <ul>
         {athlete.disciplines?.map((discipline) => {
           return <li key={discipline}>{discipline}</li>
