@@ -38,20 +38,11 @@ export default function Home() {
           </li>
           <li>
             <a
-              id="link_erstellen_aendern_von_reglungen"
-              href="#erstellen_aendern_von_reglungen"
-              className="text-black hover:text-gray-600"
-            >
-              04. Erstellen oder Ändern von Reglungen
-            </a>
-          </li>
-          <li>
-            <a
               id="link_export_eines_athleten"
               href="#export_eines_athleten"
               className="text-black hover:text-gray-600"
             >
-              05. Export eines Athleten
+              04. Export eines Athleten
             </a>
           </li>
           <li>
@@ -60,7 +51,7 @@ export default function Home() {
               href="#export_eines_athleten_pdf"
               className="text-black hover:text-gray-600"
             >
-              06. Export eines Athleten und seiner Daten als PDF
+              05. Export eines Athleten und seiner Daten als PDF
             </a>
           </li>
           <li>
@@ -69,7 +60,7 @@ export default function Home() {
               href="#export_mehrer_athlethen"
               className="text-black hover:text-gray-600"
             >
-              07. Export mehrerer Athleten als CSV
+              06. Export mehrerer Athleten als CSV
             </a>
           </li>
           <li>
@@ -78,7 +69,7 @@ export default function Home() {
               href="#liste_athlethen"
               className="text-black hover:text-gray-600"
             >
-              08. Liste aller Athleten
+              07. Liste aller Athleten
             </a>
           </li>
           <li>
@@ -87,7 +78,7 @@ export default function Home() {
               href="#knopf_reglungsaktualisierung"
               className="text-black hover:text-gray-600"
             >
-              09. Manuelle Aktualisierung der Reglungen durch Knopfdruck
+              08. Manuelle Aktualisierung der Reglungen durch Knopfdruck
             </a>
           </li>
           <li>
@@ -96,7 +87,7 @@ export default function Home() {
               href="#medaillen_ansicht"
               className="text-black hover:text-gray-600"
             >
-              10. Medaillen Ansicht
+              09. Medaillen Ansicht
             </a>
           </li>
           <li>
@@ -105,7 +96,7 @@ export default function Home() {
               href="#regelungsverwaltung"
               className="text-black hover:text-gray-600"
             >
-              11. Regelungsverwaltung
+              10. Regelungsverwaltung
             </a>
           </li>
           <li>
@@ -114,7 +105,7 @@ export default function Home() {
               href="#visuelle_darstellung_entwicklung"
               className="text-black hover:text-gray-600"
             >
-              12. Visuelle Darstellung der Entwicklung eines Athleten
+              11. Visuelle Darstellung der Entwicklung eines Athleten
             </a>
           </li>
         </ul>
@@ -135,28 +126,24 @@ export default function Home() {
           <h2 className="text-xl font-semibold">03. Eintragsmodus für Leistungswerte</h2>
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
-        <div id="erstellen_aendern_von_reglungen" className="mb-8">
-          <h2 className="text-xl font-semibold">04. Erstellen oder Ändern von Reglungen</h2>
-          <p>Hier könnte die Beschreibung stehen</p>
-        </div>
         <div id="export_eines_athleten" className="mb-8">
-          <h2 className="text-xl font-semibold">05. Export eines Athleten</h2>
+          <h2 className="text-xl font-semibold">04. Export eines Athleten</h2>
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
         <div id="export_eines_athleten_pdf" className="mb-8">
-          <h2 className="text-xl font-semibold">06. Export eines Athleten und seiner Daten als PDF</h2>
+          <h2 className="text-xl font-semibold">05. Export eines Athleten und seiner Daten als PDF</h2>
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
         <div id="export_mehrer_athlethen" className="mb-8">
-          <h2 className="text-xl font-semibold">07. Export mehrerer Athleten als CSV</h2>
+          <h2 className="text-xl font-semibold">06. Export mehrerer Athleten als CSV</h2>
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
         <div id="liste_athlethen" className="mb-8">
-          <h2 className="text-xl font-semibold">08. Liste aller Athleten</h2>
+          <h2 className="text-xl font-semibold">07. Liste aller Athleten</h2>
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
         <div id="knopf_reglungsaktualisierung" className="mb-8">
-          <h2 className="text-xl font-semibold">09. Manuelle Aktualisierung der Reglungen durch Knopfdruck</h2>
+          <h2 className="text-xl font-semibold">08. Manuelle Aktualisierung der Reglungen durch Knopfdruck</h2>
           <p>Der Knopf zur Aktualisierung der Regelungen befindet sich unten auf der Startseite und trägt die Aufschrift "Regelungen aktualisieren".<br />
               Dieser Knopf sorgt dafür, dass nach einer Bestätigung die aktuellen Regelungen geladen werden.<br /><br />
             </p>
@@ -198,15 +185,15 @@ export default function Home() {
             </p>
         </div>
         <div id="medaillen_ansicht" className="mb-8">
-          <h2 className="text-xl font-semibold">10. Medaillen Ansicht</h2>
+          <h2 className="text-xl font-semibold">09. Medaillen Ansicht</h2>
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
         <div id="regelungsverwaltung" className="mb-8">
-          <h2 className="text-xl font-semibold">11. Regelungsverwaltung</h2>
+          <h2 className="text-xl font-semibold">10. Regelungsverwaltung</h2>
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
         <div id="visuelle_darstellung_entwicklung" className="mb-8">
-          <h2 className="text-xl font-semibold">12. Visuelle Darstellung der Entwicklung eines Athleten</h2>
+          <h2 className="text-xl font-semibold">11. Visuelle Darstellung der Entwicklung eines Athleten</h2>
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
       </div>
