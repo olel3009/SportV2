@@ -1,5 +1,5 @@
 from flask import Blueprint
-from database.models import Athlete as DBAthlete, Result as DBResult, Regel as DBRule
+from database.models import Athlete as DBAthlete, Result as DBResult, Rule as DBRule, Discipline as DBDiscipline
 from database import db
 import logging
 import csv
@@ -15,12 +15,17 @@ def import_csv(csv_file):
         with open(csv_file, newline="") as csv_data:
             reader = csv.reader(csv_data)
             athletes = DBAthlete.query.all()
+            disciplines = DBDiscipline.query.all()
+            rule = DBResult.query.all()
             for row in reader:
                 #Athleten-ID aus der CSV
                 athlete_name=row["Name"]
                 athlete_surname=row["Vorname"]
                 athlete_year = row["Geburtsjahr"]
                 athlete_day = row["Geburtstag"]
+                
+                discipline_category = row["Kategorie"]
+                rule_exercise = row["Übung"]
                 
                 #Ermittelt die ID des Athleten anhand von Namen und Geburtsdaten
                 athlete_id = select(DBAthlete) \
@@ -30,18 +35,26 @@ def import_csv(csv_file):
                 .where(athlete_day in athletes.birth_date) \
                 .compile()['id']
                 
+                discipline_id = select(DBDiscipline) \
+                .where(disciplines.discipline_name == discipline_category).compile()['id']
+                
+                rule_id = select(DBRule) \
+                .where(rule.rule_name == rule_exercise)\
+                .where(rule.discipline_id == discipline_id)\
+                .compile()['id']
+                
                 #Objekte mit der Athleten-ID
                 dbathlete = DBAthlete.query.get_or_404(athlete_id)
                 dbresult = DBResult.query.get_or_404(athlete_id)
-                dbrule = DBRule.query.get_or_404(athlete_id)
-                
+
                 #Attribute aktualisieren
-                dbrule.disziplin = f"{row["Disziplin"]} {row["Kategorie"]}"
                 dbresult.result = row["Leitstung"]
-                dbresult.created_at = row["Datum"]
+                dbresult.year = row["Datum"]
+                dbresult.rule_id = rule_id
+                db.athlete_id = athlete_id
             db.session.commit()
 
-    except dbathlete is not None:
-        return logging.WARNING("Athlet existiert schon!")
+    except dbathlete is None:
+        return logging.WARNING("Athlet existiert nicht!")
     
     return logging.info("CSV-Daten wurden erfolgreich importiert!")
