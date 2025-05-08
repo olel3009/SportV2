@@ -1,0 +1,1 @@
+import {getAthleteById, getFeatsById, getAllDisciplines} from "./athlete_getters"
