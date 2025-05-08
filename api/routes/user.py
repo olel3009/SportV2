@@ -30,6 +30,7 @@ def get_users():
     return jsonify([{
         "id": user.id,
         "email": user.email,
+        "password": user.password,  # In einer echten App: Hashen!
         "created_at": user.created_at,
         "updated_at": user.updated_at
     } for user in users])

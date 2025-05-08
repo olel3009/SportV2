@@ -25,29 +25,20 @@ export async function login(state: FormState, formData: FormData) {
 
     const mail = formData.get('email') as string;
     const password = formData.get('password') as string;
-    if (LoginKontrolle(mail, password) == 2) {
+    if (await LoginKontrolle(mail, password) == 2) {
         console.log("login successful")
         redirect('/dashboard')
-        return {
-            message: 'Login successful',
-            email: ['Anmeldung erfolgreich.'],
-            password: ['Anmeldung erfolgreich.'],
-            errors: {
-                email: ['Anmeldung erfolgreich.'],
-                password: ['Anmeldung erfolgreich.'],
-            }
-        }
     } else {
         console.log("login failed")
 
-        if (LoginKontrolle(mail, password) == 0) {
+        if (await LoginKontrolle(mail, password) == 0) {
             return {
                 errors: {
                     email: ['Es existiert kein Account mit dieser E-Mail Adresse'],
                 }
             }
         }
-        if (LoginKontrolle(mail, password) == 1) {
+        if (await LoginKontrolle(mail, password) == 1) {
             return {
                 errors: {
                     password: ['Das Passwort ist falsch'],
@@ -75,17 +66,15 @@ export async function signup(state: FormState, formData: FormData) {
         }
     }
 
-    if (userExists(mail) == false) {
+    if (await userExists(mail) == false) {
         if (password != password2) {
             return {
                 errors: {
                     password: ['Die Passwörter sind nicht gleich'],
-
-
                 }
             }
         } else {
-            if (createUser(mail, password) == true) {
+            if (await createUser(mail, password) == true) {
                 console.log("Signup Erfolgreich")
                 redirect('/dashboard')
                 return {
@@ -93,18 +82,15 @@ export async function signup(state: FormState, formData: FormData) {
 
                 }
             }
-
             else {
                 console.log("SignUp Fehlgeschlagen")
-                if (userExists(mail) == true) {
+                if (await userExists(mail) == true) {
                     return {
                         errors: {
                             email: ['Ein Account mit dieser E-Mail Adresse existiert bereits'],
                         }
                     }
                 } else {
-
-
                     return {
                         errors: {
                             email: ['SignUp Fehlgeschlagen'],
