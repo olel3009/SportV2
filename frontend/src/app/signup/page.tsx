@@ -43,37 +43,89 @@ function SignUpForm() {
         <CardContent>
           <form action={action}>
             <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">E-Mail</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="m.mustermann@beispiel.de"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="password">Passwort</Label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="password">Passwort Bestätigung</Label>
-                <Input
-                  id="password2"
-                  name="password2"
-                  type="password"
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full" id="signupbutton">
-                SignUp
-              </Button>
+              <Tooltip.Root>
+                <Tooltip.Trigger asChild>
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">E-Mail</Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="m.mustermann@beispiel.de"
+                      required
+                    />
+                  </div>
+                </Tooltip.Trigger>
+                <Tooltip.Content
+                  side="left" // Tooltip wird rechts angezeigt
+                  align="center" // Zentriert den Tooltip vertikal zur Maus
+                  sideOffset={10} // Abstand zwischen Tooltip und Maus
+                  className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+                >
+                  Geben Sie hier ihre E-Mail Adresse ein.
+                  <Tooltip.Arrow className="fill-gray-800" />
+                </Tooltip.Content>
+              </Tooltip.Root>
+              <Tooltip.Root>
+                <Tooltip.Trigger asChild>
+                  <div className="grid gap-2">
+                    <Label htmlFor="password">Passwort</Label>
+                    <Input
+                      id="password"
+                      name="password"
+                      type="password"
+                      required
+                    />
+                  </div>
+                </Tooltip.Trigger>
+                <Tooltip.Content
+                  side="left" // Tooltip wird rechts angezeigt
+                  align="center" // Zentriert den Tooltip vertikal zur Maus
+                  sideOffset={10} // Abstand zwischen Tooltip und Maus
+                  className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+                >
+                  Geben Sie hier ein sicheres Passwort ein.
+                  <Tooltip.Arrow className="fill-gray-800" />
+                </Tooltip.Content>
+              </Tooltip.Root>
+              <Tooltip.Root>
+                <Tooltip.Trigger asChild>
+                  <div className="grid gap-2">
+                    <Label htmlFor="password">Passwort Bestätigung</Label>
+                    <Input
+                      id="password2"
+                      name="password2"
+                      type="password"
+                      required
+                    />
+                  </div>
+                </Tooltip.Trigger>
+                <Tooltip.Content
+                  side="left" // Tooltip wird rechts angezeigt
+                  align="center" // Zentriert den Tooltip vertikal zur Maus
+                  sideOffset={10} // Abstand zwischen Tooltip und Maus
+                  className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+                >
+                  Geben Sie hier das Passwort erneut ein, um sicherzustellen, dass es korrekt ist.
+                  <Tooltip.Arrow className="fill-gray-800" />
+                </Tooltip.Content>
+              </Tooltip.Root>
+              <Tooltip.Root>
+                <Tooltip.Trigger asChild>
+                  <Button type="submit" className="w-full" id="signupbutton">
+                    SignUp
+                  </Button>
+                </Tooltip.Trigger>
+                <Tooltip.Content
+                  side="left" // Tooltip wird rechts angezeigt
+                  align="center" // Zentriert den Tooltip vertikal zur Maus
+                  sideOffset={10} // Abstand zwischen Tooltip und Maus
+                  className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+                >
+                  Drücken Sie hier, um sich zu registrieren.
+                  <Tooltip.Arrow className="fill-gray-800" />
+                </Tooltip.Content>
+              </Tooltip.Root>
             </div>
           </form>
         </CardContent>
