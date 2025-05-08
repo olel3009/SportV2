@@ -23,7 +23,7 @@ def import_csv(csv_file):
                 athlete_day = row["Geburtstag"]
                 
                 #Ermittelt die ID des Athleten anhand von Namen und Geburtsdaten
-                athlete_id = select("athletes") \
+                athlete_id = select(DBAthlete) \
                 .where(athletes.first_name == athlete_name) \
                 .where(athletes.last_name == athlete_surname) \
                 .where(athlete_year in athletes.birth_date) \
