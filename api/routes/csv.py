@@ -5,11 +5,11 @@ import logging
 import csv
 from sqlalchemy import select
 
-bp_csv = Blueprint("csv", __name__)#
+bp_csv = Blueprint('csv', __name__)
 
 test_csv =r"api\data\PO.csv"
 
-@bp_csv.route("/sportdaten/import", method=["POST"])
+@bp_csv.route("/sportdaten/import", method=['POST'])
 def import_csv(csv_file):
     try:
         with open(csv_file, newline="") as csv_data:
@@ -25,7 +25,7 @@ def import_csv(csv_file):
                 athletes = DBAthlete.query.all()
                 athlete_id = select("athletes") \
                 .where(athletes.first_name == athlete_name) \
-                .where(athletes.last_name == athlete_surname)\
+                .where(athletes.last_name == athlete_surname) \
                 .where(athlete_year in athletes.birth_date) \
                 .where(athlete_day in athletes.birth_date) \
                 .compile()['id']
