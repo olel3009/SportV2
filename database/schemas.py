@@ -135,8 +135,6 @@ class RuleSchema(Schema):
 class UserSchema(Schema):
     email = fields.Str(required=True, validate=Length(min=5, max=255))
     password = fields.Str(required=True, validate=Length(min=8, max=255))
-    trainer_id = fields.Int(required=False, allow_none=True)
-    athlete_id = fields.Int(required=False, allow_none=True)
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
@@ -144,11 +142,3 @@ class UserSchema(Schema):
     def validate_email(self, value):
         if "@" not in value:
             raise ValidationError("E-Mail muss ein '@' enthalten")
-
-    @validates("trainer_id")
-    def validate_trainer_id(self, value):
-        pass
-    
-    @validates("athlete_id")
-    def validate_athlete_id(self, value):
-        pass
