@@ -14,6 +14,7 @@ def import_csv(csv_file):
     try:
         with open(csv_file, newline="") as csv_data:
             reader = csv.reader(csv_data)
+            athletes = DBAthlete.query.all()
             for row in reader:
                 #Athleten-ID aus der CSV
                 athlete_name=row["Name"]
@@ -22,7 +23,6 @@ def import_csv(csv_file):
                 athlete_day = row["Geburtstag"]
                 
                 #Ermittelt die ID des Athleten anhand von Namen und Geburtsdaten
-                athletes = DBAthlete.query.all()
                 athlete_id = select("athletes") \
                 .where(athletes.first_name == athlete_name) \
                 .where(athletes.last_name == athlete_surname) \
