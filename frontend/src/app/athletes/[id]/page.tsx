@@ -4,10 +4,10 @@ import { getAthleteById } from "@/athlete_getters";
 import Link from "next/link";
 
 export default async function Page({ params }: {
-    params: Promise<{ id: number }>
+    params: Promise<{ id: string }>
 }) {
-    const id = (await params).id
-    const athlete = getAthleteById(id)
+    const id = parseInt((await params).id)
+    const athlete = await getAthleteById(id)
     function mapSex(sex: string) {
         sex = sex.toLocaleLowerCase();
         if (sex === "m") return "Männlich";

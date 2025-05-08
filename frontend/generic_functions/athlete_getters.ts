@@ -1,7 +1,8 @@
 //Fügen Sie hier alle Funktionen ein, die Athleten abrufen, damit sie im bereits vorhandenen Code verwendet werden können
 //Auf diese Weise müssen wir, wenn die API fertig ist, nur die Logik hier ändern und nicht an anderer Stelle im Code
 //Außerdem werden diese Funktionen mit ziemlicher Sicherheit mehr als einmal verwendet, daher ist es gut, sie woanders zu platzieren
-import {Athlete, Feat} from "../src/models/athlete"
+import { Athlete, Feat } from "../src/models/athlete";
+
 let mockupData = `[
   {
     "id": 420,
@@ -201,84 +202,120 @@ let mockupData = `[
   }
 ]`;
 
-export function getAthleteById(id: number) : Athlete | undefined {  
-    let translatedTrainees: Athlete[] = JSON.parse(mockupData);
-    id = typeof id === "string" ? parseInt(id, 10) : id;
+type RawAthlete = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  gender: "m" | "w" | "d";
+  birth_date: string;
+  swim_certificate: boolean;
+  created_at: string;
+  updated_at: string;
+};
 
-    // Return the trainee that has the id from the passed parameter 
-    return translatedTrainees.find(trainee => trainee.id === id);
+export async function getAthleteById(id: number): Promise<Athlete | undefined> {
+  const all = await getAllAthletes();
+  return all.find(a => a.id === id);
 }
 
+export async function getAllAthletes(): Promise<Athlete[]> {
+  const res = await fetch("http://127.0.0.1:5000/athletes", {
+    cache: "no-store"
+  });
+  if (!res.ok) {
+    throw new Error(`API call failed: ${res.status}`);
+  }
 
-export function getAllAthletes() : Athlete[] {
-  return JSON.parse(mockupData);
-} 
+  const data: RawAthlete[] = await res.json();
 
-export function calculateMedal(score: number) : number {
- return 69;
+  //Mapping
+  const mapped: Athlete[] = data.map((raw) => ({
+    id: raw.id,
+    firstName: raw.first_name,
+    lastName: raw.last_name,
+    sex: raw.gender,
+    dateOfBirth: raw.birth_date,
+    goldMedals: 0,
+    silverMedals: 0,
+    bronzeMedals: 0,
+    disciplines: [],
+    feats: [],
+  }));
+
+  return mapped;
 }
 
+export function calculateMedal(score: number): number {
+  return 69;
+}
 
-export function addFeatToAthlete(athleteId: number, exercise: string, date: string, result: string) {
-  let athlete = getAthleteById(athleteId);
-  if(!athlete){
+export async function addFeatToAthlete(
+  athleteId: number,
+  exercise: string,
+  date: string,
+  result: string
+) {
+  let athlete = await getAthleteById(athleteId);
+  if (!athlete) {
     return;
   }
-  if(exercise==''){
+  if (exercise == "") {
     alert("Bitte eine Übung auswählen!");
     return;
   }
-  if(date==''){
+  if (date == "") {
     alert("Bitte ein Datum eingeben!");
     return;
   }
-  if(result==''){
+  if (result == "") {
     alert("Bitte ein Ergebnis eingeben!");
     return;
   }
-  console.log("before: "+athlete.feats);
+  console.log("before: " + athlete.feats);
   let discipline: string;
   let exToDisc = [["50mLauf"], ["Hochsprung", "Weitsprung"], ["Kugelstossen"]];
-  if (exToDisc[0].includes(exercise)){
-    discipline = "Schnelligkeit"; 
-  }else if(exToDisc[1].includes(exercise)){
+  if (exToDisc[0].includes(exercise)) {
+    discipline = "Schnelligkeit";
+  } else if (exToDisc[1].includes(exercise)) {
     discipline = "Koordination";
-  }else if(exToDisc[2].includes(exercise)){
+  } else if (exToDisc[2].includes(exercise)) {
     discipline = "Kraft";
-  }else{
+  } else {
     discipline = "Sonstiges";
   }
-  let score = calculateMedal(result.length); 
-  let newFeat:Feat = {
+  let score = calculateMedal(result.length);
+  let newFeat: Feat = {
     discipline: discipline,
     exercise: exercise,
     date: date,
     result: result,
-    score: score
+    score: score,
   };
-  if(athlete.feats){
+  if (athlete.feats) {
     let repeat = false;
-    let overwrite=false;
-    athlete.feats.forEach(feat=>{
-      if(feat.date==date&&feat.exercise==exercise){
-        repeat=true;
+    let overwrite = false;
+    athlete.feats.forEach((feat) => {
+      if (feat.date == date && feat.exercise == exercise) {
+        repeat = true;
       }
     });
-    if(repeat){
-      overwrite = confirm("Diese Übung wurde für diesen Tag bereits eingetragen, überschreiben?");
+    if (repeat) {
+      overwrite = confirm(
+        "Diese Übung wurde für diesen Tag bereits eingetragen, überschreiben?"
+      );
     }
-    if(repeat){
-      if(overwrite){
+    if (repeat) {
+      if (overwrite) {
         athlete.feats.push(newFeat);
-        alert("Neue Leistung Eingetragen!")
+        alert("Neue Leistung Eingetragen!");
       }
-    }else{
+    } else {
       athlete.feats.push(newFeat);
-      alert("Neue Leistung Eingetragen!")
+      alert("Neue Leistung Eingetragen!");
     }
-  }else{
+  } else {
     athlete.feats = [newFeat];
-    alert("Neue Leistung Eingetragen!")
+    alert("Neue Leistung Eingetragen!");
   }
-  console.log("after: "+athlete.feats);
+  console.log("after: " + athlete.feats);
 }

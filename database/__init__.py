@@ -25,9 +25,10 @@ def create_app():
     from api.routes.rule import bp_rule
     from api.routes.group import bp_group
     from api.routes.csv import bp_csv
+    from api.routes.discipline import bp_discipline
     
-    for bp in [bp_user, bp_trainer, bp_result, bp_athlete, bp_rule, bp_group, bp_csv]:
-        app.register_blueprint(bp)
+    for bp in [bp_user, bp_trainer, bp_result, bp_athlete, bp_rule, bp_group, bp_csv, bp_discipline]:
+            app.register_blueprint(bp)
 
     @app.errorhandler(ValidationError)
     def handle_validation_error(err):

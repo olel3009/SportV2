@@ -1,9 +1,10 @@
 from datetime import datetime
 from flask import Blueprint, request, jsonify
 from database import db
-from database.models import Athlete as DBAthlete, Result as DBResult
-from database.schemas import AthleteSchema
+from database.models import Athlete as DBAthlete, Result as DBResult, Rule as DBRule
+from database.schemas import AthleteSchema, DisciplineSchema, ResultSchema, RuleSchema
 from api.export_pdf import fill_pdf_form
+from sqlalchemy.orm import joinedload
 
 bp_athlete = Blueprint('athlete', __name__)
 
@@ -17,7 +18,8 @@ def create_athlete():
         first_name=valid_data["first_name"],
         last_name=valid_data["last_name"],
         birth_date=valid_data["birth_date"],
-        gender=valid_data["gender"]
+        gender=valid_data["gender"],
+        swim_certificate=valid_data["swim_certificate"]
     )
     db.session.add(new_athlete)
     db.session.commit()
@@ -26,24 +28,43 @@ def create_athlete():
 @bp_athlete.route('/athletes', methods=['GET'])
 def get_athletes():
     athletes = DBAthlete.query.all()
-    return jsonify([{
-        "id": athlete.id,
-        "first_name": athlete.first_name,
-        "last_name": athlete.last_name,
-        "birth_date": athlete.birth_date.strftime('%d-%m-%Y'),
-        "gender": athlete.gender,
-        "created_at": athlete.created_at,
-        "updated_at": athlete.updated_at
-    } for athlete in athletes])
+    result = []
+    for ath in athletes:
+        result.append({
+            "id": ath.id,
+            "first_name": ath.first_name,
+            "last_name": ath.last_name,
+            "birth_date": ath.birth_date.strftime("%d-%m-%Y"),
+            "gender": ath.gender,
+            "swim_certificate": ath.swim_certificate,
+            "created_at": ath.created_at,
+            "updated_at": ath.updated_at
+        })
+    return jsonify(result)
+
+@bp_athlete.route('/athletes/<int:id>', methods=['GET'])
+def get_athlete_id(id):
+    athlete = DBAthlete.query.get_or_404(id)
+    schema = AthleteSchema()
+    return jsonify(schema.dump(athlete))
 
 @bp_athlete.route('/athletes/<int:id>', methods=['PUT'])
 def update_athlete(id):
     athlete = DBAthlete.query.get_or_404(id)
     data = request.json
-    athlete.first_name = data.get('first_name', athlete.first_name)
-    athlete.last_name = data.get('last_name', athlete.last_name)
-    athlete.birth_date = datetime.strptime(data['birth_date'], '%d-%m-%Y') if 'birth_date' in data else athlete.birth_date
-    athlete.gender = data.get('gender', athlete.gender)
+
+    if "first_name" in data:
+        athlete.first_name = data["first_name"]
+    if "last_name" in data:
+        athlete.last_name = data["last_name"]
+    if "birth_date" in data:
+        athlete.birth_date = datetime.strptime(data["birth_date"], "%d-%m-%Y").date()
+    if "gender" in data:
+        athlete.gender = data["gender"]
+    # NEUES FELD
+    if "swim_certificate" in data:
+        athlete.swim_certificate = data["swim_certificate"]
+
     db.session.commit()
     return jsonify({"message": "Athlet aktualisiert"})
 
@@ -72,7 +93,8 @@ def export_athlete_pdf(athlete_id):
         first_name=db_athlete.first_name,
         last_name=db_athlete.last_name,
         gender=db_athlete.gender,
-        birth_date=db_athlete.birth_date,  # datetime.date
+        birth_date=db_athlete.birth_date,
+        swim_certificate=db_athlete.swim_certificate,
         performances=[]
     )
 
@@ -94,3 +116,59 @@ def export_athlete_pdf(athlete_id):
         "message": "Export erfolgreich",
         "pdf_feedback": pdf_feedback
     })
+
+@bp_athlete.route('/athletes/<int:athlete_id>/results', methods=['GET'])
+def get_athletes_results(athlete_id):
+
+    db_athlete = DBAthlete.query.get_or_404(athlete_id)
+
+    db_results = DBResult.query.options(
+        joinedload(DBResult.rule).joinedload(DBRule.discipline) #
+    ).filter(
+        DBResult.athlete_id == athlete_id
+    ).all()
+
+    if not db_results:
+        return jsonify([]), 200
+    
+    response_data = []
+
+    result_schema = ResultSchema()
+    rule_schema = RuleSchema()
+    discipline_schema = DisciplineSchema() 
+
+    for result in db_results:
+
+        serialized_result = result_schema.dump(result) #
+
+        rule = result.rule
+
+        if rule:
+             serialized_rule = rule_schema.dump(rule) #
+
+             discipline = rule.discipline
+
+             if discipline:
+                 serialized_discipline = discipline_schema.dump(discipline)
+
+                 if 'discipline_id' in serialized_rule:
+                     del serialized_rule['discipline_id']
+
+                 serialized_rule['discipline'] = serialized_discipline
+             else:
+                 serialized_rule['discipline'] = None
+                 print(f"Warning: Discipline data missing for rule ID {rule.id}")
+
+             if 'rule_id' in serialized_result:
+                 del serialized_result['rule_id']
+
+             serialized_result['rule'] = serialized_rule
+        else:
+             if 'rule_id' in serialized_result:
+                 del serialized_result['rule_id']
+             serialized_result['rule'] = None
+             print(f"Warning: Rule data missing for result ID {result.id} (Rule ID: {result.rule_id if hasattr(result, 'rule_id') else 'N/A'})")
+
+        response_data.append(serialized_result)
+
+    return jsonify(response_data), 200

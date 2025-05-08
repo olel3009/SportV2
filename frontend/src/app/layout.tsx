@@ -16,8 +16,11 @@ export default function RootLayout({
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
-            <main className='flex flex-col w-full h-full'>
+            {/* Header mit sticky Position für SidebarTrigger */}
+            <header className="sticky top-0 z-10 ">
               <SidebarTrigger />
+            </header>
+            <main className="flex flex-col w-full h-full">
               {children}
             </main>
           </SidebarInset>

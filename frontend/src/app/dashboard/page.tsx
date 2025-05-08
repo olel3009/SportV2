@@ -1,9 +1,13 @@
 'use client'
 
+import RegelungenButton from "@/components/RegelungenButton";
+
 export default function Startpage() {
   return (
-    <div className="flex w-full justify-center">
-        <h1 className="text-4xl">Testseite</h1>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <p>Dies ist die Dashboardseite</p>
+      <RegelungenButton />
     </div>
   );
 }

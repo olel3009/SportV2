@@ -20,12 +20,12 @@ export function button_loggig_date(): number {
     if (other_date == 0)/*dass reale Datum zu Nutzen*/ {
         if (new Date().getMonth() === 1) /*Wenn es Januar ist*/ {
             if (new Date().getDate() >= 29)/*Wenn es Januar ist und nicht die ersten vier Wochen des Jahres*/ {
-                result = 0; //0 bedeutet, dass der Knopf hervorgehoben wird
+                result = 0; //0 bedeutet, dass der Knopf nicht hervorgehoben wird
             } else/*Wenn es Januar ist und in den ersten vier Wochen*/ {
-                result = 1;//1 bedeutet, dass der Knopf nicht hervorgehoben wird
+                result = 1;//1 bedeutet, dass der Knopf hervorgehoben wird
             }
         } else {
-            result = 0;
+            result = 0; //0 bedeutet, dass der Knopf nicht hervorgehoben wird
         }
     } else {
         if (other_date == 1) {
@@ -63,16 +63,17 @@ export function button_loggig_other_date_changer(x: number): void {
 
 export function button_loggig_color(): number {
     let result = 0;
-    if (dbresults == 1) {
+    if (dbresults == 1) {// bedeutet dass die regelungen aktualisiert wurden 
         result = 0;
     } else {
-        if (button_loggig_date() == 0) {
+        if (button_loggig_date() == 0) {// es sind die ersten vier Wochen des Jahres vorbei
             result = 0;
         } else {
             result = 1;
         }
     }
     return result;
+    //return 1;
 }
 
 
