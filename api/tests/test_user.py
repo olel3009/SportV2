@@ -1,83 +1,18 @@
 import pytest
 
-def test_create_user_with_trainer(client):
+def test_create_user(client):
     """
     Testet das Anlegen eines neuen Users mit trainer_id per POST /users.
     Prüft, ob der Status 201 und ein 'id' zurückkommen.
     """
-    # Falls trainer_id=1 existiert, sonst anlegen:
-    trainer_resp = client.post("/trainers", json={
-        "first_name": "Max",
-        "last_name": "Mustermann",
-        "email": "max@example.com",
-        "birth_date": "01-01-1990",
-        "gender": "m"
-    })
-    trainer_id = trainer_resp.get_json()["id"]
-
     response = client.post("/users", json={
         "email": "traineruser@example.com",
-        "password": "SuperSecure123",
-        "trainer_id": 1
+        "password": "SuperSecure123"
     })
     assert response.status_code == 201
     data = response.get_json()
     assert data["message"] == "User erstellt"
     assert "id" in data
-
-
-def test_create_user_with_athlete(client):
-    """
-    Testet das Anlegen eines neuen Users mit athlete_id per POST /users.
-    """
-    # Falls athlete_id=1 existiert, sonst anlegen:
-    athlete_resp = client.post("/athletes", json={
-        "first_name": "Max",
-        "last_name": "Mustermann",
-        "birth_date": "01-01-2000",  # TT-MM-YYYY
-        "gender": "m"
-    })
-    athlete_id = athlete_resp.get_json()["id"]
-
-    response = client.post("/users", json={
-        "email": "athleteuser@example.com",
-        "password": "AnotherSecurePass!",
-        "athlete_id": 1
-    })
-    assert response.status_code == 201
-    data = response.get_json()
-    assert data["message"] == "User erstellt"
-    assert "id" in data
-
-
-def test_create_user_with_both_roles(client):
-    """
-    Testet, dass User mit trainer_id UND athlete_id nicht erlaubt ist.
-    Erwartet einen 400-Fehler.
-    """
-    response = client.post("/users", json={
-        "email": "bothroles@example.com",
-        "password": "Password123",
-        "trainer_id": 1,
-        "athlete_id": 2
-    })
-    assert response.status_code == 400
-    data = response.get_json()
-    assert "error" in data or "Ein User kann entweder Trainer oder Athlet sein, aber nicht beides" in str(data)
-
-
-def test_create_user_with_no_role(client):
-    """
-    Testet, dass User ohne trainer_id UND athlete_id nicht erlaubt ist.
-    Erwartet einen 400-Fehler.
-    """
-    response = client.post("/users", json={
-        "email": "norole@example.com",
-        "password": "NoRolePass"
-    })
-    assert response.status_code == 400
-    data = response.get_json()
-    assert "error" in data or "Ein User kann entweder Trainer oder Athlet sein" in str(data)
 
 
 def test_get_users(client):
@@ -87,8 +22,7 @@ def test_get_users(client):
     # Mindestens 1 User anlegen
     client.post("/users", json={
         "email": "testget@example.com",
-        "password": "TestGetPass",
-        "trainer_id": 1
+        "password": "TestGetPass"
     })
 
     response = client.get("/users")
@@ -105,8 +39,7 @@ def test_update_user(client):
     # 1) User anlegen
     create_resp = client.post("/users", json={
         "email": "update@example.com",
-        "password": "UpdatePass123",
-        "trainer_id": 1
+        "password": "UpdatePass123"
     })
     assert create_resp.status_code == 201
     user_id = create_resp.get_json()["id"]
@@ -135,8 +68,7 @@ def test_delete_user(client):
     # 1) User anlegen
     create_resp = client.post("/users", json={
         "email": "delete@example.com",
-        "password": "DeletePass123",
-        "trainer_id": 1
+        "password": "DeletePass123"
     })
     assert create_resp.status_code == 201
     user_id = create_resp.get_json()["id"]
