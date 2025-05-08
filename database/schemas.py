@@ -133,8 +133,8 @@ class RuleSchema(Schema):
         
 # User-Schema
 class UserSchema(Schema):
-    email = fields.Str(required=True, validate=Length(min=5, max=255))
-    password = fields.Str(required=True, validate=Length(min=8, max=255))
+    email = fields.Str(required=True, validate=Length(max=255))
+    password = fields.Str(required=True, validate=Length(max=255))
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 

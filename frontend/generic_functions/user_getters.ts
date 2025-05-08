@@ -2,7 +2,6 @@
 
 
 type RawUser = {
-    id: number;
     email: string;
     password: string;
     created_at: Date;
@@ -20,7 +19,6 @@ export async function getUsers(): Promise<RawUser[]> {
     }
     const data: RawUser[] = await res.json();
     const mapped: RawUser[] = data.map((raw) => ({
-        id: raw.id,
         email: raw.email,
         password: raw.password,
         created_at: new Date(raw.created_at),
@@ -31,11 +29,12 @@ export async function getUsers(): Promise<RawUser[]> {
 
 //Mit Backend verbunden
 export async function LoginKontrolle(email: string, password: string): Promise<number> {
-
+    console.log("LoginKontrolle")
     const data: RawUser[] = await getUsers();
-
+    console.log(data)
 
     const user = data.find(user => user.email === email);
+    console.log(user)
 
     if (!user) {
         return 0; // Kein Benutzer mit dieser E-Mail-Adresse

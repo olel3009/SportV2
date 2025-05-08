@@ -10,6 +10,7 @@ import { redirect } from 'next/navigation'
 
 
 export async function login(state: FormState, formData: FormData) {
+    console.log("Login");
     // If any form fields are invalid, return early
     const validatedFields = LoginFormSchema.safeParse({
         email: formData.get('email'),
@@ -59,6 +60,7 @@ export async function signup(state: FormState, formData: FormData) {
     const mail = formData.get('email') as string;
     const password = formData.get('password') as string;
     const password2 = formData.get('password2') as string;
+    
     // If any form fields are invalid, return early
     if (!validatedFields.success) {
         return {
@@ -99,6 +101,11 @@ export async function signup(state: FormState, formData: FormData) {
                 }
             }
         }
+    }else {
+        return {
+            errors: {
+                email: ['Ein Account mit dieser E-Mail Adresse existiert bereits'],
+            }
+        }
     }
-
 }

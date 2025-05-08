@@ -2,17 +2,18 @@ from flask import Blueprint, request, jsonify
 from database import db
 from database.models import User
 from database.schemas import UserSchema
+from sqlalchemy import inspect
 
 bp_user = Blueprint('user', __name__)
 
 @bp_user.route('/users', methods=['POST'])
 def create_user():
+    insp = inspect(db.engine)
+    print(insp.get_columns('http://127.0.0.1:5000/users'))
     data = request.json
     schema = UserSchema()
     valid_data = schema.load(data)  # Falls invalid, ValidationError -> 400
 
-    if not data.get('email') or not data.get('password'):
-        return jsonify({"error": "Email und Passwort sind erforderlich"}), 400
 
     new_user = User(
         email=valid_data["email"],
@@ -21,14 +22,13 @@ def create_user():
 
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({"message": "User erstellt", "id": new_user.id}), 201
+    return jsonify({"message": "User erstellt"}), 201
 
 # READ Users
 @bp_user.route('/users', methods=['GET'])
 def get_users():
     users = User.query.all()
     return jsonify([{
-        "id": user.id,
         "email": user.email,
         "password": user.password,  # In einer echten App: Hashen!
         "created_at": user.created_at,

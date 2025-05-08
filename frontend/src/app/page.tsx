@@ -28,7 +28,7 @@ function Error({ message }: { message: string }) {
 }
 
 function LoginForm() {
-  const [state, action, pending] = useActionState(signup, undefined)
+  const [state, action, pending] = useActionState(login, undefined)
   const router = useRouter(); // Router-Hook initialisieren
 
   return (
@@ -109,6 +109,8 @@ function LoginForm() {
                   <Tooltip.Arrow className="fill-gray-800" />
                 </Tooltip.Content>
               </Tooltip.Root>
+
+
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
                   <Button
