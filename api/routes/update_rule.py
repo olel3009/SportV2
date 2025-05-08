@@ -14,7 +14,7 @@ def update_rule(csv_updates):
             reader = csv.reader(csv_data)
             rules = DBRule.query.all()
             for row in reader:
-                rule_id = select("Rule").where(rules.disciplin == row["Disziplin"])
+                rule_id = select(DBRule).where(rules.disciplin == row["Disziplin"])
                 dbrule= DBRule.query.get_or_404(rule_id)
                 dbrule.discilplin = row["Disziplin"]
                 dbrule.min_age = row["Altersgruppe"].split("-")[0]
