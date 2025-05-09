@@ -40,6 +40,30 @@ def get_user_id(id):
     schema = UserSchema()
     return jsonify(schema.dump(user))
 
+@bp_user.route('/users/login', methods=['POST'])
+def login_user():
+    """
+    Prüft anhand von Email und Passwort, ob ein Nutzer existiert und die Credentials stimmen.
+    """
+    data = request.get_json() or {}
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({"error": "Email und Passwort müssen übergeben werden"}), 400
+
+    # User per Email laden
+    user = User.query.filter_by(email=email).first()
+    if user is None or user.password != password:
+        return jsonify({"error": "Ungültige Anmeldedaten"}), 401
+
+    # Login erfolgreich
+    return jsonify({
+        "message": "Login erfolgreich",
+        "id": user.id,
+        "email": user.email
+    }), 200
+
 # UPDATE User
 @bp_user.route('/users/<int:id>', methods=['PUT'])
 def update_user(id):
