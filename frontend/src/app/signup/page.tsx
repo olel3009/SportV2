@@ -38,7 +38,6 @@ function SignUpForm() {
           <CardTitle className="text-2x1">SignUp</CardTitle>
           <CardDescription>
             Geben Sie zum Registrieren ihre E-Mail Adresse und ein Passwort an und bestätigen Sie dieses Passwort. 
-            Das Passwort muss mindestens 8 Zeichen lang sein.
           </CardDescription>
         </CardHeader>
         <CardContent>

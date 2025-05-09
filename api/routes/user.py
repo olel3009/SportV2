@@ -8,8 +8,9 @@ bp_user = Blueprint('user', __name__)
 
 @bp_user.route('/users', methods=['POST'])
 def create_user():
-    insp = inspect(db.engine)
-    print(insp.get_columns('http://127.0.0.1:5000/users'))
+    
+    #insp = inspect(db.engine)
+    #print(insp.get_columns('http://127.0.0.1:5000/users'))
     data = request.json
     schema = UserSchema()
     valid_data = schema.load(data)  # Falls invalid, ValidationError -> 400
