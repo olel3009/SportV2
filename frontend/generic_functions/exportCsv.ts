@@ -1,1 +1,8 @@
-import {getAthleteById, getFeatsById, getAllDisciplines} from "./athlete_getters"
+import {getAthleteWithFeats} from "./athlete_getters"
+
+export async function exportAthletesAsCsv(ids:number[]){
+    ids.forEach(id=>{
+        
+    });
+
+}
