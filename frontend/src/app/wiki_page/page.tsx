@@ -176,7 +176,7 @@ export default function Home() {
 
             <h4 className="text-lg font-semibold">Wichtige Hinweise:</h4>
             <p>
-              - Es können nur Regelungen aus der CSV gelesen werden, wenn diese dem Standard-Design entsprechen.<br />
+              - Es können nur Regelungen aus der CSV gelesen werden, wenn diese dem Standard-Design entsprechen. Dies kann über Knopfdruck heruntergeladen werden.<br />
               - Der Prozess kann nach der Bestätigung nicht abgebrochen werden.<br />
               - Sollte das Aktualisieren der Regelungen nicht erfolgreich sein, versuchen Sie es nicht direkt erneut, sondern warten Sie ein paar Minuten.<br />
               Dies kann dem Server helfen, falls das Fehlschlagen des Vorgangs an einer zu hohen Auslastung liegt oder die Daten aus einer anderen Ursache nicht abrufbar sind.<br />
