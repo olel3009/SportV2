@@ -62,7 +62,7 @@ def test_create_result_time(client):
       - bronze: result <= 30
     """
     # Erstelle einen Athlete und einen Rule (unit "time")
-    athlete_id = create_test_athlete(client, first_name="Time", last_name="Tester", birth_date="1,1,2003", gender="m")
+    athlete_id = create_test_athlete(client, first_name="Time", last_name="Tester", birth_date="1,1,1990", gender="m")
     rule_id = create_test_rule(client, rule_name="Time Test Rule", unit="Zeit (Min.,Sek.)",
                                threshold_bronze_m=30.0,
                                threshold_silver_m=25.0,
@@ -100,7 +100,7 @@ def test_create_result_distance(client):
       - bronze: result >= 5
     """
     # Für diesen Test passen wir die Thresholds entsprechend an.
-    athlete_id = create_test_athlete(client, first_name="Distance", last_name="Tester", birth_date="1,1,2003", gender="m")
+    athlete_id = create_test_athlete(client, first_name="Distance", last_name="Tester", birth_date="1,1,1995", gender="m")
     # Hier definieren wir für unit "distance" höhere Werte als besser.
     # Wir setzen beispielsweise:
     # Bronze: 5, Silver: 10, Gold: 15 (für männlich, gleiche für weiblich in diesem Test)
