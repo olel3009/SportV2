@@ -3,7 +3,19 @@
 //Außerdem werden diese Funktionen mit ziemlicher Sicherheit mehr als einmal verwendet, daher ist es gut, sie woanders zu platzieren
 import { Athlete, Feat, Rule, Discipline } from "../src/models/athlete";
 
-export async function getAthleteWithFeats(id:number): Promise<void> {
+export type csvCombo ={
+  last_name:string;
+  first_name:string;
+  gender:string;
+  birth_date:string;
+  exercise:string;
+  category:string;
+  date:string;
+  medal:string;
+  result:number;
+}
+
+export async function getAthleteWithFeats(id:number): Promise<csvCombo[]> {
   let fetchlink:string='http://127.0.0.1:5000/athletes/'+id+'/results';
   console.log(fetchlink);
   const res = await fetch(fetchlink, {
@@ -12,7 +24,23 @@ export async function getAthleteWithFeats(id:number): Promise<void> {
   if (!res.ok) {
     throw new Error(`API call failed: ${res.status}`);
   }
-  console.log(await res.json());
+  let data = await res.json();
+  let last_name_raw:string=data.athlete.last_name;
+  let first_name_raw:string=data.athlete.first_name;
+  let gender_raw:string=data.athlete.gender;
+  let birth_date_raw:string=data.athlete.birth_date;
+  const mapped:csvCombo[]=data.results.map((raw)=>({
+    last_name:last_name_raw,
+    first_name:first_name_raw,
+    gender:gender_raw,
+    birth_date:birth_date_raw,
+    exercise:raw.rule.rule_name,
+    category:raw.rule.discipline.discipline_name,
+    date:raw.created_at,
+    medal:raw.medal,
+    result:raw.result
+  }));
+  return mapped;
 
 }
 
