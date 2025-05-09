@@ -1,6 +1,13 @@
-from datetime import date
 from database import db, create_app
 from database.models import Trainer, Athlete, Discipline, Rule, Result, User
+from datetime import date as _real_date
+
+def date(day: int, month: int, year: int) -> _real_date:
+    """
+    Wrapper um datetime.date, damit man in Tests und Seeds
+    bequem date(day, month, year) schreiben kann.
+    """
+    return _real_date(year, month, day)
 
 def seed_test_data():
     with app.app_context():
