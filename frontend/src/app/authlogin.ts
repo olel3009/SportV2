@@ -64,7 +64,8 @@ export async function signup(state: FormState, formData: FormData) {
     // If any form fields are invalid, return early
     if (!validatedFields.success) {
         return {
-            errors: validatedFields.error.flatten().fieldErrors,
+            errors: { passwordlänge: ['Das Passwort muss mindestens 8 Zeichen lang sein.'],
+            }
         }
     }
 

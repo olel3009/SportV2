@@ -36,16 +36,18 @@ def get_users():
         "updated_at": user.updated_at
     } for user in users])
 
-@bp_user.route('/users/<int:id>', methods=['GET'])
-def get_user_id(id):
-    user = User.query.get_or_404(id)
+@bp_user.route('/users/<string:email>', methods=['GET'])
+def get_user_email(email):
+    user = User.query.get_or_404(email)
     schema = UserSchema()
     return jsonify(schema.dump(user))
 
+
+
 # UPDATE User
-@bp_user.route('/users/<int:id>', methods=['PUT'])
-def update_user(id):
-    user = User.query.get_or_404(id)
+@bp_user.route('/users/<string:email>', methods=['PUT'])
+def update_user(email):
+    user = User.query.get_or_404(email)
     data = request.json
 
     if "email" in data:
@@ -57,9 +59,9 @@ def update_user(id):
     return jsonify({"message": "User aktualisiert"})
 
 # DELETE User
-@bp_user.route('/users/<int:id>', methods=['DELETE'])
-def delete_user(id):
-    user = User.query.get_or_404(id)
+@bp_user.route('/users/<string:email>', methods=['DELETE'])
+def delete_user(email):
+    user = User.query.get_or_404(email)
     db.session.delete(user)
     db.session.commit()
     return jsonify({"message": "User gelöscht"})

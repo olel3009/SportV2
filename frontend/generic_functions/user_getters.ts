@@ -36,9 +36,9 @@ export async function LoginKontrolle(email: string, password: string): Promise<n
     const user = data.find(user => user.email === email);
     console.log(user)
 
-    if (!user) {
+    if (await userExists(email) === false) {
         return 0; // Kein Benutzer mit dieser E-Mail-Adresse
-    } else if (user.password !== password) {
+    } else if (user && user.password !== password) {
         return 1; // Benutzer mit dieser E-Mail-Adresse gefunden, aber falsches Passwort
     } else {
         return 2; // Benutzer mit dieser E-Mail-Adresse und diesem Passwort gefunden

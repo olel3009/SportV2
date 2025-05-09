@@ -33,11 +33,17 @@ function SignUpForm() {
         <Error message="Die angegebene E-Mail Adresse ist fehlerhaft oder es existiert schon ein Accout unter dieser E-Mail Adresse
          oder die Passwörter stimmen nicht überein."></Error>
       }
+      {(state?.errors?.passwordlänge) &&
+        <Error message="Das angegebene Passwort entspricht nicht den Vorgaben. 
+        Es muss mindestens 8 Zeichen lang sein und eine Zahl, ein Buchstaben und ein Sonderzeichen enthalten"></Error>
+      }
+
       <Card>
         <CardHeader>
           <CardTitle className="text-2x1">SignUp</CardTitle>
           <CardDescription>
-            Geben Sie zum Registrieren ihre E-Mail Adresse und ein Passwort an und bestätigen Sie dieses Passwort. 
+            Geben Sie zum Registrieren ihre E-Mail Adresse und ein Passwort an und bestätigen Sie dieses Passwort. <br />
+            Das Passwort muss mindestens 8 Zeichen lang sein und mindestens einen Buchstaben, eine Zahl und ein Sonderzeichen enthalten.
           </CardDescription>
         </CardHeader>
         <CardContent>
