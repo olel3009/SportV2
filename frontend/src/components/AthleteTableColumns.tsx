@@ -181,7 +181,7 @@ export const columns: ColumnDef<Athlete>[] = [
                   <span>Neue Leistung eintragen</span>
                 </DropdownMenuItem>
               </DialogTrigger>
-              <DropdownMenuItem><Download />Als CSV exportieren</DropdownMenuItem>
+              <DropdownMenuItem  onClick={(e) => e.stopPropagation()}><Download />Als CSV exportieren</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem><Pen />Editieren</DropdownMenuItem>
               <DropdownMenuItem className="text-red-600"><Trash2 />Löschen</DropdownMenuItem>

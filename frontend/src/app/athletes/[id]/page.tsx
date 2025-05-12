@@ -1,7 +1,7 @@
 import { useParams } from "next/navigation";
 import { Athlete, Feat } from "@/models/athlete";
 import { getAllDisciplines, getAthleteById, getFeatsById, getAthleteWithFeats} from "@/athlete_getters";
-import {exportAthletesAsCsv } from "@/exportCsv";
+import {downloadCsv } from "@/exportCsv";
 import Link from "next/link";
 import { Undo2 } from "lucide-react";
 import {
@@ -41,7 +41,6 @@ export default async function Page({
     const athlete = await getAthleteById(id);
     const feats= await getFeatsById(id);
     const disciplines= await getAllDisciplines();
-    console.log(await exportAthletesAsCsv([id]));
     console.log(disciplines);
     console.log(feats);
     let actDiscIds:boolean[]=[false, false, false, false];
