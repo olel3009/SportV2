@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 import  DownloadCsvButton from "@/components/ui/csvExportButton"
 import {getSelectedAthleteIds} from "@/components/ui/DataTable"
 import { DataTable } from "@/components/ui/DataTable";
-import { columns, selectedIds } from "@/components/AthleteTableColumns"
+import { columns } from "@/components/AthleteTableColumns"
 import { getAllAthletes } from "@/athlete_getters";
 import { useEffect, useState } from "react";
 import { Athlete } from "@/models/athlete";
@@ -26,7 +26,7 @@ export default function Page() {
     return (
         <div className="p-6">
             <h1 className="text-2x1 font bold mb-4">Athleten</h1>
-            (<DownloadCsvButton ids={getSelectedAthleteIds} text={"Ausgewählte als Csv exportieren"} />)
+            <DownloadCsvButton ids={getSelectedAthleteIds} text={"Ausgewählte als Csv exportieren"} />
             <DataTable 
                 columns={columns} 
                 data={athletes}

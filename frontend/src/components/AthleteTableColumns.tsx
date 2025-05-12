@@ -35,12 +35,6 @@ import { DialogTitle } from "@radix-ui/react-dialog"
 import { useCallback } from "react"
 
 
-export let selectedIds:number[]=[];
-export function resetSelection():void{
-  selectedIds=[];
-  console.log("Auswahl zurückgesetzt");
-}
-
 
 
 function sortedHeader(column: Column<any, any>, headerName: string) {
@@ -81,12 +75,6 @@ export const columns: ColumnDef<Athlete>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => {
           row.toggleSelected(!!value); 
-          if(value){
-            selectedIds.push(row.original.id);
-          }else{
-            let remInd = selectedIds.indexOf(row.original.id);
-            selectedIds.splice(remInd, 1)
-          }
         }}
         onClick={(e) => e.stopPropagation()}
         aria-label="Select row"
