@@ -38,11 +38,39 @@ export async function LoginKontrolle(email: string, password: string): Promise<n
 
     if (await userExists(email) === false) {
         return 0; // Kein Benutzer mit dieser E-Mail-Adresse
-    } else if (user && user.password !== password) {
-        return 1; // Benutzer mit dieser E-Mail-Adresse gefunden, aber falsches Passwort
     } else {
-        return 2; // Benutzer mit dieser E-Mail-Adresse und diesem Passwort gefunden
+        console.log("User found, checking password...")
+        try {
+            const res = await fetch("http://127.0.0.1:5000/users/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                })
+            });
+            if (!res.ok) {
+                const errorBody = await res.json();
+                console.log("Login failed:", errorBody);
+                return 1; // Fehler bei der Überprüfung des Benutzers
+                throw new Error(errorBody.error || "Failed to add result");
+            } else {
+                console.log("Login successful");
+                return 2; // Login erfolgreich
+            }
+        } catch (error) {
+            console.error("Error during user login:", error);
+            return 1; // Fehler bei der Überprüfung des Benutzers
+        }
+
     }
+
+
+    //else if (user && user.password !== password) {
+    //    return 1; // Benutzer mit dieser E-Mail-Adresse gefunden, aber falsches Passwort
+    //} else {
+    //    return 2; // Benutzer mit dieser E-Mail-Adresse und diesem Passwort gefunden
+    //}
 }
 
 
@@ -68,6 +96,7 @@ export async function createUser(email: string, password: string): Promise<boole
 
     if (!res.ok) {
         const errorBody = await res.json();
+        return false; // User creation failed
         throw new Error(errorBody.error || "Failed to add result");
         return false; // User creation failed
 
@@ -75,7 +104,4 @@ export async function createUser(email: string, password: string): Promise<boole
         console.log("User created successfully");
         return true; // User creation successful
     }
-
-
-
 }

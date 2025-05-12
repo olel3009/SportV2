@@ -31,7 +31,6 @@ def get_users():
     users = User.query.all()
     return jsonify([{
         "email": user.email,
-        "password": user.password,  # In einer echten App: Hashen!
         "created_at": user.created_at,
         "updated_at": user.updated_at
     } for user in users])
@@ -41,6 +40,31 @@ def get_user_email(email):
     user = User.query.get_or_404(email)
     schema = UserSchema()
     return jsonify(schema.dump(user))
+
+
+@bp_user.route('/users/login', methods=['POST'])
+def login_user():
+    """
+    Prüft anhand von Email und Passwort, ob ein Nutzer existiert und die Credentials stimmen.
+    """
+    data = request.get_json() or {}
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({"error": "Email und Passwort müssen übergeben werden"}), 400
+
+    # User per Email laden
+    user = User.query.filter_by(email=email).first()
+    if user is None or user.password != password:
+        return jsonify({"error": "Ungültige Anmeldedaten"}), 401
+
+    # Login erfolgreich
+    return jsonify({
+        "message": "Login erfolgreich",
+        "email": user.email
+    }), 200
+
 
 # UPDATE User
 @bp_user.route('/users/<string:email>', methods=['PUT'])

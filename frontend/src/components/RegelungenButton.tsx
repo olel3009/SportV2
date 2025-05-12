@@ -227,7 +227,7 @@ export default function RegelungenButton() {
 
             <Tooltip.Root>
               <Tooltip.Trigger asChild>
-                <a href="/Leistungsuebersicht_beispiel.csv" download>
+                <a href="/regelung-beispiel.csv" download>
                   <Button>
                     Beispiel CSV
                   </Button>
