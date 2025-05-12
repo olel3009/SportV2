@@ -2,6 +2,7 @@
 
 import { Column, ColumnDef } from "@tanstack/react-table"
 import { Athlete } from "@/models/athlete"
+import { downloadCsv } from "@/exportCsv"
 import {
   ChartNoAxesCombined,
   MoreHorizontal,
@@ -181,7 +182,7 @@ export const columns: ColumnDef<Athlete>[] = [
                   <span>Neue Leistung eintragen</span>
                 </DropdownMenuItem>
               </DialogTrigger>
-              <DropdownMenuItem  onClick={(e) => e.stopPropagation()}><Download />Als CSV exportieren</DropdownMenuItem>
+              <DropdownMenuItem  onClick={(e) => {e.stopPropagation(); downloadCsv([row.original.id])}}><Download />Als CSV exportieren</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem><Pen />Editieren</DropdownMenuItem>
               <DropdownMenuItem className="text-red-600"><Trash2 />Löschen</DropdownMenuItem>
