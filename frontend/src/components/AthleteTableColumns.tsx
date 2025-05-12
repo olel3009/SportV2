@@ -32,6 +32,10 @@ import {
 } from "./ui/dialog"
 import { FeatEntryCard, FeatEntryDialog } from "./featentry"
 import { DialogTitle } from "@radix-ui/react-dialog"
+import { useCallback } from "react"
+
+
+export let selectedIds:number[]=[];
 
 
 function sortedHeader(column: Column<any, any>, headerName: string) {
@@ -63,14 +67,22 @@ export const columns: ColumnDef<Athlete>[] = [
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        onCheckedChange={(value) => {table.toggleAllPageRowsSelected(!!value);}}
         aria-label="Select all"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        onCheckedChange={(value) => {
+          row.toggleSelected(!!value); 
+          if(value){
+            selectedIds.push(row.original.id);
+          }else{
+            let remInd = selectedIds.indexOf(row.original.id);
+            selectedIds.splice(remInd, 1)
+          }
+        }}
         onClick={(e) => e.stopPropagation()}
         aria-label="Select row"
       />

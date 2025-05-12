@@ -3,10 +3,12 @@ import { useRouter } from "next/navigation"
 
 import styles from "./page.module.css";
 import { DataTable } from "@/components/ui/DataTable";
-import { columns } from "@/components/AthleteTableColumns"
+import { columns, selectedIds } from "@/components/AthleteTableColumns"
 import { getAllAthletes } from "@/athlete_getters";
 import { useEffect, useState } from "react";
 import { Athlete } from "@/models/athlete";
+import { downloadCsv } from "@/exportCsv";
+import { Download } from "lucide-react";
 
 export default function Page() {
     const router = useRouter();
@@ -19,6 +21,14 @@ export default function Page() {
     return (
         <div className="p-6">
             <h1 className="text-2x1 font bold mb-4">Athleten</h1>
+            <button 
+                onClick={() => {
+                    downloadCsv(selectedIds)
+                }}
+                className="w-full"
+                >
+                Ausgewählte als CSV herunterladen
+            </button>
             <DataTable 
                 columns={columns} 
                 data={athletes}
