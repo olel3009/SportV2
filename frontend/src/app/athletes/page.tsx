@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation"
 
 import styles from "./page.module.css";
+import  DownloadCsvButton from "@/components/ui/csvExportButton"
 import { DataTable } from "@/components/ui/DataTable";
 import { columns, selectedIds } from "@/components/AthleteTableColumns"
 import { getAllAthletes } from "@/athlete_getters";
@@ -21,14 +22,7 @@ export default function Page() {
     return (
         <div className="p-6">
             <h1 className="text-2x1 font bold mb-4">Athleten</h1>
-            <button 
-                onClick={() => {
-                    downloadCsv(selectedIds)
-                }}
-                className="w-full"
-                >
-                Ausgewählte als CSV herunterladen
-            </button>
+            <DownloadCsvButton ids={selectedIds} text={"Ausgewählte als Csv exportieren"} />
             <DataTable 
                 columns={columns} 
                 data={athletes}

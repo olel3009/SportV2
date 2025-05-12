@@ -2,6 +2,7 @@ import { useParams } from "next/navigation";
 import { Athlete, Feat } from "@/models/athlete";
 import { getAllDisciplines, getAthleteById, getFeatsById, getAthleteWithFeats} from "@/athlete_getters";
 import {downloadCsv } from "@/exportCsv";
+import DownloadCsvButton from "@/components/ui/csvExportButton";
 import Link from "next/link";
 import { Undo2 } from "lucide-react";
 import {
@@ -41,8 +42,6 @@ export default async function Page({
     const athlete = await getAthleteById(id);
     const feats= await getFeatsById(id);
     const disciplines= await getAllDisciplines();
-    console.log(disciplines);
-    console.log(feats);
     let actDiscIds:boolean[]=[false, false, false, false];
     feats?.forEach(feat => {
       // first, safely pull out discipline_id
@@ -53,7 +52,6 @@ export default async function Page({
         actDiscIds[id - 1] = true;
       }
     });
-    console.log(actDiscIds);
     function mapSex(sex: string) {
         sex = sex.toLocaleLowerCase();
         if (sex === "m") return "Männlich";
@@ -75,6 +73,7 @@ export default async function Page({
         <ErrorDisplay message={`Athlet mit ID: ${id} existiert nicht.`} />
       </div>
     );
+
   return (
     <div className="p-6 gap-2 flex flex-col">
       <Link href="/athletes/" className="flex items-center gap-2">
@@ -89,6 +88,7 @@ export default async function Page({
           <CardDescription>
             {athlete.dateOfBirth.split("-").join(".")} -{" "}
             {getAge(athlete.dateOfBirth)} Jahre
+            <DownloadCsvButton ids={[id]} text={"Als Csv exportieren"} />
           </CardDescription>
         </CardHeader>
         <CardContent></CardContent>
@@ -122,7 +122,6 @@ export default async function Page({
                 if (!disc) return null;                       // guard against not found
 
                 let relFeats:Feat[]|undefined=feats?.filter(a=>a.ruling?.discipline_id==index+1);
-                console.log(relFeats);
                 return <div key={disc.id+"_tab"}>
                 {relFeats?.map(feat=>{
                   if(usedExercises.includes(feat.rule_id)){
