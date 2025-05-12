@@ -8,7 +8,7 @@ def test_create_athlete(client):
     response = client.post("/athletes", json={
         "first_name": "Max",
         "last_name": "Mustermann",
-        "birth_date": "1,1,2003",  
+        "birth_date": "1.1.2003",  
         "gender": "m"
     })
     assert response.status_code == 201
@@ -24,7 +24,7 @@ def test_create_athlete_default_swim_certificate(client):
     response = client.post("/athletes", json={
         "first_name": "Max",
         "last_name": "Mustermann",
-        "birth_date": "1,1,2003",  
+        "birth_date": "1.1.2003",  
         "gender": "m"
         # swim_certificate nicht mitgeschickt => default false
     })
@@ -48,7 +48,7 @@ def test_create_athlete_with_swim_certificate_true(client):
     response = client.post("/athletes", json={
         "first_name": "Anna",
         "last_name": "Schwimmer",
-        "birth_date": "1,1,2003",
+        "birth_date": "1.1.2003",
         "gender": "f",
         "swim_certificate": True
     })
@@ -72,7 +72,7 @@ def test_get_athletes(client):
     client.post("/athletes", json={
         "first_name": "Anna",
         "last_name": "Schmidt",
-        "birth_date": "1,1,2006",
+        "birth_date": "1.1.2006",
         "gender": "f"
     })
 
@@ -97,7 +97,7 @@ def test_update_athlete(client):
     create_resp = client.post("/athletes", json={
         "first_name": "Erika",
         "last_name": "Mustermann",
-        "birth_date": "1,1,2003",
+        "birth_date": "1.1.2003",
         "gender": "f"
     })
     athlete_id = create_resp.get_json()["id"]
@@ -126,7 +126,7 @@ def test_update_athlete_swim_certificate(client):
     create_resp = client.post("/athletes", json={
         "first_name": "Peter",
         "last_name": "Lustig",
-        "birth_date": "1,1,2003",
+        "birth_date": "1.1.2003",
         "gender": "m",
         "swim_certificate": False
     })
@@ -156,7 +156,7 @@ def test_delete_athlete(client):
     create_resp = client.post("/athletes", json={
         "first_name": "Peter",
         "last_name": "Lustig",
-        "birth_date": "1,1,2003",
+        "birth_date": "1.1.2003",
         "gender": "m"
     })
     athlete_id = create_resp.get_json()["id"]
@@ -181,7 +181,7 @@ def test_export_athlete_pdf(client):
     create_resp = client.post("/athletes", json={
         "first_name": "Lena",
         "last_name": "Test",
-        "birth_date": "1,1,2003",
+        "birth_date": "1.1.2003",
         "gender": "f"
     })
     athlete_id = create_resp.get_json()["id"]

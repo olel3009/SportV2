@@ -9,7 +9,7 @@ def test_create_trainer(client):
         "first_name": "Max",
         "last_name": "Mustermann",
         "email": "max@example.com",
-        "birth_date": "1,1,2003",
+        "birth_date": "1.1.2003",
         "gender": "m"
     })
     assert response.status_code == 201
@@ -26,7 +26,7 @@ def test_get_trainers(client):
         "first_name": "Erika",
         "last_name": "Mustermann",
         "email": "erika@example.com",
-        "birth_date": "1,1,2003",
+        "birth_date": "1.1.2003",
         "gender": "f"
     })
 
@@ -45,7 +45,7 @@ def test_update_trainer(client):
         "first_name": "Anna",
         "last_name": "Schmidt",
         "email": "anna@example.com",
-        "birth_date": "1,1,2003",
+        "birth_date": "1.1.2003",
         "gender": "f"
     })
     trainer_id = create_resp.get_json()["id"]
@@ -76,7 +76,7 @@ def test_delete_trainer(client):
         "first_name": "Peter",
         "last_name": "Lustig",
         "email": "peter@example.com",
-        "birth_date": "1,1,2003",
+        "birth_date": "1.1.2003",
         "gender": "m"
     })
     trainer_id = create_resp.get_json()["id"]

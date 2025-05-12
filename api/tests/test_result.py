@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime
 
 # Hilfsfunktionen, um in jedem Test einen Athlete und einen Rule anzulegen.
-def create_test_athlete(client, first_name="Test", last_name="Athlete", birth_date="1,1,2003", gender="m"):
+def create_test_athlete(client, first_name="Test", last_name="Athlete", birth_date="1.1.2003", gender="m"):
     resp = client.post("/athletes", json={
         "first_name": first_name,
         "last_name": last_name,
@@ -18,8 +18,8 @@ def create_test_rule(client,
                      discipline_id =1, 
                      min_age=18, 
                      max_age=40, 
-                     valid_start="01,01,2025", 
-                     valid_end="31,12,2025",
+                     valid_start="01.01.2025", 
+                     valid_end="31.12.2025",
                      unit="Zeit (Min.,Sek.)",
                      description_m="Kraftübung 80g",
                      description_f="Kraftübung 80g",
@@ -62,7 +62,7 @@ def test_create_result_time(client):
       - bronze: result <= 30
     """
     # Erstelle einen Athlete und einen Rule (unit "time")
-    athlete_id = create_test_athlete(client, first_name="Time", last_name="Tester", birth_date="1,1,1990", gender="m")
+    athlete_id = create_test_athlete(client, first_name="Time", last_name="Tester", birth_date="1.1.1990", gender="m")
     rule_id = create_test_rule(client, rule_name="Time Test Rule", unit="Zeit (Min.,Sek.)",
                                threshold_bronze_m=30.0,
                                threshold_silver_m=25.0,
@@ -100,7 +100,7 @@ def test_create_result_distance(client):
       - bronze: result >= 5
     """
     # Für diesen Test passen wir die Thresholds entsprechend an.
-    athlete_id = create_test_athlete(client, first_name="Distance", last_name="Tester", birth_date="1,1,1995", gender="m")
+    athlete_id = create_test_athlete(client, first_name="Distance", last_name="Tester", birth_date="1.1.1995", gender="m")
     # Hier definieren wir für unit "distance" höhere Werte als besser.
     # Wir setzen beispielsweise:
     # Bronze: 5, Silver: 10, Gold: 15 (für männlich, gleiche für weiblich in diesem Test)
@@ -135,7 +135,7 @@ def test_update_result(client):
     Wir ändern den result-Wert, sodass sich die Medal ändert.
     """
     # Erstelle Athlete und Rule (unit "time" Test)
-    athlete_id = create_test_athlete(client, first_name="Update", last_name="Tester", birth_date="1,1,2003", gender="m")
+    athlete_id = create_test_athlete(client, first_name="Update", last_name="Tester", birth_date="1.1.2003", gender="m")
     rule_id = create_test_rule(client, rule_name="Update Time Rule", unit="Zeit (Min.,Sek.)",
                                threshold_bronze_m=30.0,
                                threshold_silver_m=25.0,
@@ -167,7 +167,7 @@ def test_delete_result(client):
     Testet das Löschen eines Result-Datensatzes per DELETE /results/<id>
     """
     # Erstelle Athlete und Rule (unit "time")
-    athlete_id = create_test_athlete(client, first_name="Delete", last_name="Tester", birth_date="1,1,2003", gender="m")
+    athlete_id = create_test_athlete(client, first_name="Delete", last_name="Tester", birth_date="1.1.2003", gender="m")
     rule_id = create_test_rule(client, rule_name="Delete Rule", unit="Zeit (Min.,Sek.)",
                                threshold_bronze_m=30.0,
                                threshold_silver_m=25.0,
