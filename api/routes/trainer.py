@@ -31,7 +31,7 @@ def get_trainers():
         "first_name": trainer.first_name,
         "last_name": trainer.last_name,
         "email": trainer.email,
-        "birth_date": trainer.birth_date.strftime('%d-%m-%Y'),
+        "birth_date": trainer.birth_date.strftime('%d,%m,%Y'),
         "gender": trainer.gender,
         "created_at": trainer.created_at,
         "updated_at": trainer.updated_at
@@ -50,7 +50,7 @@ def update_trainer(id):
     trainer.first_name = data.get('first_name', trainer.first_name)
     trainer.last_name = data.get('last_name', trainer.last_name)
     trainer.email = data.get('email', trainer.email)
-    trainer.birth_date = datetime.strptime(data['birth_date'], '%d-%m-%Y') if 'birth_date' in data else trainer.birth_date
+    trainer.birth_date = datetime.strptime(data['birth_date'], '%d,%m,%Y') if 'birth_date' in data else trainer.birth_date
     trainer.gender = data.get('gender', trainer.gender)
     db.session.commit()
     return jsonify({"message": "Trainer aktualisiert"})

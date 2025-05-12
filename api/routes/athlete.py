@@ -34,7 +34,7 @@ def get_athletes():
             "id": ath.id,
             "first_name": ath.first_name,
             "last_name": ath.last_name,
-            "birth_date": ath.birth_date.strftime("%d-%m-%Y"),
+            "birth_date": ath.birth_date.strftime("%d,%m,%Y"),
             "gender": ath.gender,
             "swim_certificate": ath.swim_certificate,
             "created_at": ath.created_at,
@@ -44,9 +44,23 @@ def get_athletes():
 
 @bp_athlete.route('/athletes/<int:id>', methods=['GET'])
 def get_athlete_id(id):
+    # 1) Athleten‐Datensatz laden oder 404
     athlete = DBAthlete.query.get_or_404(id)
     schema = AthleteSchema()
-    return jsonify(schema.dump(athlete))
+    data = schema.dump(athlete)
+
+    # 3) Query‐Parameter auslesen (Default = "false")
+    show = request.args.get('show_results', 'false').lower() == 'true'
+
+    if show:
+        # 4) nur wenn show_results=true, Medaillen zählen
+        data.update({
+            "total_bronze": DBResult.query.filter_by(athlete_id=id, medal='Bronze').count(),
+            "total_silver": DBResult.query.filter_by(athlete_id=id, medal='Silber').count(),
+            "total_gold":   DBResult.query.filter_by(athlete_id=id, medal='Gold').count(),
+        })
+
+    return jsonify(data), 200
 
 @bp_athlete.route('/athletes/<int:id>', methods=['PUT'])
 def update_athlete(id):
@@ -58,7 +72,7 @@ def update_athlete(id):
     if "last_name" in data:
         athlete.last_name = data["last_name"]
     if "birth_date" in data:
-        athlete.birth_date = datetime.strptime(data["birth_date"], "%d-%m-%Y").date()
+        athlete.birth_date = datetime.strptime(data["birth_date"], "%d,%m,%Y").date()
     if "gender" in data:
         athlete.gender = data["gender"]
     # NEUES FELD
@@ -122,53 +136,54 @@ def get_athletes_results(athlete_id):
 
     db_athlete = DBAthlete.query.get_or_404(athlete_id)
 
+    athlete_schema = AthleteSchema()
+    result_schema = ResultSchema()
+    rule_schema = RuleSchema()
+    discipline_schema = DisciplineSchema()
+
+    serialized_athlete_details = athlete_schema.dump(db_athlete)
+
     db_results = DBResult.query.options(
-        joinedload(DBResult.rule).joinedload(DBRule.discipline) #
+        joinedload(DBResult.rule).joinedload(DBRule.discipline)
     ).filter(
         DBResult.athlete_id == athlete_id
     ).all()
 
-    if not db_results:
-        return jsonify([]), 200
+    processed_results = []
+
+    if db_results:
+        for result in db_results:
+            serialized_result = result_schema.dump(result) 
+            rule = result.rule
+
+            if rule:
+                serialized_rule = rule_schema.dump(rule) 
+                discipline = rule.discipline
+
+                if discipline:
+                    serialized_discipline = discipline_schema.dump(discipline) 
+                    
+                    if 'discipline_id' in serialized_rule:
+                        del serialized_rule['discipline_id']
+                    serialized_rule['discipline'] = serialized_discipline
+                else:
+                    serialized_rule['discipline'] = None
+                    print(f"Warning: Discipline data missing for rule ID {rule.id}")
+
+                if 'rule_id' in serialized_result:
+                    del serialized_result['rule_id']
+                serialized_result['rule'] = serialized_rule
+            else:
+                if 'rule_id' in serialized_result:
+                    del serialized_result['rule_id']
+                serialized_result['rule'] = None
+                print(f"Warning: Rule data missing for result ID {result.id} (Rule ID: {result.rule_id if hasattr(result, 'rule_id') else 'N/A'})")
+            
+            processed_results.append(serialized_result)
+
+    response_payload = {
+        "athlete": serialized_athlete_details,
+        "results": processed_results
+    }
     
-    response_data = []
-
-    result_schema = ResultSchema()
-    rule_schema = RuleSchema()
-    discipline_schema = DisciplineSchema() 
-
-    for result in db_results:
-
-        serialized_result = result_schema.dump(result) #
-
-        rule = result.rule
-
-        if rule:
-             serialized_rule = rule_schema.dump(rule) #
-
-             discipline = rule.discipline
-
-             if discipline:
-                 serialized_discipline = discipline_schema.dump(discipline)
-
-                 if 'discipline_id' in serialized_rule:
-                     del serialized_rule['discipline_id']
-
-                 serialized_rule['discipline'] = serialized_discipline
-             else:
-                 serialized_rule['discipline'] = None
-                 print(f"Warning: Discipline data missing for rule ID {rule.id}")
-
-             if 'rule_id' in serialized_result:
-                 del serialized_result['rule_id']
-
-             serialized_result['rule'] = serialized_rule
-        else:
-             if 'rule_id' in serialized_result:
-                 del serialized_result['rule_id']
-             serialized_result['rule'] = None
-             print(f"Warning: Rule data missing for result ID {result.id} (Rule ID: {result.rule_id if hasattr(result, 'rule_id') else 'N/A'})")
-
-        response_data.append(serialized_result)
-
-    return jsonify(response_data), 200
+    return jsonify(response_payload), 200

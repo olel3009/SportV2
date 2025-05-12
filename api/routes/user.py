@@ -42,8 +42,6 @@ def get_user_email(email):
     schema = UserSchema()
     return jsonify(schema.dump(user))
 
-
-
 # UPDATE User
 @bp_user.route('/users/<string:email>', methods=['PUT'])
 def update_user(email):
