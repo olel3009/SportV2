@@ -36,6 +36,10 @@ import { useCallback } from "react"
 
 
 export let selectedIds:number[]=[];
+export function resetSelection():void{
+  selectedIds=[];
+  console.log("Auswahl zurückgesetzt");
+}
 
 
 
