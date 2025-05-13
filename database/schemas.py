@@ -8,7 +8,7 @@ class TrainerSchema(Schema):
     first_name = fields.Str(required=True, validate=Length(min=1, max=100))
     last_name = fields.Str(required=True, validate=Length(min=1, max=100))
     email = fields.Email(required=True)  # Gültige E-Mail
-    birth_date = fields.Date(required=True, format="%d,%m,%Y")
+    birth_date = fields.Date(required=True, format="%d.%m.%Y")
     gender = fields.Str(required=True, validate=OneOf(["m", "f", "d"]))
 
 
@@ -16,7 +16,7 @@ class TrainerSchema(Schema):
 class AthleteSchema(Schema):
     first_name = fields.Str(required=True, validate=Length(min=1, max=100))
     last_name = fields.Str(required=True, validate=Length(min=1, max=100))
-    birth_date = fields.Date(required=True, format="%d,%m,%Y")
+    birth_date = fields.Date(required=True, format="%d.%m.%Y")
     gender = fields.Str(required=True, validate=OneOf(["m", "f", "d"]))
     swim_certificate = fields.Bool(missing=False)
     created_at = fields.DateTime(dump_only=True)
@@ -109,8 +109,8 @@ class RuleSchema(Schema):
     threshold_silver_f = fields.Float(required=True, validate=Range(min=0))
     threshold_gold_f = fields.Float(required=True, validate=Range(min=0))
 
-    valid_start = fields.Date(required=True, format="%d,%m,%Y")
-    valid_end = fields.Date(required=False, allow_none=True, format="%d,%m,%Y")
+    valid_start = fields.Date(required=True, format="%d.%m.%Y")
+    valid_end = fields.Date(required=False, allow_none=True, format="%d.%m.%Y")
 
     # Version startet mit 1, wenn nicht angegeben
     version = fields.Int(missing=1)
@@ -133,8 +133,8 @@ class RuleSchema(Schema):
         
 # User-Schema
 class UserSchema(Schema):
-    email = fields.Str(required=True, validate=Length(min=5, max=255))
-    password = fields.Str(required=True, validate=Length(min=8, max=255))
+    email = fields.Str(required=True, validate=Length(max=255))
+    password = fields.Str(required=True, validate=Length(max=255))
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 

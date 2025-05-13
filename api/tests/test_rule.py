@@ -24,8 +24,8 @@ def test_create_rule(client):
         "threshold_bronze_f": 8.0,
         "threshold_silver_f": 10.0,
         "threshold_gold_f": 13.0,
-        "valid_start": "01,01,2025",
-        "valid_end": "31,12,2025"
+        "valid_start": "01.01.2025",
+        "valid_end": "31.12.2025"
     })
     assert response.status_code == 201
     data = response.get_json()
@@ -55,8 +55,8 @@ def test_get_rules(client):
         "threshold_bronze_f": 4.0,
         "threshold_silver_f": 5.0,
         "threshold_gold_f": 6.0,
-        "valid_start": "01,01,2026",
-        "valid_end": "31,12,2026"
+        "valid_start": "01.01.2026",
+        "valid_end": "31.12.2026"
     })
 
     response = client.get("/rules")
@@ -91,8 +91,8 @@ def test_update_rule(client):
         "threshold_bronze_f": 4.0,
         "threshold_silver_f": 8.0,
         "threshold_gold_f": 12.0,
-        "valid_start": "01,01,2025",
-        "valid_end": "31,12,2025"
+        "valid_start": "01.01.2025",
+        "valid_end": "31.12.2025"
     })
     assert create_resp.status_code == 201
     rule_id = create_resp.get_json()["id"]
@@ -131,7 +131,7 @@ def test_delete_rule(client):
         "threshold_bronze_f": 2.0,
         "threshold_silver_f": 4.0,
         "threshold_gold_f": 6.0,
-        "valid_start": "01,01,2030"
+        "valid_start": "01.01.2030"
     })
     assert create_resp.status_code == 201
     rule_id = create_resp.get_json()["id"]

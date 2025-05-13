@@ -1,5 +1,4 @@
 import pytest
-
 def test_create_user(client):
     """
     Testet das Anlegen eines neuen Users mit trainer_id per POST /users.
