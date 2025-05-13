@@ -14,14 +14,9 @@ def create_user():
     if not data.get('email') or not data.get('password'):
         return jsonify({"error": "Email und Passwort sind erforderlich"}), 400
 
-    if bool(data.get('trainer_id')) == bool(data.get('athlete_id')):  
-        return jsonify({"error": "Ein User kann entweder Trainer oder Athlet sein, aber nicht beides"}), 400
-
     new_user = User(
         email=valid_data["email"],
-        password=valid_data["password"], 
-        trainer_id=valid_data.get("trainer_id"),
-        athlete_id=valid_data.get("athlete_id")
+        password=valid_data["password"]
     )
 
     db.session.add(new_user)
@@ -35,8 +30,6 @@ def get_users():
     return jsonify([{
         "id": user.id,
         "email": user.email,
-        "trainer_id": user.trainer_id,
-        "athlete_id": user.athlete_id,
         "created_at": user.created_at,
         "updated_at": user.updated_at
     } for user in users])
@@ -46,6 +39,30 @@ def get_user_id(id):
     user = User.query.get_or_404(id)
     schema = UserSchema()
     return jsonify(schema.dump(user))
+
+@bp_user.route('/users/login', methods=['POST'])
+def login_user():
+    """
+    Prüft anhand von Email und Passwort, ob ein Nutzer existiert und die Credentials stimmen.
+    """
+    data = request.get_json() or {}
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({"error": "Email und Passwort müssen übergeben werden"}), 400
+
+    # User per Email laden
+    user = User.query.filter_by(email=email).first()
+    if user is None or user.password != password:
+        return jsonify({"error": "Ungültige Anmeldedaten"}), 401
+
+    # Login erfolgreich
+    return jsonify({
+        "message": "Login erfolgreich",
+        "id": user.id,
+        "email": user.email
+    }), 200
 
 # UPDATE User
 @bp_user.route('/users/<int:id>', methods=['PUT'])
@@ -57,14 +74,6 @@ def update_user(id):
         user.email = data['email']
     if "password" in data:
         user.password = data['password']  # In einer echten App: Hashen!
-    if "trainer_id" in data and "athlete_id" in data:
-        return jsonify({"error": "Ein User kann entweder Trainer oder Athlet sein, aber nicht beides"}), 400
-    if "trainer_id" in data:
-        user.trainer_id = data['trainer_id']
-        user.athlete_id = None  # Sicherstellen, dass nur eine Rolle aktiv ist
-    if "athlete_id" in data:
-        user.athlete_id = data['athlete_id']
-        user.trainer_id = None
 
     db.session.commit()
     return jsonify({"message": "User aktualisiert"})

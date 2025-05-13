@@ -1,6 +1,8 @@
 import { useParams } from "next/navigation";
 import { Athlete, Feat } from "@/models/athlete";
-import { getAthleteById, getFeatsById } from "@/athlete_getters";
+import { getAllDisciplines, getAthleteById, getFeatsById, getAthleteWithFeats} from "@/athlete_getters";
+import {downloadCsv } from "@/exportCsv";
+import DownloadCsvButton from "@/components/ui/csvExportButton";
 import Link from "next/link";
 import { Undo2, CircleUserRound, Medal, CircleSlash } from "lucide-react";
 import {
@@ -10,6 +12,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { CardTab, TabSwitcher, TabContent } from "./tab_cards";
+import { boolean } from "zod";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import { Badge } from "@/components/ui/badge";
 
@@ -60,16 +64,30 @@ export default async function Page({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const id = parseInt((await params).id);
-  const athlete = await getAthleteById(id);
-  const feats = await getFeatsById(id);
-  console.log(feats);
-  function mapSex(sex: string) {
-    sex = sex.toLocaleLowerCase();
-    if (sex === "m") return "Männlich";
-    if (sex === "f") return "Weiblich";
-    if (sex === "d") return "Divers";
-  }
+    const id = parseInt((await params).id);
+    const athlete = await getAthleteById(id);
+    const feats= await getFeatsById(id);
+    const disciplines= await getAllDisciplines();
+    let actDiscIds:boolean[]=[false, false, false, false];
+    feats?.forEach(feat => {
+      // first, safely pull out discipline_id
+      const id = feat?.ruling?.discipline_id;
+    
+      // make sure it's a real number in [1..4]
+      if (typeof id === "number" && id >= 1 && id <= actDiscIds.length) {
+        actDiscIds[id - 1] = true;
+      }
+    });
+    function mapSex(sex: string) {
+        sex = sex.toLocaleLowerCase();
+        if (sex === "m") return "Männlich";
+        if (sex === "w") return "Weiblich";
+        if (sex === "d") return "Divers";
+    }
+   let usedExercises:number[]=[];
+   let idIndex=1;
+   let temp:number;
+   let tabMap:number[]=[];
 
   if (athlete === undefined)
     return (
@@ -116,6 +134,81 @@ export default async function Page({
           </div>
         </CardContent>
       </Card>
+        <CardHeader>
+          <CardTitle className="text-xl">
+            {athlete.firstName} {athlete.lastName}
+          </CardTitle>
+          <CardDescription>
+            {athlete.dateOfBirth.split("-").join(".")} -{" "}
+            {getAge(athlete.dateOfBirth)} Jahre
+            <DownloadCsvButton ids={[id]} text={"Als Csv exportieren"} />
+          </CardDescription>
+        </CardHeader>
+        <CardContent></CardContent>
+      </Card>
+      <p>Geburtsdatum: {athlete.dateOfBirth}</p>
+      <p>Geschlecht: {mapSex(athlete.sex)}</p>
+      <Link href={`/feats_result_page?id=${id}`}>Disziplinen:</Link>
+      <div className="m-8 bg-gray-200 rounded-sm shadow-lg">
+          <CardTab>
+            <div>
+            {actDiscIds.map((yes, index) => {
+              if (!yes) return null;                        // skip inactive ones
+
+              const disc = disciplines.find(d => d.id === index + 1);
+              if (!disc) return null;                       // guard against not found
+              temp=idIndex;
+              idIndex+=1;
+              tabMap[disc.id]=temp;
+              return (
+                <TabSwitcher key={disc.id} tabId={temp}>
+                  <div className="p-2">{disc.name}</div>
+                </TabSwitcher>
+              );
+            })}
+            </div>
+            <div className="p-2">
+              {actDiscIds.map((yes, index) => {
+                if (!yes) return null;                        // skip inactive ones
+
+                const disc = disciplines.find(d => d.id === index + 1);
+                if (!disc) return null;                       // guard against not found
+
+                let relFeats:Feat[]|undefined=feats?.filter(a=>a.ruling?.discipline_id==index+1);
+                return <div key={disc.id+"_tab"}>
+                {relFeats?.map(feat=>{
+                  if(usedExercises.includes(feat.rule_id)){
+                    return null;
+                  }else{
+                    usedExercises.push(feat.rule_id);
+                  }
+                  let discName:string|undefined='';
+                  if(athlete.sex=='w'){
+                     discName=feat.ruling?.description_f;
+                  }else{
+                     discName=feat.ruling?.description_m;
+                  }
+                  discName+=" "+feat.ruling?.min_age+" - "+feat.ruling?.max_age;
+                  let tabKey:string;
+                  if(discName){
+                    tabKey=disc.id+discName;
+                  }else{
+                    tabKey=disc.id+'_tab';
+                  }
+                  return (
+                    <TabContent key={tabKey} id={tabMap[disc.id]}><details><summary>{discName}</summary>Hier genauere Details über Disziplin/Übung</details></TabContent>
+                  );
+                })}
+                </div>
+              })}
+            </div>
+          </CardTab>
+        </div>
+      <ul>
+        {athlete.disciplines?.map((discipline) => {
+          return <li key={discipline}>{discipline}</li>;
+        })}
+      </ul>
     </div>
   );
 }
