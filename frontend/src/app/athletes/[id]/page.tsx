@@ -134,21 +134,6 @@ export default async function Page({
           </div>
         </CardContent>
       </Card>
-        <CardHeader>
-          <CardTitle className="text-xl">
-            {athlete.firstName} {athlete.lastName}
-          </CardTitle>
-          <CardDescription>
-            {athlete.dateOfBirth.split("-").join(".")} -{" "}
-            {getAge(athlete.dateOfBirth)} Jahre
-            <DownloadCsvButton ids={[id]} text={"Als Csv exportieren"} />
-          </CardDescription>
-        </CardHeader>
-        <CardContent></CardContent>
-      </Card>
-      <p>Geburtsdatum: {athlete.dateOfBirth}</p>
-      <p>Geschlecht: {mapSex(athlete.sex)}</p>
-      <Link href={`/feats_result_page?id=${id}`}>Disziplinen:</Link>
       <div className="m-8 bg-gray-200 rounded-sm shadow-lg">
           <CardTab>
             <div>
