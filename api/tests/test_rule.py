@@ -13,7 +13,7 @@ def test_create_rule(client):
     response = client.post("/rules", json={
         "discipline_id": discipline_id,
         "rule_name": "Kraftübung",
-        "unit": "points",
+        "unit": "Punkte",
         "description_m": "Kraftübung 80g",
         "description_f": "Kraftübung 70g",
         "min_age": 18,
@@ -24,8 +24,8 @@ def test_create_rule(client):
         "threshold_bronze_f": 8.0,
         "threshold_silver_f": 10.0,
         "threshold_gold_f": 13.0,
-        "valid_start": "2025-01-01",
-        "valid_end": "2025-12-31"
+        "valid_start": "01.01.2025",
+        "valid_end": "31.12.2025"
     })
     assert response.status_code == 201
     data = response.get_json()
@@ -44,7 +44,7 @@ def test_get_rules(client):
     client.post("/rules", json={
         "discipline_id": discipline_id,
         "rule_name": "Testregel",
-        "unit": "points",
+        "unit": "Punkte",
         "description_m": "Kraftübung 80g",
         "description_f": "Kraftübung 70g",
         "min_age": 20,
@@ -55,8 +55,8 @@ def test_get_rules(client):
         "threshold_bronze_f": 4.0,
         "threshold_silver_f": 5.0,
         "threshold_gold_f": 6.0,
-        "valid_start": "2026-01-01",
-        "valid_end": "2026-12-31"
+        "valid_start": "01.01.2026",
+        "valid_end": "31.12.2026"
     })
 
     response = client.get("/rules")
@@ -80,7 +80,7 @@ def test_update_rule(client):
     create_resp = client.post("/rules", json={
         "discipline_id": discipline_id,
         "rule_name": "Kraftübung",
-        "unit": "points",
+        "unit": "Punkte",
         "description_m": "Kraftübung 80g",
         "description_f": "Kraftübung 70g",
         "min_age": 18,
@@ -91,8 +91,8 @@ def test_update_rule(client):
         "threshold_bronze_f": 4.0,
         "threshold_silver_f": 8.0,
         "threshold_gold_f": 12.0,
-        "valid_start": "2025-01-01",
-        "valid_end": "2025-12-31"
+        "valid_start": "01.01.2025",
+        "valid_end": "31.12.2025"
     })
     assert create_resp.status_code == 201
     rule_id = create_resp.get_json()["id"]
@@ -120,7 +120,7 @@ def test_delete_rule(client):
     create_resp = client.post("/rules", json={
         "discipline_id": discipline_id,
         "rule_name": "DeleteTest",
-        "unit": "points",
+        "unit": "Punkte",
         "description_m": "Kraftübung 80g",
         "description_f": "Kraftübung 70g",
         "min_age": 25,
@@ -131,7 +131,7 @@ def test_delete_rule(client):
         "threshold_bronze_f": 2.0,
         "threshold_silver_f": 4.0,
         "threshold_gold_f": 6.0,
-        "valid_start": "2030-01-01"
+        "valid_start": "01.01.2030"
     })
     assert create_resp.status_code == 201
     rule_id = create_resp.get_json()["id"]

@@ -8,7 +8,7 @@ class TrainerSchema(Schema):
     first_name = fields.Str(required=True, validate=Length(min=1, max=100))
     last_name = fields.Str(required=True, validate=Length(min=1, max=100))
     email = fields.Email(required=True)  # Gültige E-Mail
-    birth_date = fields.Date(required=True, format="%d-%m-%Y")
+    birth_date = fields.Date(required=True, format="%d.%m.%Y")
     gender = fields.Str(required=True, validate=OneOf(["m", "f", "d"]))
 
 
@@ -16,7 +16,7 @@ class TrainerSchema(Schema):
 class AthleteSchema(Schema):
     first_name = fields.Str(required=True, validate=Length(min=1, max=100))
     last_name = fields.Str(required=True, validate=Length(min=1, max=100))
-    birth_date = fields.Date(required=True, format="%d-%m-%Y")
+    birth_date = fields.Date(required=True, format="%d.%m.%Y")
     gender = fields.Str(required=True, validate=OneOf(["m", "f", "d"]))
     swim_certificate = fields.Bool(missing=False)
     created_at = fields.DateTime(dump_only=True)
@@ -87,7 +87,7 @@ class RuleSchema(Schema):
 
     unit = fields.Str(
         required=True,
-        validate=OneOf(["points", "distance", "time", "amount"])
+        validate=OneOf(["Punkte", "Distanz (m,cm)", "Zeit (Min.,Sek.)", "Zeit (Sek.,1/10 Sek.)"])
     )
 
     min_age = fields.Int(
@@ -109,8 +109,8 @@ class RuleSchema(Schema):
     threshold_silver_f = fields.Float(required=True, validate=Range(min=0))
     threshold_gold_f = fields.Float(required=True, validate=Range(min=0))
 
-    valid_start = fields.Date(required=True, format="%Y-%m-%d")
-    valid_end = fields.Date(required=False, allow_none=True, format="%Y-%m-%d")
+    valid_start = fields.Date(required=True, format="%d.%m.%Y")
+    valid_end = fields.Date(required=False, allow_none=True, format="%d.%m.%Y")
 
     # Version startet mit 1, wenn nicht angegeben
     version = fields.Int(missing=1)
@@ -133,10 +133,8 @@ class RuleSchema(Schema):
         
 # User-Schema
 class UserSchema(Schema):
-    email = fields.Str(required=True, validate=Length(min=5, max=255))
-    password = fields.Str(required=True, validate=Length(min=8, max=255))
-    trainer_id = fields.Int(required=False, allow_none=True)
-    athlete_id = fields.Int(required=False, allow_none=True)
+    email = fields.Str(required=True, validate=Length(max=255))
+    password = fields.Str(required=True, validate=Length(max=255))
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
@@ -144,11 +142,3 @@ class UserSchema(Schema):
     def validate_email(self, value):
         if "@" not in value:
             raise ValidationError("E-Mail muss ein '@' enthalten")
-
-    @validates("trainer_id")
-    def validate_trainer_id(self, value):
-        pass
-    
-    @validates("athlete_id")
-    def validate_athlete_id(self, value):
-        pass
