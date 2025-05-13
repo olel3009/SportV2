@@ -95,10 +95,11 @@ export async function createUser(email: string, password: string): Promise<boole
     });
 
     if (!res.ok) {
+        return false; // User creation failed
         const errorBody = await res.json();
         return false; // User creation failed
         throw new Error(errorBody.error || "Failed to add result");
-        return false; // User creation failed
+        
 
     } else {
         console.log("User created successfully");

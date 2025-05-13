@@ -158,6 +158,7 @@ export default function Home() {
               1. Um die Regelungen zu aktualisieren, klicken Sie auf den Knopf "Regelungen aktualisieren".<br />
               2. Warten Sie, bis sich ein Popup öffnet.<br />
               3. Laden Sie anschließend die CSV mit den Regelungen im Standart-Design hoch.<br />
+                (Sie können eine Beispiel CSV durch das drücken auf den Knopf mit der Aufschrift "Beispiel CSV" herunterladen.)<br />
               4. Wählen Sie das Jahr aus.<br />
               5. Bestätigen Sie den Vorgang mit "Bestätigen" (grün hinterlegter Knopf) oder brechen Sie den Vorgang mit "Abbrechen" (rot hinterlegter Knopf) ab.<br />
               6. Warten Sie, bis der Vorgang abgeschlossen ist. Den Status des Vorgangs können Sie am Text unter dem "Regelungen aktualisieren"-Knopf erkennen.<br />

@@ -4,6 +4,15 @@ let dbresults = 0;
 //0 für aktuelles Datum und 1 für nicht aktuelles Datum welche keine hinterlegung triggert, 2 für hervorheben
 let other_date = 0;
 
+type RawRule ={
+  id:number;
+  discipline_id:number;
+  rule_name:string;
+  created_at:Date;
+  updated_at:Date;
+  valid_start:Date;
+}
+
 
 export function button_loggig_dbresults_changer(x: number): void {
     //1 für positive und 0 für negative rückmeldung
@@ -16,9 +25,10 @@ export function button_loggig_dbresults_changer(x: number): void {
 }
 
 export function button_loggig_date(): number {
+    console.log("button_loggig_date");
     let result = 0;
     if (other_date == 0)/*dass reale Datum zu Nutzen*/ {
-        if (new Date().getMonth() === 1) /*Wenn es Januar ist*/ {
+        if (new Date().getMonth() <= 0) /*Wenn es Januar ist*/ {
             if (new Date().getDate() >= 29)/*Wenn es Januar ist und nicht die ersten vier Wochen des Jahres*/ {
                 result = 0; //0 bedeutet, dass der Knopf nicht hervorgehoben wird
             } else/*Wenn es Januar ist und in den ersten vier Wochen*/ {
@@ -37,12 +47,39 @@ export function button_loggig_date(): number {
     return result;
 }
 
-export function button_loggig_dbresults(): number {
-    // Hier bitte Datenbankabfrgae/Api aufruf machen, zum feststellen, ob in diesem Jahr schon mal aktualisiert wurde
-
-
+export async function button_loggig_dbresults(): Promise<number> {
+    console.log("button_loggig_dbresults");
     //Hier wird der Wert der Datenbankabfrage zurückgegeben, ob die Regelungen schon mal in diesem Jahr aktualisiert wurden
     //1 für positive und 0 für negative rückmeldung
+    const res = await fetch("http://127.0.0.1:5000/rules", {
+        method: "GET",
+        cache: "no-store"
+    });
+    if (!res.ok) {
+        return 0; // Fehler bei der API-Abfrage
+        throw new Error(`API call failed: ${res.status}`);
+    }
+    const data: RawRule[] = await res.json();
+    const mapped: RawRule[] = data.map((raw) => ({
+        id: raw.id,
+        discipline_id: raw.discipline_id,
+        rule_name: raw.rule_name,
+        created_at: new Date(raw.created_at),
+        updated_at: new Date(raw.updated_at),
+        valid_start: new Date(raw.valid_start)
+    }));
+    //console.log("Mapped data:", mapped);
+    const year =  new Date().getFullYear();
+    //console.log("Current year:", year);
+    //console.log("Mapped years:", mapped.some((rule) => rule.created_at.getFullYear()));
+
+    if (mapped.some((rule) => rule.created_at.getFullYear() === year )) {
+        dbresults = 1; // Regelungen wurden in diesem Jahr aktualisiert
+        console.log("Regelungen wurden in diesem Jahr aktualisiert");
+    }else{
+        dbresults = 0; // Regelungen wurden in diesem Jahr noch nicht aktualisiert
+        console.log("Regelungen wurden in diesem Jahr noch nicht aktualisiert");
+    }
     return dbresults;
 }
 
@@ -61,9 +98,9 @@ export function button_loggig_other_date_changer(x: number): void {
     }
 }
 
-export function button_loggig_color(): number {
+export async function button_loggig_color(): Promise<number> {
     let result = 0;
-    if (dbresults == 1) {// bedeutet dass die regelungen aktualisiert wurden 
+    if (await button_loggig_dbresults() === 1) {// bedeutet dass die regelungen aktualisiert wurden 
         result = 0;
     } else {
         if (button_loggig_date() == 0) {// es sind die ersten vier Wochen des Jahres vorbei

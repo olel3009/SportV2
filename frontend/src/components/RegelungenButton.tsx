@@ -1,7 +1,7 @@
 'use client';
 
 import * as Tooltip from "@radix-ui/react-tooltip";
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
@@ -23,8 +23,14 @@ export default function RegelungenButton() {
   const [selectedYear, setSelectedYear] = useState(currentYear.toString());
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [buttonColor, setButtonColor] = useState<number | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // API-Aufruf nur einmal beim Mounten
+  useEffect(() => {
+    button_loggig_color().then(setButtonColor);
+  }, []);
 
   const handleButtonClick = () => {
     setShowPopup(true);
@@ -46,9 +52,9 @@ export default function RegelungenButton() {
 
     setShowPopup(false);
     setButtonResult("Das Aktualisieren der Regelungen wird durchgeführt. Bitte warten Sie einen Moment.");
-
     // Simulierte Logik für die Regelaktualisierung
     setTimeout(() => {
+      button_loggig_color().then(setButtonColor);
       setButtonResult("Das Aktualisieren der Regelungen war erfolgreich.");
     }, 2000);
     setSelectedYear(currentYear.toString());
@@ -72,7 +78,9 @@ export default function RegelungenButton() {
   };
   return (
     <div>
-      {button_loggig_color() === wert ? (
+      {buttonColor === null ? (
+        <div>Lade...</div>
+      ) : buttonColor === wert ? (
         <div>
           <Tooltip.Root>
             <Tooltip.Trigger asChild>
@@ -82,9 +90,9 @@ export default function RegelungenButton() {
             </Tooltip.Trigger>
             <p dangerouslySetInnerHTML={{ __html: buttonresult }}></p>
             <Tooltip.Content
-              side="right" // Tooltip wird rechts angezeigt
-              align="center" // Zentriert den Tooltip vertikal zur Maus
-              sideOffset={10} // Abstand zwischen Tooltip und Maus
+              side="right"
+              align="center"
+              sideOffset={10}
               className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
             >
               Klicken Sie hier, um die Regelungen zu aktualisieren
@@ -102,9 +110,9 @@ export default function RegelungenButton() {
             </Tooltip.Trigger>
             <p dangerouslySetInnerHTML={{ __html: buttonresult }}></p>
             <Tooltip.Content
-              side="right" // Tooltip wird rechts angezeigt
-              align="center" // Zentriert den Tooltip vertikal zur Maus
-              sideOffset={10} // Abstand zwischen Tooltip und Maus
+              side="right"
+              align="center"
+              sideOffset={10}
               className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
             >
               Klicken Sie hier, um die Regelungen zu aktualisieren
@@ -130,9 +138,9 @@ export default function RegelungenButton() {
                 className="relative border border-dashed border-gray-300 p-4 rounded-md mb-4 cursor-pointer flex flex-col items-center justify-center h-48"
                 onClick={() => fileInputRef.current?.click()}
                 onDragOver={(e) => {
-                  e.preventDefault(); // Verhindert das Standardverhalten des Browsers
+                  e.preventDefault();
                   e.stopPropagation();
-                  e.dataTransfer.dropEffect = "copy"; // Zeigt an, dass Dateien kopiert werden können
+                  e.dataTransfer.dropEffect = "copy";
                 }}
                 onDrop={(e) => {
                   e.preventDefault();
@@ -141,7 +149,7 @@ export default function RegelungenButton() {
                     const file = e.dataTransfer.files[0];
                     if (file.name.endsWith(".csv")) {
                       setUploadedFile(file);
-                      setErrorMessage(""); // Entfernt vorherige Fehlermeldungen
+                      setErrorMessage("");
                     } else {
                       setErrorMessage("Bitte laden Sie eine gültige CSV-Datei hoch.");
                     }
@@ -173,16 +181,15 @@ export default function RegelungenButton() {
               </div>
             </Tooltip.Trigger>
             <Tooltip.Content
-              side="left" // Tooltip wird rechts angezeigt
-              align="center" // Zentriert den Tooltip vertikal zur Maus
-              sideOffset={10} // Abstand zwischen Tooltip und Maus
+              side="left"
+              align="center"
+              sideOffset={10}
               className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
             >
               Hier Klicken um Datei Explorer zu öffnen, um eine Datei hochzuladen.
               <Tooltip.Arrow className="fill-gray-800" />
             </Tooltip.Content>
           </Tooltip.Root>
-
 
           <Tooltip.Root>
             <Tooltip.Trigger asChild>
@@ -219,12 +226,7 @@ export default function RegelungenButton() {
 
           {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
 
-
-
-
           <DialogFooter>
-
-
             <Tooltip.Root>
               <Tooltip.Trigger asChild>
                 <a href="/regelung-beispiel.csv" download>
@@ -232,21 +234,17 @@ export default function RegelungenButton() {
                     Beispiel CSV
                   </Button>
                 </a>
-
               </Tooltip.Trigger>
               <Tooltip.Content
-                side="left" // Tooltip wird rechts angezeigt
-                align="center" // Zentriert den Tooltip vertikal zur Maus
-                sideOffset={10} // Abstand zwischen Tooltip und Maus
+                side="left"
+                align="center"
+                sideOffset={10}
                 className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
               >
                 Hier Klicken um eine Beispiel CSV-Datei Herunterzuladen.
                 <Tooltip.Arrow className="fill-gray-800" />
               </Tooltip.Content>
             </Tooltip.Root>
-
-
-
 
             <Tooltip.Root>
               <Tooltip.Trigger asChild>
@@ -255,9 +253,9 @@ export default function RegelungenButton() {
                 </Button>
               </Tooltip.Trigger>
               <Tooltip.Content
-                side="left" // Tooltip wird rechts angezeigt
-                align="center" // Zentriert den Tooltip vertikal zur Maus
-                sideOffset={10} // Abstand zwischen Tooltip und Maus
+                side="left"
+                align="center"
+                sideOffset={10}
                 className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
               >
                 Hier Klicken um den Vorgang Abzubrechen.
@@ -271,9 +269,9 @@ export default function RegelungenButton() {
                 </Button>
               </Tooltip.Trigger>
               <Tooltip.Content
-                side="right" // Tooltip wird rechts angezeigt
-                align="center" // Zentriert den Tooltip vertikal zur Maus
-                sideOffset={10} // Abstand zwischen Tooltip und Maus
+                side="right"
+                align="center"
+                sideOffset={10}
                 className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
               >
                 Hier Klicken um den Vorgang des Aktualisierens zu starten.
