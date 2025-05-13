@@ -23,13 +23,14 @@ def create_user():
 
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({"message": "User erstellt"}), 201
+    return jsonify({"id": new_user.id, "message": "User erstellt"}), 201
 
 # READ Users
 @bp_user.route('/users', methods=['GET'])
 def get_users():
     users = User.query.all()
     return jsonify([{
+        "id": user.id,
         "email": user.email,
         "created_at": user.created_at,
         "updated_at": user.updated_at
