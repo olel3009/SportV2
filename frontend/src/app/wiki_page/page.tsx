@@ -92,20 +92,11 @@ export default function Home() {
           </li>
           <li>
             <a
-              id="link_regelungsverwaltung"
-              href="#regelungsverwaltung"
-              className="text-black hover:text-gray-600"
-            >
-              10. Regelungsverwaltung
-            </a>
-          </li>
-          <li>
-            <a
               id="link_visuelle_darstellung_entwicklung"
               href="#visuelle_darstellung_entwicklung"
               className="text-black hover:text-gray-600"
             >
-              11. Visuelle Darstellung der Entwicklung eines Athleten
+              10. Visuelle Darstellung der Entwicklung eines Athleten
             </a>
           </li>
         </ul>
@@ -189,12 +180,8 @@ export default function Home() {
           <h2 className="text-xl font-semibold">09. Medaillen Ansicht</h2>
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
-        <div id="regelungsverwaltung" className="mb-8">
-          <h2 className="text-xl font-semibold">10. Regelungsverwaltung</h2>
-          <p>Hier könnte die Beschreibung stehen</p>
-        </div>
         <div id="visuelle_darstellung_entwicklung" className="mb-8">
-          <h2 className="text-xl font-semibold">11. Visuelle Darstellung der Entwicklung eines Athleten</h2>
+          <h2 className="text-xl font-semibold">10. Visuelle Darstellung der Entwicklung eines Athleten</h2>
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
       </div>

@@ -36,12 +36,6 @@ export async function login(state: FormState, formData: FormData) {
             return {
                 errors: {
                     email: ['Es existiert kein Account mit dieser E-Mail Adresse'],
-                }
-            }
-        }
-        if (await LoginKontrolle(mail, password) == 1) {
-            return {
-                errors: {
                     password: ['Das Passwort ist falsch'],
                 }
             }
@@ -69,7 +63,6 @@ export async function signup(state: FormState, formData: FormData) {
         }
     }
 
-    if (await userExists(mail) == false) {
         if (password != password2) {
             return {
                 errors: {
@@ -80,33 +73,14 @@ export async function signup(state: FormState, formData: FormData) {
             if (await createUser(mail, password) == true) {
                 console.log("Signup Erfolgreich")
                 redirect('/dashboard')
-                return {
-                    message: 'Signup Erfolgreich',
-
-                }
             }
             else {
                 console.log("SignUp Fehlgeschlagen")
-                if (await userExists(mail) == true) {
-                    return {
-                        errors: {
-                            email: ['Ein Account mit dieser E-Mail Adresse existiert bereits'],
-                        }
-                    }
-                } else {
                     return {
                         errors: {
                             email: ['SignUp Fehlgeschlagen'],
                         }
                     }
-                }
             }
         }
-    }else {
-        return {
-            errors: {
-                email: ['Ein Account mit dieser E-Mail Adresse existiert bereits'],
-            }
-        }
-    }
 }
