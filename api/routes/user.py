@@ -3,6 +3,10 @@ from database import db
 from database.models import User
 from database.schemas import UserSchema
 from sqlalchemy import inspect
+from flask_jwt_extended import (
+    create_access_token, jwt_required, get_jwt_identity
+)
+from passlib.hash import pbkdf2_sha256
 
 bp_user = Blueprint('user', __name__)
 
@@ -52,18 +56,21 @@ def login_user():
     email = data.get('email')
     password = data.get('password')
 
-    if not email or not password:
-        return jsonify({"error": "Email und Passwort müssen übergeben werden"}), 400
+    access_token = create_access_token(identity=email)
 
-    # User per Email laden
+    #if not email or not password:
+    #    return jsonify({"error": "Email und Passwort müssen übergeben werden"}), 400
+#
+    ## User per Email laden
     user = User.query.filter_by(email=email).first()
-    if user is None or user.password != password:
-        return jsonify({"error": "Ungültige Anmeldedaten"}), 401
+    #if user is None or user.password != password:
+    #    return jsonify({"error": "Ungültige Anmeldedaten"}), 401
 
     # Login erfolgreich
     return jsonify({
         "message": "Login erfolgreich",
-        "email": user.email
+        "email": "user.email",
+        "access_token": access_token
     }), 200
 
 

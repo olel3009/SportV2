@@ -2,6 +2,8 @@ from marshmallow import ValidationError
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
+import datetime
 
 # Initialisiere Extensions
 db = SQLAlchemy()
@@ -13,6 +15,10 @@ def create_app():
     
     # Konfiguration laden
     app.config.from_object('config.Config')
+    app.config['JWT_SECRET_KEY'] = "kotmitc"
+    app.config['JWT_ACCESS_TOKEN_EXPIRES']= datetime.timedelta(hours=1)
+    
+    jwt = JWTManager(app)
 
     # Extensions initialisieren
     db.init_app(app)
