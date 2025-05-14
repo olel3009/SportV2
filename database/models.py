@@ -112,7 +112,7 @@ class Rule(db.Model):
     threshold_gold_f = db.Column(db.Float, nullable=False)
 
     valid_start = db.Column(db.Date, nullable=False)
-    valid_end = db.Column(db.Date, nullable=True)
+    valid_end = db.Column(db.Date, nullable=True, )
 
     # Version, startet mit 1
     version = db.Column(db.Integer, nullable=False, default=1)
