@@ -17,9 +17,10 @@ import { boolean } from "zod";
 import ErrorDisplay from "@/components/ErrorDisplay";
 import { Badge } from "@/components/ui/badge";
 import ProgressChart from "@/components/ProgressChart";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const getAge = (dateString: string) => {
-  const [day, month, year] = dateString.split("-").map(Number);
+  const [day, month, year] = dateString.split(".").map(Number);
   const birthday = new Date(year, month - 1, day);
   const today = new Date();
   let age = today.getFullYear() - birthday.getFullYear();
@@ -213,7 +214,7 @@ export default async function Page({
         })}
       </ul>
 
-      <ProgressChart results={testFeats}/>
+      <ProgressChart results={testFeats} />
 
     </div>
   );
