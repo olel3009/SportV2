@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { FileUp } from "lucide-react";
-import { button_loggig_color } from '@/button_loggig';
+import { add_rules, button_loggig_color } from '@/button_loggig';
+import { add } from "date-fns";
 
 export default function RegelungenButton() {
   const buttonresulterfolg = "Das Aktualisieren der Reglungen war erfolgreich.";
@@ -38,25 +39,28 @@ export default function RegelungenButton() {
 
   const handleClosePopup = () => {
     setShowPopup(false);
-    setButtonResult("Das Aktualisieren der Regelungen wurde abgebrochen.");
+    setButtonResult(buttonresultabruch);
     setSelectedYear(currentYear.toString());
     setUploadedFile(null);
     setErrorMessage("");
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!uploadedFile || !uploadedFile.name.endsWith('.csv')) {
       setErrorMessage("Bitte laden Sie eine gültige CSV-Datei hoch.");
       return;
     }
 
     setShowPopup(false);
-    setButtonResult("Das Aktualisieren der Regelungen wird durchgeführt. Bitte warten Sie einen Moment.");
+    setButtonResult(buttonresultwarten);
     // Simulierte Logik für die Regelaktualisierung
-    setTimeout(() => {
+    if(await add_rules(uploadedFile)){
       button_loggig_color().then(setButtonColor);
-      setButtonResult("Das Aktualisieren der Regelungen war erfolgreich.");
-    }, 2000);
+      setButtonResult(buttonresulterfolg);
+    }else{
+      setButtonResult(buttonresultfehler);
+    }
+
     setSelectedYear(currentYear.toString());
     setUploadedFile(null);
     setErrorMessage("");
