@@ -3,13 +3,14 @@ from flask import Blueprint, request, jsonify
 from database import db
 from database.models import Trainer
 from database.schemas import TrainerSchema
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bp_trainer = Blueprint('trainer', __name__)
 
 @bp_trainer.route('/trainers', methods=['POST'])
 @jwt_required()
 def create_trainer():
+    current_user = get_jwt_identity()
     data = request.json
     schema = TrainerSchema()
     valid_data = schema.load(data)  # Falls invalid, ValidationError -> 400
@@ -28,6 +29,7 @@ def create_trainer():
 @bp_trainer.route('/trainers', methods=['GET'])
 @jwt_required()
 def get_trainers():
+    current_user = get_jwt_identity()
     trainers = Trainer.query.all()
     return jsonify([{
         "id": trainer.id,
@@ -43,6 +45,7 @@ def get_trainers():
 @bp_trainer.route('/trainers/<int:id>', methods=['GET'])
 @jwt_required()
 def get_trainer_id(id):
+    current_user = get_jwt_identity()
     trainer = Trainer.query.get_or_404(id)
     schema = TrainerSchema()
     return jsonify(schema.dump(trainer))
@@ -50,6 +53,7 @@ def get_trainer_id(id):
 @bp_trainer.route('/trainers/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_trainer(id):
+    current_user = get_jwt_identity()
     trainer = Trainer.query.get_or_404(id)
     data = request.json
     trainer.first_name = data.get('first_name', trainer.first_name)
@@ -63,6 +67,10 @@ def update_trainer(id):
 @bp_trainer.route('/trainers/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_trainer(id):
+    current_user = get_jwt_identity()
+    
+    
+    
     trainer = Trainer.query.get_or_404(id)
     db.session.delete(trainer)
     db.session.commit()

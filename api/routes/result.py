@@ -4,7 +4,7 @@ from database import db
 from database.models import Result, Athlete, Rule
 from database.schemas import ResultSchema 
 from marshmallow import ValidationError
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bp_result = Blueprint('result', __name__)
 
@@ -49,6 +49,7 @@ def determine_medal(rule, result_value, athlete_gender):
 @bp_result.route('/results', methods=['POST'])
 @jwt_required()
 def create_result():
+    current_user = get_jwt_identity()
     data = request.json
     schema = ResultSchema()
     try:
@@ -90,6 +91,7 @@ def create_result():
 @bp_result.route('/results', methods=['GET'])
 @jwt_required()
 def get_results():
+    current_user = get_jwt_identity()
     results = Result.query.all()
     schema = ResultSchema(many=True)
     return jsonify(schema.dump(results))
@@ -97,6 +99,7 @@ def get_results():
 @bp_result.route('/results/<int:id>', methods=['GET'])
 @jwt_required()
 def get_result_id(id):
+    current_user = get_jwt_identity()
     result = Result.query.get_or_404(id)
     schema = ResultSchema()
     return jsonify(schema.dump(result))
@@ -104,6 +107,7 @@ def get_result_id(id):
 @bp_result.route('/results/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_result(id):
+    current_user = get_jwt_identity()
     result_obj = Result.query.get_or_404(id)
     data = request.json
     schema = ResultSchema(partial=True)
@@ -147,6 +151,7 @@ def update_result(id):
 @bp_result.route('/results/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_result(id):
+    current_user = get_jwt_identity()
     result_obj = Result.query.get_or_404(id)
     db.session.delete(result_obj)
     db.session.commit()
