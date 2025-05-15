@@ -34,7 +34,7 @@ def get_athletes():
             "id": ath.id,
             "first_name": ath.first_name,
             "last_name": ath.last_name,
-            "birth_date": ath.birth_date.strftime("%d,%m,%Y"),
+            "birth_date": ath.birth_date.strftime("%d.%m.%Y"),
             "gender": ath.gender,
             "swim_certificate": ath.swim_certificate,
             "created_at": ath.created_at,
@@ -72,7 +72,7 @@ def update_athlete(id):
     if "last_name" in data:
         athlete.last_name = data["last_name"]
     if "birth_date" in data:
-        athlete.birth_date = datetime.strptime(data["birth_date"], "%d,%m,%Y").date()
+        athlete.birth_date = datetime.strptime(data["birth_date"], "%d.%m.%Y").date()
     if "gender" in data:
         athlete.gender = data["gender"]
     # NEUES FELD
