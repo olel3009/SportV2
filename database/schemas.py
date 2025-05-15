@@ -87,7 +87,7 @@ class RuleSchema(Schema):
 
     unit = fields.Str(
         required=True,
-        validate=OneOf(["Punkte", "Distanz (m,cm)", "Zeit (Min.,Sek.)", "Zeit (Sek.,1/10 Sek.)"])
+        validate=OneOf(["Punkte", "m,cm", "Min.,Sek.", "Sek.,1/10 Sek."])
     )
 
     min_age = fields.Int(

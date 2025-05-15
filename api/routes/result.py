@@ -25,7 +25,7 @@ def determine_medal(rule, result_value, athlete_gender):
         silver = rule.threshold_silver_f
         gold = rule.threshold_gold_f
 
-    if rule.unit in ["Punkte", "Distanz (m,cm)"]:
+    if rule.unit in ["Punkte", "m,cm"]:
         if result_value >= gold:
             return "Gold"
         elif result_value >= silver:
@@ -34,7 +34,7 @@ def determine_medal(rule, result_value, athlete_gender):
             return "Bronze"
         else:
             return None
-    elif rule.unit in ["Zeit (Min.,Sek.)", "Zeit (Sek.,1/10 Sek.)"]:
+    elif rule.unit in ["Min.,Sek.", "Sek.,1/10 Sek."]:
         if result_value <= gold:
             return "Gold"
         elif result_value <= silver:
