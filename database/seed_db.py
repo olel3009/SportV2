@@ -252,6 +252,30 @@ def seed_test_data():
         year=2025, age=2025 - athletes[0].birth_date.year,
         result=1.40, medal="Gold"
     ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[0].id,
+        year=2025, age=2025 - athletes[0].birth_date.year,
+        result=10.5, medal="Bronze"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[0].id,
+        year=2025, age=2025 - athletes[0].birth_date.year,
+        result=11.0
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id, # Duplicate rule_id for athlete 0
+        year=2025, age=2025 - athletes[0].birth_date.year,
+        result=2.50, medal="Silber"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[7].id,
+        year=2025, age=2025 - athletes[0].birth_date.year,
+        result=15.75
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[10].id, # Duplicate rule_id for athlete 0
+        year=2025, age=2025 - athletes[0].birth_date.year,
+        result=30.50, medal="Silber"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[15].id,
+        year=2025, age=2025 - athletes[0].birth_date.year,
+        result=18.00, medal="Bronze"
+    ),
         Result(athlete_id=athletes[1].id, rule_id=rules[23].id,
         year=2025, age=2025 - athletes[1].birth_date.year,
         result=1.45, medal="Silber"
