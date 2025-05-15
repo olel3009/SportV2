@@ -3,10 +3,12 @@ from flask import Blueprint, request, jsonify
 from database import db
 from database.models import Trainer
 from database.schemas import TrainerSchema
+from flask_jwt_extended import jwt_required
 
 bp_trainer = Blueprint('trainer', __name__)
 
 @bp_trainer.route('/trainers', methods=['POST'])
+@jwt_required()
 def create_trainer():
     data = request.json
     schema = TrainerSchema()
@@ -24,6 +26,7 @@ def create_trainer():
     return jsonify({"message": "Trainer hinzugefügt", "id": new_trainer.id}), 201
 
 @bp_trainer.route('/trainers', methods=['GET'])
+@jwt_required()
 def get_trainers():
     trainers = Trainer.query.all()
     return jsonify([{
@@ -38,12 +41,14 @@ def get_trainers():
     } for trainer in trainers])
 
 @bp_trainer.route('/trainers/<int:id>', methods=['GET'])
+@jwt_required()
 def get_trainer_id(id):
     trainer = Trainer.query.get_or_404(id)
     schema = TrainerSchema()
     return jsonify(schema.dump(trainer))
 
 @bp_trainer.route('/trainers/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_trainer(id):
     trainer = Trainer.query.get_or_404(id)
     data = request.json
@@ -56,6 +61,7 @@ def update_trainer(id):
     return jsonify({"message": "Trainer aktualisiert"})
 
 @bp_trainer.route('/trainers/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_trainer(id):
     trainer = Trainer.query.get_or_404(id)
     db.session.delete(trainer)

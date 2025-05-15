@@ -5,10 +5,12 @@ from database.models import Athlete as DBAthlete, Result as DBResult, Rule as DB
 from database.schemas import AthleteSchema, DisciplineSchema, ResultSchema, RuleSchema
 from api.export_pdf import fill_pdf_form
 from sqlalchemy.orm import joinedload
+from flask_jwt_extended import jwt_required
 
 bp_athlete = Blueprint('athlete', __name__)
 
 @bp_athlete.route('/athletes', methods=['POST'])
+@jwt_required()
 def create_athlete():
     data = request.json
     schema = AthleteSchema()
@@ -26,6 +28,7 @@ def create_athlete():
     return jsonify({"message": "Athlet hinzugefügt", "id": new_athlete.id}), 201
 
 @bp_athlete.route('/athletes', methods=['GET'])
+@jwt_required()
 def get_athletes():
     athletes = DBAthlete.query.all()
     result = []
@@ -43,6 +46,7 @@ def get_athletes():
     return jsonify(result)
 
 @bp_athlete.route('/athletes/<int:id>', methods=['GET'])
+@jwt_required()
 def get_athlete_id(id):
     # 1) Athleten‐Datensatz laden oder 404
     athlete = DBAthlete.query.get_or_404(id)
@@ -63,6 +67,7 @@ def get_athlete_id(id):
     return jsonify(data), 200
 
 @bp_athlete.route('/athletes/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_athlete(id):
     athlete = DBAthlete.query.get_or_404(id)
     data = request.json
@@ -83,6 +88,7 @@ def update_athlete(id):
     return jsonify({"message": "Athlet aktualisiert"})
 
 @bp_athlete.route('/athletes/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_athlete(id):
     athlete = DBAthlete.query.get_or_404(id)
     db.session.delete(athlete)
@@ -90,6 +96,7 @@ def delete_athlete(id):
     return jsonify({"message": "Athlet gelöscht"})
 
 @bp_athlete.route('/athletes/<int:athlete_id>/export/pdf', methods=['GET'])
+@jwt_required()
 def export_athlete_pdf(athlete_id):
     # 1) DB-Abfrage
     db_athlete = DBAthlete.query.get_or_404(athlete_id)
@@ -132,6 +139,7 @@ def export_athlete_pdf(athlete_id):
     })
 
 @bp_athlete.route('/athletes/<int:athlete_id>/results', methods=['GET'])
+@jwt_required()
 def get_athletes_results(athlete_id):
 
     db_athlete = DBAthlete.query.get_or_404(athlete_id)

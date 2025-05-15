@@ -4,8 +4,8 @@ from database.models import User
 from database.schemas import UserSchema
 from sqlalchemy import inspect
 from flask_jwt_extended import (
-    create_access_token, jwt_required, get_jwt_identity
-)
+    create_access_token, jwt_required
+    )
 from passlib.hash import pbkdf2_sha256
 
 bp_user = Blueprint('user', __name__)
@@ -76,6 +76,7 @@ def login_user():
 
 # UPDATE User
 @bp_user.route('/users/<string:email>', methods=['PUT'])
+@jwt_required()
 def update_user(email):
     user = User.query.get_or_404(email)
     data = request.json
@@ -90,6 +91,7 @@ def update_user(email):
 
 # DELETE User
 @bp_user.route('/users/<string:email>', methods=['DELETE'])
+@jwt_required()
 def delete_user(email):
     user = User.query.get_or_404(email)
     db.session.delete(user)
