@@ -3,6 +3,7 @@ import requests
 def get_jwt():
     login_url = "http://localhost:5000/login"
     protected_url = "http://localhost:5000/protected"
+    
     payload = {
         "email" : "test@test.de",
         "password": "test123"
