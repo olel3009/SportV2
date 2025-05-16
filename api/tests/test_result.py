@@ -73,7 +73,7 @@ def test_create_result_time(client):
     resp = client.post("/results", json={
         "athlete_id": athlete_id,
         "rule_id": rule_id,
-        "year": 2025,
+        "year": "01.05.2025",
         "result": 18.0
         # medal wird automatisch ermittelt, daher nicht mitgesendet
     })
@@ -110,7 +110,7 @@ def test_create_result_distance(client):
     resp = client.post("/results", json={
         "athlete_id": athlete_id,
         "rule_id": rule_id,
-        "year": 2025,
+        "year": "01.05.2025",
         "result": 16.0
     })
     assert resp.status_code == 201
@@ -140,7 +140,7 @@ def test_update_result(client):
     resp = client.post("/results", json={
         "athlete_id": athlete_id,
         "rule_id": rule_id,
-        "year": 2025,
+        "year": "01.05.2025",
         "result": 26.0
     })
     assert resp.status_code == 201
@@ -172,7 +172,7 @@ def test_delete_result(client):
     resp = client.post("/results", json={
         "athlete_id": athlete_id,
         "rule_id": rule_id,
-        "year": 2025,
+        "year": "01.05.2025",
         "result": 22.0 
     })
     assert resp.status_code == 201

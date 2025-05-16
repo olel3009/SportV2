@@ -1,20 +1,21 @@
 from flask import Blueprint, request, jsonify
-from datetime import datetime
+from datetime import datetime, date
 from database import db
 from database.models import Result, Athlete, Rule
-from database.schemas import ResultSchema 
+from database.schemas import ResultSchema
 from marshmallow import ValidationError
 
 bp_result = Blueprint('result', __name__)
 
+def parse_date(ddmmyyyy):
+    if isinstance(ddmmyyyy, date):
+        return ddmmyyyy
+    try:
+        return datetime.strptime(ddmmyyyy, "%d.%m.%Y").date()
+    except ValueError:
+        raise ValueError(f"Datum '{ddmmyyyy}' muss im Format DD.MM.YYYY sein")
+
 def determine_medal(rule, result_value, athlete_gender):
-    """
-    Bestimmt das Medal anhand der Thresholds aus dem Rule-Datensatz.
-    Für die Einheiten 'points', 'amount' und 'distance': je höher, desto besser.
-    Für die Einheit 'time': je geringer, desto besser.
-    Gibt "Gold", "Silber", "Bronze" zurück, wenn die entsprechenden Thresholds erreicht werden,
-    sonst None.
-    """
     if athlete_gender.lower() == "m":
         bronze = rule.threshold_bronze_m
         silver = rule.threshold_silver_m
@@ -42,106 +43,119 @@ def determine_medal(rule, result_value, athlete_gender):
             return "Bronze"
         else:
             return None
-    else:
-        return None
+    return None
 
 @bp_result.route('/results', methods=['POST'])
 def create_result():
-    data = request.json
+    data = request.get_json()
     schema = ResultSchema()
     try:
-        valid_data = schema.load(data)
+        valid = schema.load(data)
     except ValidationError as err:
         return jsonify({"error": "Validation Error", "messages": err.messages}), 400
 
-    # Lade die zugehörigen Datensätze
-    athlete = Athlete.query.get_or_404(valid_data["athlete_id"])
-    rule = Rule.query.get_or_404(valid_data["rule_id"])
+    # Athlete und Rule laden
+    athlete = Athlete.query.get_or_404(valid["athlete_id"])
+    rule    = Rule.query.get_or_404(valid["rule_id"])
 
-    # Prüfungsjahr
-    exam_year = valid_data["year"]
-    # Gültigkeitscheck: Das Prüfungsjahr muss >= rule.valid_start.year sein.
-    if exam_year < rule.valid_start.year:
-        return jsonify({"error": "Exam year is before the rule's valid start"}), 400
-    if rule.valid_end is not None and exam_year > rule.valid_end.year:
-        return jsonify({"error": "Exam year is after the rule's valid end"}), 400
+    # Prüfungsdatum parsen
+    try:
+        exam_date = parse_date(valid["year"])
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
 
-    # Alter berechnen: Prüfungsjahr - Geburtsjahr
-    age = exam_year - athlete.birth_date.year
+    # Validity-Check
+    if exam_date < rule.valid_start:
+        return jsonify({"error": "Exam date is before the rule's valid start"}), 400
+    if rule.valid_end and exam_date > rule.valid_end:
+        return jsonify({"error": "Exam date is after the rule's valid end"}), 400
 
-    # Medaille automatisch ermitteln anhand der Rule-Thresholds
-    medal = determine_medal(rule, valid_data["result"], athlete.gender)
+    # Alter berechnen
+    age = exam_date.year - athlete.birth_date.year
 
-    new_result = Result(
-        athlete_id=valid_data["athlete_id"],
-        rule_id=valid_data["rule_id"],
-        year=exam_year,
-        age=age,
-        result=valid_data["result"],
-        medal=medal  
+    # Medal
+    medal = determine_medal(rule, valid["result"], athlete.gender)
+
+    new = Result(
+        athlete_id = athlete.id,
+        rule_id    = rule.id,
+        year       = exam_date,
+        age        = age,
+        result     = valid["result"],
+        medal      = medal
     )
-    db.session.add(new_result)
+    db.session.add(new)
     db.session.commit()
 
-    return jsonify({"message": "Result added", "id": new_result.id}), 201
+    return jsonify({"message": "Result added", "id": new.id}), 201
+
 
 @bp_result.route('/results', methods=['GET'])
 def get_results():
-    results = Result.query.all()
+    all = Result.query.all()
     schema = ResultSchema(many=True)
-    return jsonify(schema.dump(results))
+    return jsonify(schema.dump(all)), 200
+
 
 @bp_result.route('/results/<int:id>', methods=['GET'])
 def get_result_id(id):
-    result = Result.query.get_or_404(id)
+    res = Result.query.get_or_404(id)
     schema = ResultSchema()
-    return jsonify(schema.dump(result))
+    return jsonify(schema.dump(res)), 200
+
 
 @bp_result.route('/results/<int:id>', methods=['PUT'])
 def update_result(id):
-    result_obj = Result.query.get_or_404(id)
-    data = request.json
+    res = Result.query.get_or_404(id)
+    data = request.get_json()
     schema = ResultSchema(partial=True)
     try:
-        valid_data = schema.load(data)
+        valid = schema.load(data)
     except ValidationError as err:
         return jsonify({"error": "Validation Error", "messages": err.messages}), 400
 
-    # Wenn athlete_id oder rule_id geändert werden, neu laden
-    if "athlete_id" in valid_data:
-        athlete = Athlete.query.get_or_404(valid_data["athlete_id"])
-        result_obj.athlete_id = valid_data["athlete_id"]
+    # Athlete oder Rule gewechselt?
+    if "athlete_id" in valid:
+        athlete = Athlete.query.get_or_404(valid["athlete_id"])
+        res.athlete_id = athlete.id
     else:
-        athlete = result_obj.athlete
+        athlete = res.athlete
 
-    if "rule_id" in valid_data:
-        rule = Rule.query.get_or_404(valid_data["rule_id"])
-        result_obj.rule_id = valid_data["rule_id"]
+    if "rule_id" in valid:
+        rule = Rule.query.get_or_404(valid["rule_id"])
+        res.rule_id = rule.id
     else:
-        rule = result_obj.rule
+        rule = res.rule
 
-    # Wenn year geändert wird, prüfen und alter neu berechnen
-    if "year" in valid_data:
-        exam_year = valid_data["year"]
-        if exam_year < rule.valid_start.year:
-            return jsonify({"error": "Exam year is before the rule's valid start"}), 400
-        if rule.valid_end is not None and exam_year > rule.valid_end.year:
-            return jsonify({"error": "Exam year is after the rule's valid end"}), 400
-        result_obj.year = exam_year
-        result_obj.age = exam_year - athlete.birth_date.year
+    # Datum updaten?
+    if "year" in valid:
+        try:
+            exam_date = parse_date(valid["year"])
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 400
 
-    if "result" in valid_data:
-        result_obj.result = valid_data["result"]
+        if exam_date < rule.valid_start:
+            return jsonify({"error": "Exam date is before the rule's valid start"}), 400
+        if rule.valid_end and exam_date > rule.valid_end:
+            return jsonify({"error": "Exam date is after the rule's valid end"}), 400
 
-    # Automatisch Medaille neu bestimmen
-    result_obj.medal = determine_medal(rule, result_obj.result, athlete.gender)
+        res.year = exam_date
+        res.age  = exam_date.year - athlete.birth_date.year
+
+    # Resultwert updaten?
+    if "result" in valid:
+        res.result = valid["result"]
+
+    # Medal neu berechnen
+    res.medal   = determine_medal(rule, res.result, athlete.gender)
 
     db.session.commit()
-    return jsonify({"message": "Result updated"})
+    return jsonify({"message": "Result updated"}), 200
+
 
 @bp_result.route('/results/<int:id>', methods=['DELETE'])
 def delete_result(id):
-    result_obj = Result.query.get_or_404(id)
-    db.session.delete(result_obj)
+    res = Result.query.get_or_404(id)
+    db.session.delete(res)
     db.session.commit()
-    return jsonify({"message": "Result deleted"})
+    return jsonify({"message": "Result deleted"}), 200

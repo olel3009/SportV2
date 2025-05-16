@@ -44,7 +44,7 @@ class Result(db.Model):
     rule_id = db.Column(db.Integer, db.ForeignKey('rule.id'), nullable=False)
 
     # Jahr der Prüfung 
-    year = db.Column(db.Integer, nullable=False)
+    year = db.Column(db.Date, nullable=False)
     # Alter des Athleten im Prüfungsjahr
     age = db.Column(db.Integer, nullable=False)
 
@@ -112,7 +112,7 @@ class Rule(db.Model):
     threshold_gold_f = db.Column(db.Float, nullable=False)
 
     valid_start = db.Column(db.Date, nullable=False)
-    valid_end = db.Column(db.Date, nullable=True)
+    valid_end = db.Column(db.Date, nullable=True, )
 
     # Version, startet mit 1
     version = db.Column(db.Integer, nullable=False, default=1)
