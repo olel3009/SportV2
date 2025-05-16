@@ -1,0 +1,152 @@
+"use client"
+
+import { useParams } from "next/navigation";
+import { Rule } from "@/models/athlete";
+import { getAllRules} from "@/athlete_getters";
+import {downloadCsv } from "@/exportCsv";
+import DownloadCsvButton from "@/components/ui/csvExportButton";
+import Link from "next/link";
+import { Undo2, CircleUserRound, Medal, CircleSlash } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { CardTab, TabSwitcher, TabContent } from "@/components/ui/tab_cards";
+import { useState, useEffect } from "react"
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
+import { Check, ChevronDown } from "lucide-react"
+import { cn } from "@/lib/utils"
+const {
+  Root: DropdownMenu,
+  Trigger: DropdownMenuTrigger,
+  Content: DropdownMenuContent,
+  Item: DropdownMenuItem,
+  ItemIndicator: DropdownMenuItemIndicator,
+  RadioGroup: DropdownMenuRadioGroup,
+  RadioItem: DropdownMenuRadioItem,
+} = DropdownMenuPrimitive
+
+function parseAgegroup(groupString:string):number[]{
+  let stringGroup:string[]=groupString.split(',');
+  let ageGroup:number[]=[Number(stringGroup[0]), Number(stringGroup[1])];
+  return ageGroup;
+
+}
+
+
+export default function Page() {
+      const [ageGroup, setAgeGroup] = useState<string>()
+      const [rules, setRules] = useState<Rule[]>()
+      const [error, setError] = useState<string | null>(null);
+      useEffect(() => {
+        getAllRules()
+          .then((data) => setRules(data))
+          .catch((err) => setError(err.message));
+      }, []);
+      if (error) return <div className="text-red-600">Failed to load: {error}</div>;
+      if (!rules) return <div>Loading disciplines…</div>;
+      console.log(rules);
+      //let validRules=rules.filter(rule=>{return isCurrentDateBetween(rule.valid_start, rule.valid_end)});
+      //console.log(validRules)
+      
+    return (
+      <div className="p-6 gap-4 flex flex-col">      
+        <DropdownMenu>
+      {/* Trigger: here we put a button that shows the current selection */}
+      <DropdownMenuTrigger asChild>
+        <button
+          className={cn(
+            "inline-flex items-center justify-between rounded border px-3 py-1.5 text-sm",
+            !ageGroup ? "text-gray-500" : "text-gray-900"
+          )}
+        >
+          {/* show placeholder when nothing’s selected */}
+          {ageGroup ?? "Wählen sie eine Altersgruppe"}
+          <ChevronDown className="ml-2 h-4 w-4" />
+        </button>
+      </DropdownMenuTrigger>
+
+      {/* Content: your dropdown panel */}
+      <DropdownMenuContent sideOffset={4} className="z-50 min-w-[8rem] rounded-md border bg-white p-1 shadow-md">
+        {/* Using the radio-group approach so it keeps track of the selected value */}
+        <DropdownMenuRadioGroup value={ageGroup} onValueChange={setAgeGroup}>
+          <DropdownMenuRadioItem value="6,7">
+            6-7
+            {/* this indicator only shows on the selected item */}
+            <DropdownMenuItemIndicator>
+              <Check className="h-4 w-4" />
+            </DropdownMenuItemIndicator>
+          </DropdownMenuRadioItem>
+
+          <DropdownMenuRadioItem value="8,9">
+            8-9
+            <DropdownMenuItemIndicator>
+              <Check className="h-4 w-4" />
+            </DropdownMenuItemIndicator>
+          </DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+        <div className="m-8 bg-gray-200 rounded-sm shadow-lg">
+            <CardTab>
+                <div>
+                    <TabSwitcher key="m" tabId="1">
+                    <div className="p-2">M</div>
+                    </TabSwitcher>
+                    <TabSwitcher key="f" tabId="2">
+                    <div className="p-2">F</div>
+                    </TabSwitcher>
+                </div>
+                <div className="p-2">
+                    {
+                        rules.map(rule=>{
+                          let currAgeGroup:number[]=parseAgegroup(ageGroup??'0,0');
+                          if(rule.min_age==currAgeGroup[0]&&rule.max_age==currAgeGroup[1]){
+                            return (
+                              <TabContent key={rule.rule_name+"f"} id={"2"}>
+                                <details>
+                                  <summary>{rule.description_f}</summary>
+                                  <ul>
+                                    <li>Gold: {rule.thresh_gold_f} {rule.unit}</li>
+                                    <li>Silber: {rule.thresh_silver_f} {rule.unit}</li>
+                                    <li>Bronze: {rule.thresh_bronze_f} {rule.unit}</li>
+                                  </ul>
+                                </details>
+                              </TabContent>
+                            );
+                          }else{
+                            return null;
+                          }
+                        })
+                    }
+                    {
+                        rules.map(rule=>{
+                          let currAgeGroup:number[]=parseAgegroup(ageGroup??'0,0');
+                          if(rule.min_age==currAgeGroup[0]&&rule.max_age==currAgeGroup[1]){
+                            return (
+                                <TabContent key={rule.rule_name+"m"} id={"1"}>
+                                  <details>
+                                    <summary>{rule.description_m}</summary>
+                                    <ul>
+                                      <li>Gold: {rule.thresh_gold_m} {rule.unit}</li>
+                                      <li>Silber: {rule.thresh_silver_m} {rule.unit}</li>
+                                      <li>Bronze: {rule.thresh_bronze_m} {rule.unit}</li>
+                                    </ul>
+                                  </details>
+                                </TabContent>
+                            );
+                          }else{
+                            return null;
+                          }
+                        })
+                    }
+                </div>
+              
+            </CardTab>
+          </div>
+      </div>
+    );
+  }

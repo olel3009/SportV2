@@ -29,6 +29,11 @@ const items = [
     icon: ChartNoAxesCombined
   },
   {
+    title: "Regelübersicht",
+    url: "/rule_overview",
+    icon: ChartNoAxesCombined
+  },
+  {
     title: "Wiki",
     url: "/wiki_page",
     icon: BookOpenText
