@@ -1,30 +1,61 @@
-"use client"
+"use client";
 
 import { Feat } from "@/models/athlete";
 
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "./ui/chart";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "./ui/chart";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
   result: {
     label: "Ergebnis",
     color: "hsl(var(--chart-1))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-interface ResultChartData {
-  result: number
-  unit: string
-  date: string
+interface MonthlyChartData {
+  dateKey: string;
+  result: number | null;
+  unit: string;
 }
 
 export default function ProgressChart({ results }: { results: Feat[] }) {
-  if (!results) return (<></>)
-  const data: ResultChartData[] = results.map(feat => ({
-    result: feat.result,
-    unit: feat.ruling?.unit || "",
-    date: new Date(feat.updated_at).getUTCFullYear().toString(),
-  }))
+  if (!results || results.length === 0) return <></>;
+
+  const processedFeats = results
+    .map((feat) => ({
+      date: new Date(feat.updated_at),
+      result: feat.result,
+      unit: feat.ruling?.unit || "",
+    }))
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  if (processedFeats.length === 0) {
+    return <></>;
+  }
+
+  const firstDataDate = processedFeats[0].date;
+  const lastDataDate = processedFeats[processedFeats.length - 1].date;
+  const minDataYear = firstDataDate.getUTCFullYear();
+
+  const chartData: MonthlyChartData[] = [];
+  const currentIterDate = new Date(
+    Date.UTC(firstDataDate.getUTCFullYear(), firstDataDate.getUTCMonth(), 1)
+  );
+  const endDateBoundary = new Date(
+    Date.UTC(lastDataDate.getUTCFullYear(), lastDataDate.getUTCMonth(), 1)
+  );
+
+  while (currentIterDate <= endDateBoundary) {
+    const year = currentIterDate.getUTCFullYear();
+    const month = currentIterDate.getUTCMonth();
+
+    const dateKey = `$`
+  }
 
   return (
     <ChartContainer config={chartConfig} className="h-80">
@@ -32,18 +63,13 @@ export default function ProgressChart({ results }: { results: Feat[] }) {
         accessibilityLayer
         data={data}
         margin={{
-          left: 12,
+          left: 0,
           right: 12,
         }}
       >
         <CartesianGrid vertical={false} />
-        <XAxis
-          dataKey="date"
-          tickLine={false}
-          axisLine={false}
-          tickMargin={8}
-          tickFormatter={(value) => value.slice(0, 3)}
-        />
+        <XAxis dataKey="date" tickLine={true} axisLine={false} tickMargin={8} />
+        <YAxis axisLine={false} />
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
         <defs>
           <linearGradient id="fillResult" x1="0" y1="0" x2="0" y2="1">
@@ -69,5 +95,5 @@ export default function ProgressChart({ results }: { results: Feat[] }) {
         />
       </AreaChart>
     </ChartContainer>
-  )
+  );
 }

@@ -95,7 +95,7 @@ const testFeats: Feat[] = [
     result: 9.58,
     medal: "gold",
     created_at: "2020-08-01T12:00:00Z",
-    updated_at: "2025-05-01T10:00:00Z",
+    updated_at: "2021-05-01T10:00:00Z",
     ruling: undefined,
   },
   {
@@ -107,7 +107,7 @@ const testFeats: Feat[] = [
     result: 10.12,
     medal: "silver",
     created_at: "2021-06-15T09:30:00Z",
-    updated_at: "2025-05-02T11:15:00Z",
+    updated_at: "2022-05-02T11:15:00Z",
     ruling: undefined,
   },
   {
@@ -119,7 +119,7 @@ const testFeats: Feat[] = [
     result: 8.88,
     medal: "bronze",
     created_at: "2022-04-10T08:00:00Z",
-    updated_at: "2025-05-03T14:45:00Z",
+    updated_at: "2023-05-03T14:45:00Z",
     ruling: undefined,
   },
   {
@@ -131,7 +131,7 @@ const testFeats: Feat[] = [
     result: 9.23,
     medal: "gold",
     created_at: "2023-02-20T17:20:00Z",
-    updated_at: "2025-05-04T09:00:00Z",
+    updated_at: "2024-05-04T09:00:00Z",
     ruling: undefined,
   },
   {
@@ -155,7 +155,7 @@ const testFeats: Feat[] = [
     result: 9.77,
     medal: "silver",
     created_at: "2024-03-30T16:40:00Z",
-    updated_at: "2025-05-06T08:20:00Z",
+    updated_at: "2026-05-06T08:20:00Z",
     ruling: undefined,
   },
   {
@@ -167,7 +167,7 @@ const testFeats: Feat[] = [
     result: 9.91,
     medal: "gold",
     created_at: "2020-11-11T10:05:00Z",
-    updated_at: "2025-05-07T15:00:00Z",
+    updated_at: "2027-05-07T15:00:00Z",
     ruling: undefined,
   },
   {
@@ -179,7 +179,7 @@ const testFeats: Feat[] = [
     result: 10.5,
     medal: "none",
     created_at: "2021-08-22T07:55:00Z",
-    updated_at: "2025-05-08T07:30:00Z",
+    updated_at: "2028-05-08T07:30:00Z",
     ruling: undefined,
   },
   {
@@ -191,7 +191,7 @@ const testFeats: Feat[] = [
     result: 9.65,
     medal: "bronze",
     created_at: "2018-05-09T19:00:00Z",
-    updated_at: "2025-05-09T13:45:00Z",
+    updated_at: "2029-05-09T13:45:00Z",
     ruling: undefined,
   },
   {
@@ -203,7 +203,7 @@ const testFeats: Feat[] = [
     result: 10.01,
     medal: "silver",
     created_at: "2023-10-14T20:10:00Z",
-    updated_at: "2025-05-10T18:15:00Z",
+    updated_at: "2030-05-10T18:15:00Z",
     ruling: undefined,
   },
 ];
@@ -337,7 +337,7 @@ export default async function Page({
                           <AccordionItem key={index} value={index.toString()}>
                             <AccordionTrigger>{discName}</AccordionTrigger>
                             <AccordionContent>
-                              Hier genauere Details über Disziplin/Übung
+                              <ProgressChart results={testFeats}/>
                             </AccordionContent>
                           </AccordionItem>
                         );
@@ -350,8 +350,6 @@ export default async function Page({
           })}
         </Tabs>
       </div>
-
-      <ProgressChart results={testFeats} />
     </div>
   );
 }
