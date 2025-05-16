@@ -28,6 +28,26 @@ interface DataTableProps<TData, TValue> {
     data: TData[]
     getRowProps?: (row: any) => React.HTMLAttributes<HTMLTableRowElement>
 }
+let activeTable:any=null;
+
+export function getSelectedAthleteIds():number[]{
+  if (activeTable==null){
+    return[];
+  }
+  else if(typeof(activeTable)==typeof(Table)){
+    let rows=activeTable.getFilteredSelectedRowModel().rows;
+    console.log("Rows");
+    console.log(rows);
+    let activeIds:number[]=[];
+    rows.forEach(row => {
+      console.log(row.original.id);
+      activeIds.push(row.original.id);
+    });
+    
+    return activeIds;
+  }
+  return[];
+}
 
 export function DataTable<TData, TValue>({
     columns,
@@ -59,7 +79,7 @@ export function DataTable<TData, TValue>({
         globalFilter
       }
     })
-   
+    activeTable=table;
     return (
       <div>
 

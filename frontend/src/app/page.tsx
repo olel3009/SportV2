@@ -1,6 +1,7 @@
 "use client"
 import { login, signup } from "./authlogin";
 import { useActionState } from 'react'
+import ErrorDisplay from "@/components/ErrorDisplay";
 import { useRouter } from "next/navigation";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
@@ -16,33 +17,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertCircle } from "lucide-react";
 
-function Error({ message }: { message: string }) {
-  return (
-    <Card className="bg-red-50 border border-red-200 text-red-700">
-      <CardContent className="flex items-center gap-2 py-3">
-        <AlertCircle className="h-5 w-5 text-red-600" />
-        <span>{message}</span>
-      </CardContent>
-    </Card>
-  )
-}
-
 function LoginForm() {
   const [state, action, pending] = useActionState(login, undefined)
   const router = useRouter(); // Router-Hook initialisieren
 
   return (
     <div className="flex flex-col gap-6">
-
+      
       {(state?.errors?.email || state?.errors?.password) &&
-        <Error message="Die angegebene E-Mail Adress oder das Passwort sind falsch."></Error>
+        <ErrorDisplay message="Die angegebene E-Mail oder das Passwort sind falsch."></ErrorDisplay>
       }
+
       <Card>
         <CardHeader>
           <CardTitle className="text-2x1">Login</CardTitle>
           <CardDescription>
-            Geben Sie zum Einloggen ihre E-Mail Adresse und ihr Passwort an.<br />
-            Falls Sie noch kein Account haben, drücken Sie auf den SignUp-Knopf.
+            Geben Sie zum Einloggen ihre E-Mail-Adresse und ihr Passwort an.<br />
+            Falls Sie noch keinen Account haben, drücken Sie auf den SignUp-Knopf.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -67,7 +58,7 @@ function LoginForm() {
                   sideOffset={10} // Abstand zwischen Tooltip und Maus
                   className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
                 >
-                  Geben Sie hier ihre E-Mail Adresse ein.
+                  Geben Sie hier ihre E-Mail-Adresse ein.
                   <Tooltip.Arrow className="fill-gray-800" />
                 </Tooltip.Content>
               </Tooltip.Root>
@@ -130,7 +121,7 @@ function LoginForm() {
                   sideOffset={10} // Abstand zwischen Tooltip und Maus
                   className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
                 >
-                  Drücken sie diesen Knopf, um die SignUp Seite zu öffnen.
+                  Drücken Sie diesen Knopf, um die SignUp-Seite zu öffnen.
                   <Tooltip.Arrow className="fill-gray-800" />
                 </Tooltip.Content>
               </Tooltip.Root>
