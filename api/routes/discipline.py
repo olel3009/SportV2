@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from database.models import Discipline
 from database.schemas import DisciplineSchema
 from database import db
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bp_discipline = Blueprint('discipline', __name__)
 
@@ -10,6 +10,7 @@ bp_discipline = Blueprint('discipline', __name__)
 @bp_discipline.route('/disciplines', methods=['POST'])
 @jwt_required()
 def create_discipline():
+    current_user = get_jwt_identity()
     data = request.json
     schema = DisciplineSchema()
     valid_data = schema.load(data)  # Falls invalid -> ValidationError -> 400
@@ -25,6 +26,7 @@ def create_discipline():
 @bp_discipline.route('/disciplines', methods=['GET'])
 @jwt_required()
 def get_disciplines():
+    current_user = get_jwt_identity()
     all_disc = Discipline.query.all()
     schema = DisciplineSchema(many=True)
     result = schema.dump(all_disc)
@@ -33,6 +35,7 @@ def get_disciplines():
 @bp_discipline.route('/disciplines/<int:id>', methods=['GET'])
 @jwt_required()
 def get_discipline_id(id):
+    current_user = get_jwt_identity()
     discipline = Discipline.query.get_or_404(id)
     schema = DisciplineSchema()
     return jsonify(schema.dump(discipline))
@@ -41,6 +44,7 @@ def get_discipline_id(id):
 @bp_discipline.route('/disciplines/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_discipline(id):
+    current_user = get_jwt_identity()
     disc = Discipline.query.get_or_404(id)
     data = request.json
 
@@ -58,6 +62,7 @@ def update_discipline(id):
 @bp_discipline.route('/disciplines/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_discipline(id):
+    current_user = get_jwt_identity()
     disc = Discipline.query.get_or_404(id)
     db.session.delete(disc)
     db.session.commit()

@@ -5,13 +5,16 @@ from database.models import Athlete as DBAthlete, Result as DBResult, Rule as DB
 from database.schemas import AthleteSchema, DisciplineSchema, ResultSchema, RuleSchema
 from api.export_pdf import fill_pdf_form
 from sqlalchemy.orm import joinedload
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity, verify_jwt_in_request
+import requests
 
 bp_athlete = Blueprint('athlete', __name__)
 
 @bp_athlete.route('/athletes', methods=['POST'])
 @jwt_required()
 def create_athlete():
+    verify_jwt_in_request()
+    current_user = get_jwt_identity()
     data = request.json
     schema = AthleteSchema()
     valid_data = schema.load(data)  # Falls invalid, ValidationError -> 400
@@ -30,6 +33,7 @@ def create_athlete():
 @bp_athlete.route('/athletes', methods=['GET'])
 @jwt_required()
 def get_athletes():
+    current_user = get_jwt_identity()
     athletes = DBAthlete.query.all()
     result = []
     for ath in athletes:
@@ -48,6 +52,7 @@ def get_athletes():
 @bp_athlete.route('/athletes/<int:id>', methods=['GET'])
 @jwt_required()
 def get_athlete_id(id):
+    current_user = get_jwt_identity()
     # 1) Athleten‐Datensatz laden oder 404
     athlete = DBAthlete.query.get_or_404(id)
     schema = AthleteSchema()
@@ -69,6 +74,7 @@ def get_athlete_id(id):
 @bp_athlete.route('/athletes/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_athlete(id):
+    current_user = get_jwt_identity()
     athlete = DBAthlete.query.get_or_404(id)
     data = request.json
 
@@ -90,6 +96,7 @@ def update_athlete(id):
 @bp_athlete.route('/athletes/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_athlete(id):
+    current_user = get_jwt_identity()
     athlete = DBAthlete.query.get_or_404(id)
     db.session.delete(athlete)
     db.session.commit()
@@ -98,6 +105,7 @@ def delete_athlete(id):
 @bp_athlete.route('/athletes/<int:athlete_id>/export/pdf', methods=['GET'])
 @jwt_required()
 def export_athlete_pdf(athlete_id):
+    current_user = get_jwt_identity()
     # 1) DB-Abfrage
     db_athlete = DBAthlete.query.get_or_404(athlete_id)
 
@@ -141,6 +149,7 @@ def export_athlete_pdf(athlete_id):
 @bp_athlete.route('/athletes/<int:athlete_id>/results', methods=['GET'])
 @jwt_required()
 def get_athletes_results(athlete_id):
+    current_user = get_jwt_identity()
 
     db_athlete = DBAthlete.query.get_or_404(athlete_id)
 

@@ -4,13 +4,14 @@ from database import db
 import logging
 import csv
 from sqlalchemy import select
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bp_update = Blueprint("update-rule", __name__)
 
 @bp_update.route("/regelungen/aktualisieren", methods = ["POST"])
 @jwt_required()
 def update_rule(csv_updates):
+    current_user = get_jwt_identity()
     try:
         with open(csv_updates, newline="") as csv_data:
             reader = csv.reader(csv_data)

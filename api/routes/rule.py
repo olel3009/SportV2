@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from database.models import Rule
 from database.schemas import RuleSchema
 from database import db
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bp_rule = Blueprint('rule', __name__)
 
@@ -10,6 +10,7 @@ bp_rule = Blueprint('rule', __name__)
 @bp_rule.route('/rules', methods=['POST'])
 @jwt_required()
 def create_rule():
+    current_user = get_jwt_identity()
     data = request.json
     schema = RuleSchema()
     valid_data = schema.load(data)  # ValidationError -> 400
@@ -51,6 +52,7 @@ def create_rule():
 @bp_rule.route('/rules', methods=['GET'])
 @jwt_required()
 def get_rules():
+    current_user = get_jwt_identity()
     all_rules = Rule.query.all()
     schema = RuleSchema(many=True)
     result = schema.dump(all_rules)
@@ -59,6 +61,7 @@ def get_rules():
 @bp_rule.route('/rules/<int:id>', methods=['GET'])
 @jwt_required()
 def get_rule(id):
+    current_user = get_jwt_identity()
     rule = Rule.query.get_or_404(id)
     schema = RuleSchema()
     return jsonify(schema.dump(rule))
@@ -67,6 +70,7 @@ def get_rule(id):
 @bp_rule.route('/rules/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_rule_id(id):
+    current_user = get_jwt_identity()
     rule = Rule.query.get_or_404(id)
     data = request.json
 
@@ -117,6 +121,7 @@ def update_rule_id(id):
 @bp_rule.route('/rules/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_rule(id):
+    current_user = get_jwt_identity()
     rule = Rule.query.get_or_404(id)
     db.session.delete(rule)
     db.session.commit()
