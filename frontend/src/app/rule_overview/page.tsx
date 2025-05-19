@@ -53,7 +53,8 @@ export default function Page() {
       //console.log(validRules)
       
     return (
-      <div className="p-6 gap-4 flex flex-col">      
+      <div className="p-6 gap-4 flex flex-col"> 
+      <h1 className="text-2x1 font bold mb-4">Regel-Übersicht</h1>     
         <DropdownMenu>
       {/* Trigger: here we put a button that shows the current selection */}
       <DropdownMenuTrigger asChild>
@@ -73,6 +74,7 @@ export default function Page() {
       <DropdownMenuContent sideOffset={4} className="z-50 min-w-[8rem] rounded-md border bg-white p-1 shadow-md">
         {/* Using the radio-group approach so it keeps track of the selected value */}
         <DropdownMenuRadioGroup value={ageGroup} onValueChange={setAgeGroup}>
+
           <DropdownMenuRadioItem value="6,7">
             6-7
             {/* this indicator only shows on the selected item */}
@@ -87,6 +89,35 @@ export default function Page() {
               <Check className="h-4 w-4" />
             </DropdownMenuItemIndicator>
           </DropdownMenuRadioItem>
+
+          <DropdownMenuRadioItem value="10,11">
+            10-11
+            <DropdownMenuItemIndicator>
+              <Check className="h-4 w-4" />
+            </DropdownMenuItemIndicator>
+          </DropdownMenuRadioItem>
+
+          <DropdownMenuRadioItem value="12,13">
+            12-13
+            <DropdownMenuItemIndicator>
+              <Check className="h-4 w-4" />
+            </DropdownMenuItemIndicator>
+          </DropdownMenuRadioItem>
+
+          <DropdownMenuRadioItem value="14,15">
+            14-15
+            <DropdownMenuItemIndicator>
+              <Check className="h-4 w-4" />
+            </DropdownMenuItemIndicator>
+          </DropdownMenuRadioItem>
+
+          <DropdownMenuRadioItem value="16,17">
+            16-17
+            <DropdownMenuItemIndicator>
+              <Check className="h-4 w-4" />
+            </DropdownMenuItemIndicator>
+          </DropdownMenuRadioItem>
+
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
