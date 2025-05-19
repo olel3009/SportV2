@@ -21,7 +21,6 @@ export default function RegelungenButton() {
 
   const [showPopup, setShowPopup] = useState(false);
   const [buttonresult, setButtonResult] = useState("");
-  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [buttonColor, setButtonColor] = useState<number | null>(null);
@@ -34,13 +33,13 @@ export default function RegelungenButton() {
   }, []);
 
   const handleButtonClick = () => {
+    setErrorMessage("")
     setShowPopup(true);
   };
 
   const handleClosePopup = () => {
     setShowPopup(false);
     setButtonResult(buttonresultabruch);
-    setSelectedYear(currentYear.toString());
     setUploadedFile(null);
     setErrorMessage("");
   };
@@ -54,16 +53,16 @@ export default function RegelungenButton() {
     setShowPopup(false);
     setButtonResult(buttonresultwarten);
     // Simulierte Logik für die Regelaktualisierung
-    if(await add_rules(uploadedFile, selectedYear)){
-      button_loggig_color().then(setButtonColor);
-      setButtonResult(buttonresulterfolg);
-    }else{
-      setButtonResult(buttonresultfehler);
-    }
-
-    setSelectedYear(currentYear.toString());
+    const errorMsg = await add_rules(uploadedFile);
+    if (!errorMsg) {
+    button_loggig_color().then(setButtonColor);
+    setButtonResult(buttonresulterfolg);
+  } else {
+    setButtonResult(buttonresultfehler);
+    setErrorMessage(errorMsg); // Fehler im UI anzeigen
+  }
     setUploadedFile(null);
-    setErrorMessage("");
+    //setErrorMessage("");
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,9 +75,6 @@ export default function RegelungenButton() {
         setErrorMessage("Bitte laden Sie eine gültige CSV-Datei hoch."); // Fehlermeldung für ungültige Dateien
       }
     }
-  };
-  const handleYearChange = (year: string) => {
-    setSelectedYear(year);
   };
   return (
     <div>
@@ -103,6 +99,7 @@ export default function RegelungenButton() {
               <Tooltip.Arrow className="fill-gray-800" />
             </Tooltip.Content>
           </Tooltip.Root>
+          {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
         </div>
       ) : (
         <div>
@@ -123,6 +120,7 @@ export default function RegelungenButton() {
               <Tooltip.Arrow className="fill-gray-800" />
             </Tooltip.Content>
           </Tooltip.Root>
+          {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
         </div>
       )}
       <Dialog
@@ -191,39 +189,6 @@ export default function RegelungenButton() {
               className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
             >
               Hier Klicken um Datei Explorer zu öffnen, um eine Datei hochzuladen.
-              <Tooltip.Arrow className="fill-gray-800" />
-            </Tooltip.Content>
-          </Tooltip.Root>
-
-          <Tooltip.Root>
-            <Tooltip.Trigger asChild>
-              <div className="mb-4">
-                <label className="block text-base font-medium text-gray-700 mb-2">
-                  Jahr auswählen:
-                </label>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="w-full">
-                      {selectedYear}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    {years.map((year) => (
-                      <DropdownMenuItem key={year} onClick={() => handleYearChange(year.toString())}>
-                        {year}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </Tooltip.Trigger>
-            <Tooltip.Content
-              side="top"
-              align="center"
-              sideOffset={-10}
-              className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
-            >
-              Auf den Knopf drücken um ein Jahr auszuwählen.
               <Tooltip.Arrow className="fill-gray-800" />
             </Tooltip.Content>
           </Tooltip.Root>

@@ -113,9 +113,26 @@ export async function button_loggig_color(): Promise<number> {
     //return 1;
 }
 
-export async function add_rules(file: File, selectedyear: string): Promise<boolean> {
+export async function add_rules(file: File): Promise<string | null> {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch("http://127.0.0.1:5000/rules/import", {
+        method: "POST",
+        body: formData,
+    });
 
-    
-    console.log("add_rules");
-    return true;
+    if (!res.ok) {
+        let errorMsg = "Unbekannter Fehler";
+        try {
+            const error = await res.json();
+            errorMsg = error.error || JSON.stringify(error);
+        } catch (e) {
+            errorMsg = res.statusText;
+        }
+        console.log("Error adding rule:", errorMsg);
+        return errorMsg; // Fehlertext zurückgeben
+    } else {
+        console.log("Rule added successfully");
+        return null; // kein Fehler
+    }
 }
