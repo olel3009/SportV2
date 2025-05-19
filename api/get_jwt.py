@@ -22,9 +22,10 @@ def get_jwt():
 
         response = requests.get(login_url, headers=headers)
 
+        #response with users access token
         return response
     except requests.exceptions.JSONDecodeError:
-        print("Exception")
+        print("No JWT to decode!")
     
     
 
