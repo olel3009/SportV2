@@ -54,7 +54,7 @@ export default function RegelungenButton() {
     setShowPopup(false);
     setButtonResult(buttonresultwarten);
     // Simulierte Logik für die Regelaktualisierung
-    if(await add_rules(uploadedFile)){
+    if(await add_rules(uploadedFile, selectedYear)){
       button_loggig_color().then(setButtonColor);
       setButtonResult(buttonresulterfolg);
     }else{

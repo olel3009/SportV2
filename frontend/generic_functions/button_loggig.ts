@@ -113,7 +113,7 @@ export async function button_loggig_color(): Promise<number> {
     //return 1;
 }
 
-export async function add_rules(file: File): Promise<boolean> {
+export async function add_rules(file: File, selectedyear: string): Promise<boolean> {
 
     
     console.log("add_rules");
