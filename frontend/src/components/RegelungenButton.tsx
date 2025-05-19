@@ -25,7 +25,7 @@ export default function RegelungenButton() {
   const buttonresultfehler = "Das Aktualisieren der Reglungen war nicht erfolgreich.<br />Versuchen sie es zu einem späteren Zeitpunkt erneut!";
   const buttonresultwarten = "Das Aktualisieren der Reglungen wird durchgeführt.<br />Bitte warten sie einen Moment.";
   const buttonresultabruch = "Das Aktualisieren der Reglungen wurde abgebrochen.";
-  const fehlerhaftedatei = "Das Aktualisieren der Reglungen war nicht erfolgreich. <br/>Falls eine Fehlermeldung erscheint bitte die hochgeladene <br/> Datei daraufhin überprüfen und zu einem späteren Zeitpunkt erneut versuchen!<br />";
+  const fehlerhaftedatei = "Das Aktualisieren der Reglungen war nicht erfolgreich. <br/> Brücksichtigen sie die folgenden Fehler und versuchen sie mit einer abgeänderten Datei erneut:<br/>";
 
   const wert = 0;
   const currentYear = new Date().getFullYear();
@@ -71,8 +71,8 @@ export default function RegelungenButton() {
     button_loggig_color().then(setButtonColor);
     setButtonResult(buttonresulterfolg);
   } else {
-    setButtonResult(fehlerhaftedatei);
-    setErrorMessage(errorMsg); // Fehler im UI anzeigen
+    //setButtonResult(buttonresultfehler);
+    setErrorMessage(fehlerhaftedatei + errorMsg); // Fehler im UI anzeigen
   }
     setUploadedFile(null);
     //setErrorMessage("");
@@ -91,7 +91,7 @@ export default function RegelungenButton() {
   };
   return (
     <div>
-      {errorMessage && <div className="mb-4"><Error message={errorMessage}/></div>}
+      
       {buttonColor === null ? (
         <div>Lade...</div>
       ) : buttonColor === wert ? (
@@ -113,7 +113,7 @@ export default function RegelungenButton() {
               <Tooltip.Arrow className="fill-gray-800" />
             </Tooltip.Content>
           </Tooltip.Root>
-          
+          {errorMessage && <div className="mb-4"><Error message={errorMessage}/></div>}
         </div>
       ) : (
         <div>
@@ -134,6 +134,7 @@ export default function RegelungenButton() {
               <Tooltip.Arrow className="fill-gray-800" />
             </Tooltip.Content>
           </Tooltip.Root>
+          {errorMessage && <div className="mb-4"><Error message={errorMessage}/></div>}
         </div>
       )}
       <Dialog
