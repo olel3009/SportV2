@@ -4,16 +4,28 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import React, { useRef, useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { FileUp } from "lucide-react";
 import { add_rules, button_loggig_color } from '@/button_loggig';
-import { add } from "date-fns";
+import { AlertCircle } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+
+function Error({ message }: { message: string }) {
+  return (
+    <Card className="bg-red-50 border border-red-200 text-red-700">
+      <CardContent className="flex items-center gap-2 py-3">
+        <AlertCircle className="h-5 w-5 text-red-600" />
+        <span>{message}</span>
+      </CardContent>
+    </Card>
+  )
+}
 
 export default function RegelungenButton() {
   const buttonresulterfolg = "Das Aktualisieren der Reglungen war erfolgreich.";
   const buttonresultfehler = "Das Aktualisieren der Reglungen war nicht erfolgreich.<br />Versuchen sie es zu einem späteren Zeitpunkt erneut!";
   const buttonresultwarten = "Das Aktualisieren der Reglungen wird durchgeführt.<br />Bitte warten sie einen Moment.";
   const buttonresultabruch = "Das Aktualisieren der Reglungen wurde abgebrochen.";
+  const fehlerhaftedatei = "Das Aktualisieren der Reglungen war nicht erfolgreich. <br/>Falls eine Fehlermeldung erscheint bitte die hochgeladene <br/> Datei daraufhin überprüfen und zu einem späteren Zeitpunkt erneut versuchen!<br />";
 
   const wert = 0;
   const currentYear = new Date().getFullYear();
@@ -33,6 +45,7 @@ export default function RegelungenButton() {
   }, []);
 
   const handleButtonClick = () => {
+    setButtonResult("");
     setErrorMessage("")
     setShowPopup(true);
   };
@@ -58,7 +71,7 @@ export default function RegelungenButton() {
     button_loggig_color().then(setButtonColor);
     setButtonResult(buttonresulterfolg);
   } else {
-    setButtonResult(buttonresultfehler);
+    setButtonResult(fehlerhaftedatei);
     setErrorMessage(errorMsg); // Fehler im UI anzeigen
   }
     setUploadedFile(null);
@@ -78,6 +91,7 @@ export default function RegelungenButton() {
   };
   return (
     <div>
+      {errorMessage && <div className="mb-4"><Error message={errorMessage}/></div>}
       {buttonColor === null ? (
         <div>Lade...</div>
       ) : buttonColor === wert ? (
@@ -99,7 +113,7 @@ export default function RegelungenButton() {
               <Tooltip.Arrow className="fill-gray-800" />
             </Tooltip.Content>
           </Tooltip.Root>
-          {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
+          
         </div>
       ) : (
         <div>
@@ -120,7 +134,6 @@ export default function RegelungenButton() {
               <Tooltip.Arrow className="fill-gray-800" />
             </Tooltip.Content>
           </Tooltip.Root>
-          {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
         </div>
       )}
       <Dialog
