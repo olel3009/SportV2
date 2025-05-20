@@ -69,6 +69,7 @@ def login_user():
     # Login erfolgreich
     return jsonify({
         "message": "Login erfolgreich",
+        #user.email = variable
         "email": "user.email",
         "access_token": access_token
     }), 200
