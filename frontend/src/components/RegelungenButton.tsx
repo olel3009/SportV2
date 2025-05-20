@@ -11,13 +11,17 @@ import { Card, CardContent } from "@/components/ui/card";
 
 function Error({ message }: { message: string }) {
   return (
-    <Card className="bg-red-50 border border-red-200 text-red-700">
-      <CardContent className="flex items-center gap-2 py-3">
+    <Card className="bg-red-50 border border-red-200 text-red-700 inline-block">
+      <CardContent className="flex items-center gap-2 py-2 px-4">
         <AlertCircle className="h-5 w-5 text-red-600" />
-        <span>{message}</span>
+        <span
+          className="whitespace-pre-line break-words"
+          title={typeof message === "string" ? message.replace(/<br\s*\/?>/gi, "\n") : ""}
+          dangerouslySetInnerHTML={{ __html: message }}
+        />
       </CardContent>
     </Card>
-  )
+  );
 }
 
 export default function RegelungenButton() {
@@ -25,7 +29,7 @@ export default function RegelungenButton() {
   const buttonresultfehler = "Das Aktualisieren der Reglungen war nicht erfolgreich.<br />Versuchen sie es zu einem späteren Zeitpunkt erneut!";
   const buttonresultwarten = "Das Aktualisieren der Reglungen wird durchgeführt.<br />Bitte warten sie einen Moment.";
   const buttonresultabruch = "Das Aktualisieren der Reglungen wurde abgebrochen.";
-  const fehlerhaftedatei = "Das Aktualisieren der Reglungen war nicht erfolgreich. <br/> Brücksichtigen sie die folgenden Fehler und versuchen sie mit einer abgeänderten Datei erneut:<br/>";
+  const fehlerhaftedatei = "Das Aktualisieren der Regelungen war nicht erfolgreich. Brücksichtigen sie die folgenden Fehler und versuchen sie es mit einer abgeänderten Datei erneut: ";
 
   const wert = 0;
   const currentYear = new Date().getFullYear();
@@ -71,8 +75,9 @@ export default function RegelungenButton() {
     button_loggig_color().then(setButtonColor);
     setButtonResult(buttonresulterfolg);
   } else {
-    //setButtonResult(buttonresultfehler);
-    setErrorMessage(fehlerhaftedatei + errorMsg); // Fehler im UI anzeigen
+    
+    setButtonResult("");
+    setErrorMessage(fehlerhaftedatei+ "<br />" + errorMsg); // Fehler im UI anzeigen
   }
     setUploadedFile(null);
     //setErrorMessage("");
@@ -113,7 +118,7 @@ export default function RegelungenButton() {
               <Tooltip.Arrow className="fill-gray-800" />
             </Tooltip.Content>
           </Tooltip.Root>
-          {errorMessage && <div className="mb-4"><Error message={errorMessage}/></div>}
+          {errorMessage && <div className="mt-2"><Error message={errorMessage}/></div>}
         </div>
       ) : (
         <div>
@@ -134,7 +139,7 @@ export default function RegelungenButton() {
               <Tooltip.Arrow className="fill-gray-800" />
             </Tooltip.Content>
           </Tooltip.Root>
-          {errorMessage && <div className="mb-4"><Error message={errorMessage}/></div>}
+          {errorMessage && <div className="mt-2"><Error message={errorMessage}/></div>}
         </div>
       )}
       <Dialog
