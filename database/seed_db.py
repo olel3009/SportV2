@@ -237,8 +237,28 @@ def seed_test_data():
         # Optional: Mehrere Result-Datensätze anlegen
         results = [ 
         Result(athlete_id=athletes[0].id, rule_id=rules[4].id,
-        year=2025, age=2025 - athletes[0].birth_date.year,
-        result=2.45, medal="Gold"
+        year=1558380258, age=2025 - athletes[0].birth_date.year,
+        result=6.0, medal="Bronze"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id, # Duplicate rule_id for athlete 0
+        year=1558380258, age=2025 - athletes[0].birth_date.year,
+        result=4.59, medal="Bronze"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id, # Duplicate rule_id for athlete 0
+        year=1621538658, age=2025 - athletes[0].birth_date.year,
+        result=4.20, medal="Bronze"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id, # Duplicate rule_id for athlete 0
+        year=1653074658, age=2025 - athletes[0].birth_date.year,
+        result=3.50, medal="Silber"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id, # Duplicate rule_id for athlete 0
+        year=1684610658, age=2025 - athletes[0].birth_date.year,
+        result=3.41, medal="Silber"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id, # Duplicate rule_id for athlete 0
+        year=1716233058, age=2025 - athletes[0].birth_date.year,
+        result=3.35, medal="Gold"
     ),
         Result(athlete_id=athletes[0].id, rule_id=rules[10].id,
         year=2025, age=2025 - athletes[0].birth_date.year,
@@ -260,10 +280,7 @@ def seed_test_data():
         year=2025, age=2025 - athletes[0].birth_date.year,
         result=11.0
     ),
-    Result(athlete_id=athletes[0].id, rule_id=rules[4].id, # Duplicate rule_id for athlete 0
-        year=2025, age=2025 - athletes[0].birth_date.year,
-        result=2.50, medal="Silber"
-    ),
+    
     Result(athlete_id=athletes[0].id, rule_id=rules[7].id,
         year=2025, age=2025 - athletes[0].birth_date.year,
         result=15.75

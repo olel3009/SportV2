@@ -305,9 +305,13 @@ export default async function Page({
                   <CardContent>
                     <Accordion type="single" collapsible>
                       {relFeats?.map((feat, index) => {
-                        let ruleSpecificResults = feats?.filter(
-                          (f) => f.rule_id === feat.rule_id
-                        );
+                        let ruleSpecificResults = feats
+                          ?.filter((f) => f.rule_id === feat.rule_id)
+                          .sort((a, b) => {
+                            const yearA: number = a.year || 0;
+                            const yearB: number = b.year || 0;
+                            return yearB - yearA;
+                          });
                         if (!ruleSpecificResults) return <></>;
 
                         if (usedExercises.includes(feat.rule_id)) {
@@ -347,7 +351,7 @@ export default async function Page({
                               <div className="flex flex-col gap-2">
                                 {ruleSpecificResults.map((result, index) => (
                                   <div
-                                    className="flex w-full border rounded-xl p-3 gap-4 items-center"
+                                    className="grid grid-cols-[max-content_12rem_auto] w-full border rounded-xl p-3 gap-4 items-center"
                                     key={index}
                                   >
                                     <MedalDisplay
@@ -357,7 +361,7 @@ export default async function Page({
                                     <label className="font-semibold">
                                       {result.result} {result.ruling?.unit}
                                     </label>
-                                    <label>Eingetragen: {result.year}</label>
+                                    <label>{result.year}</label>
                                   </div>
                                 ))}
                               </div>
