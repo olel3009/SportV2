@@ -3,6 +3,7 @@ export interface Athlete {
     firstName: string;
     lastName: string;
     sex: "m" | "w" | "d";
+    swimCertificate: boolean;
     dateOfBirth: string;
     goldMedals: number;
     silverMedals: number;

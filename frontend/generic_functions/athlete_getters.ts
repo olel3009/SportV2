@@ -29,7 +29,7 @@ export async function getAthleteWithFeats(id:number): Promise<csvCombo[]> {
   let first_name_raw:string=data.athlete.first_name;
   let gender_raw:string=data.athlete.gender;
   let birth_date_raw:string=data.athlete.birth_date;
-  const mapped:csvCombo[]=data.results.map((raw)=>({
+  const mapped:csvCombo[]=data.results.map((raw: any)=>({
     last_name:last_name_raw,
     first_name:first_name_raw,
     gender:gender_raw,
@@ -78,6 +78,7 @@ export async function getAllAthletes(): Promise<Athlete[]> {
     lastName: raw.last_name,
     sex: raw.gender,
     dateOfBirth: raw.birth_date,
+    swimCertificate: raw.swim_certificate,
     goldMedals: 0,
     silverMedals: 0,
     bronzeMedals: 0,

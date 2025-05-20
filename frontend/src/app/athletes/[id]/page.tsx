@@ -51,38 +51,24 @@ function MedalDisplay({
   type,
 }: {
   displayName: string;
-  type: "gold" | "silver" | "bronze" | "none";
+  type: string | undefined;
 }) {
-  const size = "40";
+  const size = "20";
   const text_size = "text-xl";
-  if (type === "gold")
-    return (
-      <Badge className="bg-yellow-300 text-yellow-900 flex grow gap-2 pointer-events-none">
-        <Medal size={size} strokeWidth={1.5} />{" "}
-        <span className={`${text_size}`}>{displayName}</span>
-      </Badge>
-    );
-  if (type === "bronze")
-    return (
-      <Badge className="bg-orange-300 text-orange-900 flex grow gap-2 pointer-events-none">
-        <Medal size={size} strokeWidth={1.5} />{" "}
-        <span className={`${text_size}`}>{displayName}</span>
-      </Badge>
-    );
-  if (type === "silver")
-    return (
-      <Badge className="bg-gray-300 text-gray-800 flex grow gap-2 pointer-events-none">
-        <Medal size={size} strokeWidth={1.5} />{" "}
-        <span className={`${text_size}`}>{displayName}</span>
-      </Badge>
-    );
-  if (type === "none")
-    return (
-      <Badge className="bg-gray-100 text-neutral-500 flex grow gap-2 pointer-events-none">
-        <CircleSlash size={size} strokeWidth={1} />{" "}
-        <span className={`${text_size}`}>{displayName}</span>
-      </Badge>
-    );
+  const colors =
+    type === "Gold"
+      ? "bg-yellow-300 text-yellow-900"
+      : type === "Bronze"
+      ? "bg-orange-300 text-orange-900"
+      : type === "Silber"
+      ? "bg-gray-300 text-gray-800"
+      : "invisible";
+  return (
+    <Badge className={`${colors} flex gap-2 pointer-events-none`}>
+      <Medal size={size} />
+      {displayName && <span className={`${text_size}`}>{displayName}</span>}
+    </Badge>
+  );
 }
 
 const testFeats: Feat[] = [
@@ -279,6 +265,15 @@ export default async function Page({
 
       <DownloadCsvButton ids={[id]} text="Als Csv exportieren" />
 
+      <h2 className="text-xl font-bold">Schwimmnachweis</h2>
+      <div>
+        {!athlete.swimCertificate && (
+          <p>Es ist kein Schwimmnachweis vorhanden</p>
+        )}
+        {athlete.swimCertificate && <p>Es ist ein Schwimmnachweis vorhanden</p>}
+      </div>
+
+      <h2 className="text-xl font-bold">Leistungen</h2>
       <div>
         <Tabs defaultValue={disciplines[0].id.toString()} className="w-full">
           <TabsList>
@@ -333,14 +328,39 @@ export default async function Page({
                           " - " +
                           feat.ruling?.max_age;
 
-                        console.log(discName);
                         return (
                           <AccordionItem key={index} value={index.toString()}>
                             <AccordionTrigger>{discName}</AccordionTrigger>
                             <AccordionContent>
                               {ruleSpecificResults.length > 1 && (
-                                <ProgressChart results={ruleSpecificResults} />
+                                <>
+                                  <h3 className="text-lg font-bold">
+                                    Entwicklung
+                                  </h3>
+                                  <div className="border rounded-xl p-2 mb-2">
+                                    <ProgressChart
+                                      results={ruleSpecificResults}
+                                    />
+                                  </div>
+                                </>
                               )}
+                              <div className="flex flex-col gap-2">
+                                {ruleSpecificResults.map((result, index) => (
+                                  <div
+                                    className="flex w-full border rounded-xl p-3 gap-4 items-center"
+                                    key={index}
+                                  >
+                                    <MedalDisplay
+                                      displayName=""
+                                      type={result.medal}
+                                    />
+                                    <label className="font-semibold">
+                                      {result.result} {result.ruling?.unit}
+                                    </label>
+                                    <label>Eingetragen: {result.year}</label>
+                                  </div>
+                                ))}
+                              </div>
                             </AccordionContent>
                           </AccordionItem>
                         );

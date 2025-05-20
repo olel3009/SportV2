@@ -8,7 +8,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "./ui/chart";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, Label, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
   result: {
@@ -59,7 +59,7 @@ export default function ProgressChart({ results }: { results: Feat[] }) {
         data={data}
         height={0}
         margin={{
-          left: 24,
+          left: -20,
           right: 12,
           top: 5,
           bottom: 5,
@@ -72,7 +72,16 @@ export default function ProgressChart({ results }: { results: Feat[] }) {
           axisLine={false}
           tickMargin={8}
           interval={1}
-          unit={dataUnit}
+        >
+          <Label value="Datum" offset={0} position="insideBottom" />
+        </XAxis>
+        <YAxis
+          label={{ value: dataUnit, angle: -90 }}
+          axisLine={false}
+          tickLine={false}
+          allowDataOverflow={false}
+          type="number"
+          domain={[1, "dataMax"]}
         />
         <ChartTooltip
           cursor={false}
