@@ -128,7 +128,6 @@ export default function Page() {
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-        <div className="m-8 bg-gray-200 rounded-sm shadow-lg">
           <Tabs defaultValue={'1'} className="w-full">
             <TabsList>
               <TabsTrigger key={'m'} value={'1'}>
@@ -139,60 +138,67 @@ export default function Page() {
               </TabsTrigger>
             </TabsList>
                 <div className="p-2">
+                <TabsContent key={"m"} value={"1"}>
+                <Card>
+                  <CardContent>
+                    <Accordion type="single" collapsible>
                     {
                         rules.map(rule=>{
                           let currAgeGroup:number[]=parseAgegroup(ageGroup??'0,0');
                           if(rule.min_age==currAgeGroup[0]&&rule.max_age==currAgeGroup[1]){
                             return (
-                              <TabsContent key={rule.rule_name+"f"} value={"2"}>
-                                <Card>
-                                  <CardContent>
-                                    <details>
-                                      <summary>{rule.description_f}</summary>
+                              <AccordionItem key={rule.description_m} value={rule.description_m}>
+                                <AccordionTrigger>{rule.description_m}</AccordionTrigger>
+                                <AccordionContent>
+                                      <ul>
+                                        <li>Gold: {rule.thresh_gold_m} {rule.unit}</li>
+                                        <li>Silber: {rule.thresh_silver_m} {rule.unit}</li>
+                                        <li>Bronze: {rule.thresh_bronze_m} {rule.unit}</li>
+                                      </ul>
+                                </AccordionContent>
+                              </AccordionItem>
+                            );
+                          }else{
+                            return null;
+                          }
+                        })
+                    }
+                    </Accordion>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+                <TabsContent key={"f"} value={"2"}>
+                <Card>
+                  <CardContent>
+                    <Accordion type="single" collapsible>
+                    {
+                        rules.map(rule=>{
+                          let currAgeGroup:number[]=parseAgegroup(ageGroup??'0,0');
+                          if(rule.min_age==currAgeGroup[0]&&rule.max_age==currAgeGroup[1]){
+                            return (
+                              <AccordionItem key={rule.description_f} value={rule.description_f}>
+                                <AccordionTrigger>{rule.description_f}</AccordionTrigger>
+                                <AccordionContent>
                                       <ul>
                                         <li>Gold: {rule.thresh_gold_f} {rule.unit}</li>
                                         <li>Silber: {rule.thresh_silver_f} {rule.unit}</li>
                                         <li>Bronze: {rule.thresh_bronze_f} {rule.unit}</li>
                                       </ul>
-                                    </details>
-                                  </CardContent>
-                                </Card>
-                              </TabsContent>
+                                </AccordionContent>
+                              </AccordionItem>
                             );
                           }else{
                             return null;
                           }
                         })
                     }
-                    {
-                        rules.map(rule=>{
-                          let currAgeGroup:number[]=parseAgegroup(ageGroup??'0,0');
-                          if(rule.min_age==currAgeGroup[0]&&rule.max_age==currAgeGroup[1]){
-                            return (
-                                <TabsContent key={rule.rule_name+"m"} value={"1"}>
-                                  <Card>
-                                    <CardContent>
-                                      <details>
-                                        <summary>{rule.description_m}</summary>
-                                        <ul>
-                                          <li>Gold: {rule.thresh_gold_m} {rule.unit}</li>
-                                          <li>Silber: {rule.thresh_silver_m} {rule.unit}</li>
-                                          <li>Bronze: {rule.thresh_bronze_m} {rule.unit}</li>
-                                        </ul>
-                                      </details>
-                                    </CardContent>
-                                  </Card>
-                                </TabsContent>
-                            );
-                          }else{
-                            return null;
-                          }
-                        })
-                    }
+                    </Accordion>
+                  </CardContent>
+                </Card>
+              </TabsContent>
                 </div>
               
             </Tabs>
           </div>
-      </div>
     );
   }
