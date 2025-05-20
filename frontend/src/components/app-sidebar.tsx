@@ -1,4 +1,4 @@
-import { LayoutPanelTop, Users, Settings, ChartNoAxesCombined, BookOpenText } from "lucide-react"
+import { LayoutPanelTop, Users, Settings, ChartNoAxesCombined, BookOpenText, ClipboardList } from "lucide-react"
 
 import { 
     Sidebar, 
@@ -31,7 +31,7 @@ const items = [
   {
     title: "Regelübersicht",
     url: "/rule_overview",
-    icon: ChartNoAxesCombined
+    icon: ClipboardList
   },
   {
     title: "Wiki",
