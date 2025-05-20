@@ -303,7 +303,7 @@ export default async function Page({
             let relFeats = feats?.filter(
               (a) => a.ruling?.discipline_id === index + 1
             );
-            console.log(relFeats)
+            console.log(relFeats);
             return (
               <TabsContent key={index} value={disc.id.toString()}>
                 <Card>
@@ -313,6 +313,7 @@ export default async function Page({
                         let ruleSpecificResults = feats?.filter(
                           (f) => f.rule_id === feat.rule_id
                         );
+                        if (!ruleSpecificResults) return <></>;
 
                         if (usedExercises.includes(feat.rule_id)) {
                           return null;
@@ -337,7 +338,9 @@ export default async function Page({
                           <AccordionItem key={index} value={index.toString()}>
                             <AccordionTrigger>{discName}</AccordionTrigger>
                             <AccordionContent>
-                              <ProgressChart results={testFeats}/>
+                              {ruleSpecificResults.length > 1 && (
+                                <ProgressChart results={ruleSpecificResults} />
+                              )}
                             </AccordionContent>
                           </AccordionItem>
                         );
