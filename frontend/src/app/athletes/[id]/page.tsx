@@ -28,6 +28,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getUtcTimecodeFromGermanDate } from "@/date_format";
+
 
 const getAge = (dateString: string) => {
   const [day, month, year] = dateString.split(".").map(Number);
@@ -70,129 +72,6 @@ function MedalDisplay({
     </Badge>
   );
 }
-
-const testFeats: Feat[] = [
-  {
-    id: 1,
-    athlete_id: 101,
-    rule_id: 201,
-    year: 2020,
-    age: 25,
-    result: 9.58,
-    medal: "gold",
-    created_at: "2020-08-01T12:00:00Z",
-    updated_at: "2021-05-01T10:00:00Z",
-    ruling: undefined,
-  },
-  {
-    id: 2,
-    athlete_id: 102,
-    rule_id: 202,
-    year: 2021,
-    age: 22,
-    result: 10.12,
-    medal: "silver",
-    created_at: "2021-06-15T09:30:00Z",
-    updated_at: "2022-05-02T11:15:00Z",
-    ruling: undefined,
-  },
-  {
-    id: 3,
-    athlete_id: 103,
-    rule_id: 203,
-    year: 2022,
-    age: 27,
-    result: 8.88,
-    medal: "bronze",
-    created_at: "2022-04-10T08:00:00Z",
-    updated_at: "2023-05-03T14:45:00Z",
-    ruling: undefined,
-  },
-  {
-    id: 4,
-    athlete_id: 104,
-    rule_id: 204,
-    year: 2023,
-    age: 30,
-    result: 9.23,
-    medal: "gold",
-    created_at: "2023-02-20T17:20:00Z",
-    updated_at: "2024-05-04T09:00:00Z",
-    ruling: undefined,
-  },
-  {
-    id: 5,
-    athlete_id: 105,
-    rule_id: 205,
-    year: 2019,
-    age: 21,
-    result: 10.0,
-    medal: "none",
-    created_at: "2019-12-05T13:10:00Z",
-    updated_at: "2025-05-05T12:30:00Z",
-    ruling: undefined,
-  },
-  {
-    id: 6,
-    athlete_id: 106,
-    rule_id: 206,
-    year: 2024,
-    age: 28,
-    result: 9.77,
-    medal: "silver",
-    created_at: "2024-03-30T16:40:00Z",
-    updated_at: "2026-05-06T08:20:00Z",
-    ruling: undefined,
-  },
-  {
-    id: 7,
-    athlete_id: 107,
-    rule_id: 207,
-    year: 2020,
-    age: 24,
-    result: 9.91,
-    medal: "gold",
-    created_at: "2020-11-11T10:05:00Z",
-    updated_at: "2027-05-07T15:00:00Z",
-    ruling: undefined,
-  },
-  {
-    id: 8,
-    athlete_id: 108,
-    rule_id: 208,
-    year: 2021,
-    age: 26,
-    result: 10.5,
-    medal: "none",
-    created_at: "2021-08-22T07:55:00Z",
-    updated_at: "2028-05-08T07:30:00Z",
-    ruling: undefined,
-  },
-  {
-    id: 9,
-    athlete_id: 109,
-    rule_id: 209,
-    year: 2018,
-    age: 29,
-    result: 9.65,
-    medal: "bronze",
-    created_at: "2018-05-09T19:00:00Z",
-    updated_at: "2029-05-09T13:45:00Z",
-    ruling: undefined,
-  },
-  {
-    id: 10,
-    athlete_id: 110,
-    rule_id: 210,
-    year: 2023,
-    age: 23,
-    result: 10.01,
-    medal: "silver",
-    created_at: "2023-10-14T20:10:00Z",
-    updated_at: "2030-05-10T18:15:00Z",
-    ruling: undefined,
-  },
-];
 
 export default async function Page({
   params,
@@ -308,8 +187,8 @@ export default async function Page({
                         let ruleSpecificResults = feats
                           ?.filter((f) => f.rule_id === feat.rule_id)
                           .sort((a, b) => {
-                            const yearA: number = a.year || 0;
-                            const yearB: number = b.year || 0;
+                            const yearA = getUtcTimecodeFromGermanDate(a.year || "")?.timestamp || 0
+                            const yearB = getUtcTimecodeFromGermanDate(b.year || "")?.timestamp || 0
                             return yearB - yearA;
                           });
                         if (!ruleSpecificResults) return <></>;
