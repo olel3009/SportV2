@@ -174,6 +174,11 @@ type RawRule= {
   updated_at:Date;
 }
 
+export async function getRulesByDisciplineId(id: number): Promise<Rule[] | undefined> {
+  const all = await getAllRules();
+  return all.filter(a => a.discipline_id === id);
+}
+
 
 export async function getAllRules(): Promise<Rule[]> {
   const res = await fetch("http://127.0.0.1:5000/rules", {
@@ -249,77 +254,46 @@ export async function getAllDisciplines(): Promise<Discipline[]> {
   return mapped;
 }
 
-export function calculateMedal(score: number): number {
-  return 69;
-}
+
 
 export async function addFeatToAthlete(
   athleteId: number,
-  exercise: string,
-  date: string,
+  ruleId: number,
+  year: number,
   result: string
-) {
+): Promise<{ message: string; id: number}|false> {
   let athlete = await getAthleteById(athleteId);
   if (!athlete) {
-    return;
+    alert("Bitte einen Athleten auswählen!");
+    return false;
   }
-  if (exercise == "") {
+  if (ruleId == undefined) {
     alert("Bitte eine Übung auswählen!");
-    return;
+    return false;
   }
-  if (date == "") {
+  if (year == undefined) {
     alert("Bitte ein Datum eingeben!");
-    return;
+    return false;
   }
   if (result == "") {
     alert("Bitte ein Ergebnis eingeben!");
-    return;
+    return false;
   }
-  console.log("before: " + athlete.feats);
-  let discipline: string;
-  let exToDisc = [["50mLauf"], ["Hochsprung", "Weitsprung"], ["Kugelstossen"]];
-  if (exToDisc[0].includes(exercise)) {
-    discipline = "Schnelligkeit";
-  } else if (exToDisc[1].includes(exercise)) {
-    discipline = "Koordination";
-  } else if (exToDisc[2].includes(exercise)) {
-    discipline = "Kraft";
-  } else {
-    discipline = "Sonstiges";
+  const res = await fetch("http://127.0.0.1:5000/results", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      athlete_id: athleteId,
+      rule_id: ruleId,
+      year,
+      result
+    })
+  });
+  if (!res.ok) {
+    const errorBody = await res.json();
+    throw new Error(errorBody.error || "Failed to add result");
   }
-  let score = calculateMedal(result.length);
-  let newFeat: Feat = {
-    discipline: discipline,
-    exercise: exercise,
-    date: date,
-    result: result,
-    score: score,
-  };
-  if (athlete.feats) {
-    let repeat = false;
-    let overwrite = false;
-    athlete.feats.forEach((feat) => {
-      if (feat.date == date && feat.exercise == exercise) {
-        repeat = true;
-      }
-    });
-    if (repeat) {
-      overwrite = confirm(
-        "Diese Übung wurde für diesen Tag bereits eingetragen, überschreiben?"
-      );
-    }
-    if (repeat) {
-      if (overwrite) {
-        athlete.feats.push(newFeat);
-        alert("Neue Leistung Eingetragen!");
-      }
-    } else {
-      athlete.feats.push(newFeat);
-      alert("Neue Leistung Eingetragen!");
-    }
-  } else {
-    athlete.feats = [newFeat];
-    alert("Neue Leistung Eingetragen!");
-  }
-  console.log("after: " + athlete.feats);
+
+  return res.json();
+  
 }
