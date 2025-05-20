@@ -28,6 +28,13 @@ const {
   RadioGroup: DropdownMenuRadioGroup,
   RadioItem: DropdownMenuRadioItem,
 } = DropdownMenuPrimitive
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function parseAgegroup(groupString:string):number[]{
   let stringGroup:string[]=groupString.split(',');
@@ -122,31 +129,35 @@ export default function Page() {
       </DropdownMenuContent>
     </DropdownMenu>
         <div className="m-8 bg-gray-200 rounded-sm shadow-lg">
-            <CardTab>
-                <div>
-                    <TabSwitcher key="m" tabId="1">
-                    <div className="p-2">M</div>
-                    </TabSwitcher>
-                    <TabSwitcher key="f" tabId="2">
-                    <div className="p-2">F</div>
-                    </TabSwitcher>
-                </div>
+          <Tabs defaultValue={'1'} className="w-full">
+            <TabsList>
+              <TabsTrigger key={'m'} value={'1'}>
+                M
+              </TabsTrigger>
+              <TabsTrigger key={'f'} value={'2'}>
+                F
+              </TabsTrigger>
+            </TabsList>
                 <div className="p-2">
                     {
                         rules.map(rule=>{
                           let currAgeGroup:number[]=parseAgegroup(ageGroup??'0,0');
                           if(rule.min_age==currAgeGroup[0]&&rule.max_age==currAgeGroup[1]){
                             return (
-                              <TabContent key={rule.rule_name+"f"} id={"2"}>
-                                <details>
-                                  <summary>{rule.description_f}</summary>
-                                  <ul>
-                                    <li>Gold: {rule.thresh_gold_f} {rule.unit}</li>
-                                    <li>Silber: {rule.thresh_silver_f} {rule.unit}</li>
-                                    <li>Bronze: {rule.thresh_bronze_f} {rule.unit}</li>
-                                  </ul>
-                                </details>
-                              </TabContent>
+                              <TabsContent key={rule.rule_name+"f"} value={"2"}>
+                                <Card>
+                                  <CardContent>
+                                    <details>
+                                      <summary>{rule.description_f}</summary>
+                                      <ul>
+                                        <li>Gold: {rule.thresh_gold_f} {rule.unit}</li>
+                                        <li>Silber: {rule.thresh_silver_f} {rule.unit}</li>
+                                        <li>Bronze: {rule.thresh_bronze_f} {rule.unit}</li>
+                                      </ul>
+                                    </details>
+                                  </CardContent>
+                                </Card>
+                              </TabsContent>
                             );
                           }else{
                             return null;
@@ -158,16 +169,20 @@ export default function Page() {
                           let currAgeGroup:number[]=parseAgegroup(ageGroup??'0,0');
                           if(rule.min_age==currAgeGroup[0]&&rule.max_age==currAgeGroup[1]){
                             return (
-                                <TabContent key={rule.rule_name+"m"} id={"1"}>
-                                  <details>
-                                    <summary>{rule.description_m}</summary>
-                                    <ul>
-                                      <li>Gold: {rule.thresh_gold_m} {rule.unit}</li>
-                                      <li>Silber: {rule.thresh_silver_m} {rule.unit}</li>
-                                      <li>Bronze: {rule.thresh_bronze_m} {rule.unit}</li>
-                                    </ul>
-                                  </details>
-                                </TabContent>
+                                <TabsContent key={rule.rule_name+"m"} value={"1"}>
+                                  <Card>
+                                    <CardContent>
+                                      <details>
+                                        <summary>{rule.description_m}</summary>
+                                        <ul>
+                                          <li>Gold: {rule.thresh_gold_m} {rule.unit}</li>
+                                          <li>Silber: {rule.thresh_silver_m} {rule.unit}</li>
+                                          <li>Bronze: {rule.thresh_bronze_m} {rule.unit}</li>
+                                        </ul>
+                                      </details>
+                                    </CardContent>
+                                  </Card>
+                                </TabsContent>
                             );
                           }else{
                             return null;
@@ -176,7 +191,7 @@ export default function Page() {
                     }
                 </div>
               
-            </CardTab>
+            </Tabs>
           </div>
       </div>
     );
