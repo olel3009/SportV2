@@ -32,8 +32,8 @@ function LoginForm() {
         <CardHeader>
           <CardTitle className="text-2x1">Login</CardTitle>
           <CardDescription>
-            Geben Sie zum Einloggen ihre E-Mail Adresse und ihr Passwort an.<br />
-            Falls Sie noch kein Account haben, drücken Sie auf den SignUp-Knopf.
+            Geben Sie zum Einloggen ihre E-Mail-Adresse und ihr Passwort an.<br />
+            Falls Sie noch keinen Account haben, drücken Sie auf den SignUp-Knopf.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -58,7 +58,7 @@ function LoginForm() {
                   sideOffset={10} // Abstand zwischen Tooltip und Maus
                   className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
                 >
-                  Geben Sie hier ihre E-Mail Adresse ein.
+                  Geben Sie hier ihre E-Mail-Adresse ein.
                   <Tooltip.Arrow className="fill-gray-800" />
                 </Tooltip.Content>
               </Tooltip.Root>
@@ -121,7 +121,7 @@ function LoginForm() {
                   sideOffset={10} // Abstand zwischen Tooltip und Maus
                   className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
                 >
-                  Drücken sie diesen Knopf, um die SignUp Seite zu öffnen.
+                  Drücken Sie diesen Knopf, um die SignUp-Seite zu öffnen.
                   <Tooltip.Arrow className="fill-gray-800" />
                 </Tooltip.Content>
               </Tooltip.Root>

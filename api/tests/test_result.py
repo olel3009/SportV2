@@ -20,7 +20,7 @@ def create_test_rule(client,
                      max_age=40, 
                      valid_start="01.01.2025", 
                      valid_end="31.12.2025",
-                     unit="Zeit (Min.,Sek.)",
+                     unit="Min.,Sek.",
                      description_m="Kraftübung 80g",
                      description_f="Kraftübung 80g",
                      threshold_bronze_m=30.0,
@@ -63,7 +63,7 @@ def test_create_result_time(client):
     """
     # Erstelle einen Athlete und einen Rule (unit "time")
     athlete_id = create_test_athlete(client, first_name="Time", last_name="Tester", birth_date="1.1.1990", gender="m")
-    rule_id = create_test_rule(client, rule_name="Time Test Rule", unit="Zeit (Min.,Sek.)",
+    rule_id = create_test_rule(client, rule_name="Time Test Rule", unit="Min.,Sek.",
                                threshold_bronze_m=30.0,
                                threshold_silver_m=25.0,
                                threshold_gold_m=20.0)
@@ -101,10 +101,7 @@ def test_create_result_distance(client):
     """
     # Für diesen Test passen wir die Thresholds entsprechend an.
     athlete_id = create_test_athlete(client, first_name="Distance", last_name="Tester", birth_date="1.1.1995", gender="m")
-    # Hier definieren wir für unit "distance" höhere Werte als besser.
-    # Wir setzen beispielsweise:
-    # Bronze: 5, Silver: 10, Gold: 15 (für männlich, gleiche für weiblich in diesem Test)
-    rule_id = create_test_rule(client, rule_name="Distance Test Rule", unit="Distanz (m,cm)",
+    rule_id = create_test_rule(client, rule_name="Distance Test Rule", unit="m,cm",
                                threshold_bronze_m=5.0,
                                threshold_silver_m=10.0,
                                threshold_gold_m=15.0)
@@ -136,7 +133,7 @@ def test_update_result(client):
     """
     # Erstelle Athlete und Rule (unit "time" Test)
     athlete_id = create_test_athlete(client, first_name="Update", last_name="Tester", birth_date="1.1.2003", gender="m")
-    rule_id = create_test_rule(client, rule_name="Update Time Rule", unit="Zeit (Min.,Sek.)",
+    rule_id = create_test_rule(client, rule_name="Update Time Rule", unit="Min.,Sek.",
                                threshold_bronze_m=30.0,
                                threshold_silver_m=25.0,
                                threshold_gold_m=20.0)
@@ -168,7 +165,7 @@ def test_delete_result(client):
     """
     # Erstelle Athlete und Rule (unit "time")
     athlete_id = create_test_athlete(client, first_name="Delete", last_name="Tester", birth_date="1.1.2003", gender="m")
-    rule_id = create_test_rule(client, rule_name="Delete Rule", unit="Zeit (Min.,Sek.)",
+    rule_id = create_test_rule(client, rule_name="Delete Rule", unit="Min.,Sek.",
                                threshold_bronze_m=30.0,
                                threshold_silver_m=25.0,
                                threshold_gold_m=20.0)

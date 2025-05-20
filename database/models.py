@@ -94,7 +94,7 @@ class Rule(db.Model):
     discipline = db.relationship('Discipline', backref=db.backref('rules', lazy=True))
 
     rule_name = db.Column(db.String(255), nullable=False)
-    unit = db.Column(db.Enum('Punkte', 'Distanz (m,cm)', 'Zeit (Min.,Sek.)', 'Zeit (Sek.,1/10 Sek.)', name='unit_enum'), nullable=False)
+    unit = db.Column(db.Enum('Punkte', 'm,cm', 'Min.,Sek.', 'Sek.,1/10 Sek.', name='unit_enum'), nullable=False)
     description_m = db.Column(db.String(255), nullable=False)
     description_f = db.Column(db.String(255), nullable=False)
 
@@ -112,7 +112,7 @@ class Rule(db.Model):
     threshold_gold_f = db.Column(db.Float, nullable=False)
 
     valid_start = db.Column(db.Date, nullable=False)
-    valid_end = db.Column(db.Date, nullable=True)
+    valid_end = db.Column(db.Date, nullable=True, )
 
     # Version, startet mit 1
     version = db.Column(db.Integer, nullable=False, default=1)
