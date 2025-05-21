@@ -1,6 +1,7 @@
 from datetime import datetime
 from pypdf import PdfReader, PdfWriter
 from api.athlet import Athlete
+import os
 
 PDF_TEMPLATE = r"api/data/DSA_Einzelpruefkarte_2025_SCREEN.pdf"
 
@@ -68,6 +69,10 @@ def fill_pdf_form(athlete: Athlete) -> str:
     writer.update_page_form_field_values(page, field_values, auto_regenerate=False)
     # 5) Ausgefüllte PDF speichern
     destination = rf"api/pdfs/{athlete.last_name}_{athlete.first_name}_DSA_Einzelpruefkarte.pdf"
+    
+    # ensure the output directory exists
+    output_dir = os.path.dirname(destination)
+    os.makedirs(output_dir, exist_ok=True)
     with open(destination, "wb") as f:
         writer.write(f)
     return f"PDF erstellt unter {destination}"
