@@ -161,8 +161,6 @@ def delete_result(id):
     db.session.commit()
     return jsonify({"message": "Result deleted"}), 200
 
-bp_result = Blueprint('result', __name__)
-
 @bp_result.route('/results/import', methods=['POST'])
 def import_results_from_csv():
     """
