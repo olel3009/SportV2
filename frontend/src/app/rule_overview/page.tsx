@@ -137,7 +137,7 @@ export default function Page() {
                 F
               </TabsTrigger>
             </TabsList>
-                <div className="p-2">
+                <div>
                 <TabsContent key={"m"} value={"1"}>
                 <Card>
                   <CardContent>
