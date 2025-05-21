@@ -1,206 +1,49 @@
 //Fügen Sie hier alle Funktionen ein, die Athleten abrufen, damit sie im bereits vorhandenen Code verwendet werden können
 //Auf diese Weise müssen wir, wenn die API fertig ist, nur die Logik hier ändern und nicht an anderer Stelle im Code
 //Außerdem werden diese Funktionen mit ziemlicher Sicherheit mehr als einmal verwendet, daher ist es gut, sie woanders zu platzieren
-import { Athlete, Feat } from "../src/models/athlete";
+import { Athlete, Feat, Rule, Discipline } from "../src/models/athlete";
 
-let mockupData = `[
-  {
-    "id": 420,
-    "lastName": "Schulz",
-    "firstName": "Dieter",
-    "sex": "m",
-    "eMail": "ds@wasauchimmer.de",
-    "dateOfBirth": "18.03.2014",
-    "disciplines": ["Schnelligkeit", "Kraft"],
-    "goldMedals": 3,
-    "silverMedals": 0,
-    "bronzeMedals": 0,
-    "feats": [
-      {
-        "discipline": "Schnelligkeit",
-        "exercise": "Sprinten",
-        "date": "5.09.2023",
-        "result": "10 Sek",
-        "score": "90"
-      },
-      {
-        "discipline": "Schnelligkeit",
-        "exercise": "Sprinten",
-        "date": "5.09.2022",
-        "result": "90 Sek",
-        "score": "1"
-      },
-      {
-        "discipline": "Kraft",
-        "exercise": "Springen",
-        "date": "5.08.2023",
-        "result": "50 cm",
-        "score": "70"
-      }
-    ]
-  },
-  {
-    "id": 69,
-    "lastName": "Dortmeier",
-    "firstName": "Peter",
-    "sex": "m",
-    "eMail": "pD@wasauchimmer.de",
-    "dateOfBirth": "10.08.2010",
-    "disciplines": ["Schnelligkeit", "Kraft"],
-    "goldMedals": 2,
-    "silverMedals": 0,
-    "bronzeMedals": 0,
-    "feats": [
-      {
-        "discipline": "Kraft",
-        "exercise": "Springen",
-        "date": "5.08.2023",
-        "result": "90 cm",
-        "score": "80"
-      },
-      {
-        "discipline": "Schnelligkeit",
-        "exercise": "Sprinten",
-        "date": "5.09.2023",
-        "result": "5 Sek",
-        "score": "100"
-      },
-      {
-        "discipline": "Schnelligkeit",
-        "exercise": "Sprinten",
-        "date": "5.09.2022",
-        "result": "10 Sek",
-        "score": "80"
-      }
-    ]
-  },
-  {
-    "id": 101,
-    "lastName": "Müller",
-    "firstName": "Anna",
-    "sex": "w",
-    "eMail": "anna.mueller@example.de",
-    "dateOfBirth": "15.06.2005",
-    "disciplines": ["Schnelligkeit", "Kraft"],
-    "goldMedals": 4,
-    "silverMedals": 2,
-    "bronzeMedals": 1,
-    "feats": [
-      {
-        "discipline": "Schnelligkeit",
-        "exercise": "Sprinten",
-        "date": "01.09.2023",
-        "result": "8 Sek",
-        "score": "92"
-      },
-      {
-        "discipline": "Kraft",
-        "exercise": "Springen",
-        "date": "01.08.2023",
-        "result": "75 cm",
-        "score": "85"
-      }
-    ]
-  },
-  {
-    "id": 102,
-    "lastName": "Schneider",
-    "firstName": "Max",
-    "sex": "m",
-    "eMail": "max.schneider@example.de",
-    "dateOfBirth": "02.11.2002",
-    "disciplines": ["Schnelligkeit", "Kraft"],
-    "goldMedals": 0,
-    "silverMedals": 3,
-    "bronzeMedals": 1,
-    "feats": [
-      {
-        "discipline": "Schnelligkeit",
-        "exercise": "Sprinten",
-        "date": "02.09.2023",
-        "result": "7 Sek",
-        "score": "95"
-      },
-      {
-        "discipline": "Kraft",
-        "exercise": "Springen",
-        "date": "02.08.2023",
-        "result": "80 cm",
-        "score": "88"
-      }
-    ]
-  },
-  {
-    "id": 103,
-    "lastName": "Becker",
-    "firstName": "Lisa",
-    "sex": "w",
-    "eMail": "lisa.becker@example.de",
-    "dateOfBirth": "30.01.2008",
-    "disciplines": ["Kraft"],
-    "goldMedals": 0,
-    "silverMedals": 0,
-    "bronzeMedals": 0,
-    "feats": [
-      {
-        "discipline": "Kraft",
-        "exercise": "Springen",
-        "date": "03.08.2023",
-        "result": "70 cm",
-        "score": "75"
-      }
-    ]
-  },
-  {
-    "id": 104,
-    "lastName": "Wagner",
-    "firstName": "Thomas",
-    "sex": "m",
-    "eMail": "thomas.wagner@example.de",
-    "dateOfBirth": "05.05.2012",
-    "disciplines": ["Schnelligkeit"],
-    "goldMedals": 0,
-    "silverMedals": 0,
-    "bronzeMedals": 1,
-    "feats": [
-      {
-        "discipline": "Schnelligkeit",
-        "exercise": "Sprinten",
-        "date": "04.09.2023",
-        "result": "6 Sek",
-        "score": "98"
-      }
-    ]
-  },
-  {
-    "id": 105,
-    "lastName": "Fischer",
-    "firstName": "Sophie",
-    "sex": "w",
-    "eMail": "sophie.fischer@example.de",
-    "dateOfBirth": "21.03.2007",
-    "disciplines": ["Schnelligkeit", "Kraft"],
-    "goldMedals": 1,
-    "silverMedals": 0,
-    "bronzeMedals": 0,
-    "feats": [
-      {
-        "discipline": "Schnelligkeit",
-        "exercise": "Sprinten",
-        "date": "05.09.2023",
-        "result": "9 Sek",
-        "score": "93"
-      },
-      {
-        "discipline": "Kraft",
-        "exercise": "Springen",
-        "date": "05.08.2023",
-        "result": "65 cm",
-        "score": "82"
-      }
-    ]
+export type csvCombo ={
+  last_name:string;
+  first_name:string;
+  gender:string;
+  birth_date:string;
+  exercise:string;
+  category:string;
+  date:string;
+  medal:string;
+  result:number;
+}
+
+export async function getAthleteWithFeats(id:number): Promise<csvCombo[]> {
+  let fetchlink:string='http://127.0.0.1:5000/athletes/'+id+'/results';
+  console.log(fetchlink);
+  const res = await fetch(fetchlink, {
+    cache: "no-store"
+  });
+  if (!res.ok) {
+    throw new Error(`API call failed: ${res.status}`);
   }
-]`;
+  let data = await res.json();
+  let last_name_raw:string=data.athlete.last_name;
+  let first_name_raw:string=data.athlete.first_name;
+  let gender_raw:string=data.athlete.gender;
+  let birth_date_raw:string=data.athlete.birth_date;
+  const mapped:csvCombo[]=data.results.map((raw: any)=>({
+    last_name:last_name_raw,
+    first_name:first_name_raw,
+    gender:gender_raw,
+    birth_date:birth_date_raw,
+    exercise:raw.rule.rule_name,
+    category:raw.rule.discipline.discipline_name,
+    date:raw.created_at,
+    medal:raw.medal,
+    result:raw.result
+  }));
+  return mapped;
+
+}
+
 
 type RawAthlete = {
   id: number;
@@ -235,6 +78,7 @@ export async function getAllAthletes(): Promise<Athlete[]> {
     lastName: raw.last_name,
     sex: raw.gender,
     dateOfBirth: raw.birth_date,
+    swimCertificate: raw.swim_certificate,
     goldMedals: 0,
     silverMedals: 0,
     bronzeMedals: 0,
@@ -245,77 +89,212 @@ export async function getAllAthletes(): Promise<Athlete[]> {
   return mapped;
 }
 
-export function calculateMedal(score: number): number {
-  return 69;
+
+type RawFeat = {
+  id: number;
+  athlete_id: number;
+  rule_id: number;
+  year: number;
+  age: number;
+  result: number;
+  medal: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export async function getFeatsById(id: number): Promise<Feat[] | undefined> {
+  const all = await getAllFeats(true, id);
+  return all.filter(a => a.athlete_id === id);
 }
+
+export async function getAllFeats(forOne:boolean=false, id:number|null=null): Promise<Feat[]> {
+  const res = await fetch("http://127.0.0.1:5000/results", {
+    cache: "no-store"
+  });
+  if (!res.ok) {
+    throw new Error(`API call failed: ${res.status}`);
+  }
+
+  const data: RawFeat[] = await res.json();
+
+  //Mapping
+  let preppedFeats: Feat[] = data.map((raw) => ({
+    id: raw.id,
+    athlete_id: raw.athlete_id,
+    rule_id: raw.rule_id,
+    year: raw.year,
+    age: raw.age,
+    result: raw.result,
+    medal: raw.medal,
+    created_at: raw.created_at,
+    updated_at: raw.updated_at,
+    ruling:undefined,
+  }));
+
+  const rules= await getAllRules();
+  if(forOne){
+    preppedFeats=preppedFeats.filter(a => a.athlete_id === id);
+  }
+
+  preppedFeats.forEach( feat=>{
+    feat.ruling=rules.find(r=>r.id==feat.rule_id);
+  });
+
+  return preppedFeats;
+}
+
+type RawRule= {
+  id: number;
+
+  discipline_id: number;
+
+  rule_name: string;
+
+  description_m: string;
+  description_f: string;
+
+  unit: string;
+
+  min_age: number;
+  max_age: number;
+
+  threshold_bronze_m: number;
+  threshold_silver_m: number;
+  threshold_gold_m: number;
+
+  threshold_bronze_f: number;
+  threshold_silver_f: number;
+  threshold_gold_f: number;
+
+  valid_start: Date;
+  valid_end: Date;
+
+  version:number;
+
+  created_at:Date;
+  updated_at:Date;
+}
+
+export async function getRulesByDisciplineId(id: number): Promise<Rule[] | undefined> {
+  const all = await getAllRules();
+  return all.filter(a => a.discipline_id === id);
+}
+
+
+export async function getAllRules(): Promise<Rule[]> {
+  const res = await fetch("http://127.0.0.1:5000/rules", {
+    cache: "no-store"
+  });
+  if (!res.ok) {
+    throw new Error(`API call failed: ${res.status}`);
+  }
+
+  const data: RawRule[] = await res.json();
+
+  //Mapping
+  const mapped: Rule[] = data.map((raw) => ({
+    id: raw.id,
+
+    discipline_id: raw.discipline_id,
+
+    rule_name: raw.rule_name,
+
+    description_m: raw.description_m,
+    description_f: raw.description_f,
+
+    unit: raw.unit,
+
+    min_age: raw.min_age,
+    max_age: raw.max_age,
+
+    thresh_bronze_m: raw.threshold_bronze_m,
+    thresh_silver_m: raw.threshold_silver_m,
+    thresh_gold_m: raw.threshold_gold_m,
+
+    thresh_bronze_f: raw.threshold_bronze_f,
+    thresh_silver_f: raw.threshold_silver_f,
+    thresh_gold_f: raw.threshold_gold_f,
+
+    valid_start: raw.valid_start,
+    valid_end: raw.valid_end,
+
+    version:raw.version,
+
+    created_at:raw.created_at,
+    updated_at:raw.updated_at,
+  }));
+
+  return mapped;
+}
+
+type RawDiscipline ={
+  id:number;
+  discipline_name:string;
+  created_at:Date;
+  updated_at:Date;
+}
+
+
+export async function getAllDisciplines(): Promise<Discipline[]> {
+  const res = await fetch("http://127.0.0.1:5000/disciplines", {
+    cache: "no-store"
+  });
+  if (!res.ok) {
+    throw new Error(`API call failed: ${res.status}`);
+  }
+
+  const data: RawDiscipline[] = await res.json();
+
+  //Mapping
+  let mapped: Discipline[] = data.map((raw) => ({
+    id: raw.id,
+    name: raw.discipline_name
+  }));
+
+
+  return mapped;
+}
+
+
 
 export async function addFeatToAthlete(
   athleteId: number,
-  exercise: string,
-  date: string,
+  ruleId: number,
+  year: number,
   result: string
-) {
+): Promise<{ message: string; id: number}|false> {
   let athlete = await getAthleteById(athleteId);
   if (!athlete) {
-    return;
+    alert("Bitte einen Athleten auswählen!");
+    return false;
   }
-  if (exercise == "") {
+  if (ruleId == undefined) {
     alert("Bitte eine Übung auswählen!");
-    return;
+    return false;
   }
-  if (date == "") {
+  if (year == undefined) {
     alert("Bitte ein Datum eingeben!");
-    return;
+    return false;
   }
   if (result == "") {
     alert("Bitte ein Ergebnis eingeben!");
-    return;
+    return false;
   }
-  console.log("before: " + athlete.feats);
-  let discipline: string;
-  let exToDisc = [["50mLauf"], ["Hochsprung", "Weitsprung"], ["Kugelstossen"]];
-  if (exToDisc[0].includes(exercise)) {
-    discipline = "Schnelligkeit";
-  } else if (exToDisc[1].includes(exercise)) {
-    discipline = "Koordination";
-  } else if (exToDisc[2].includes(exercise)) {
-    discipline = "Kraft";
-  } else {
-    discipline = "Sonstiges";
+  const res = await fetch("http://127.0.0.1:5000/results", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      athlete_id: athleteId,
+      rule_id: ruleId,
+      year,
+      result
+    })
+  });
+  if (!res.ok) {
+    const errorBody = await res.json();
+    throw new Error(errorBody.error || "Failed to add result");
   }
-  let score = calculateMedal(result.length);
-  let newFeat: Feat = {
-    discipline: discipline,
-    exercise: exercise,
-    date: date,
-    result: result,
-    score: score,
-  };
-  if (athlete.feats) {
-    let repeat = false;
-    let overwrite = false;
-    athlete.feats.forEach((feat) => {
-      if (feat.date == date && feat.exercise == exercise) {
-        repeat = true;
-      }
-    });
-    if (repeat) {
-      overwrite = confirm(
-        "Diese Übung wurde für diesen Tag bereits eingetragen, überschreiben?"
-      );
-    }
-    if (repeat) {
-      if (overwrite) {
-        athlete.feats.push(newFeat);
-        alert("Neue Leistung Eingetragen!");
-      }
-    } else {
-      athlete.feats.push(newFeat);
-      alert("Neue Leistung Eingetragen!");
-    }
-  } else {
-    athlete.feats = [newFeat];
-    alert("Neue Leistung Eingetragen!");
-  }
-  console.log("after: " + athlete.feats);
+
+  return res.json();
+  
 }

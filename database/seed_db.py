@@ -238,7 +238,23 @@ def seed_test_data():
         results = [ 
         Result(athlete_id=athletes[0].id, rule_id=rules[4].id,
         year=parse_date("1.05.2025"), age=2025 - athletes[0].birth_date.year,
-        result=2.45, medal="Gold"
+        result=5, medal="Gold"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id,
+        year=parse_date("2.05.2025"), age=2025 - athletes[0].birth_date.year,
+        result=4.50, medal="Gold"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id,
+        year=parse_date("6.05.2025"), age=2025 - athletes[0].birth_date.year,
+        result=4.45, medal="Gold"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id,
+        year=parse_date("7.05.2025"), age=2025 - athletes[0].birth_date.year,
+        result=4.35, medal="Gold"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id,
+        year=parse_date("10.05.2025"), age=2025 - athletes[0].birth_date.year,
+        result=4.34, medal="Gold"
     ),
         Result(athlete_id=athletes[0].id, rule_id=rules[10].id,
         year=parse_date("1.05.2025"), age=2025 - athletes[0].birth_date.year,

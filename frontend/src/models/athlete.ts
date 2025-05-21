@@ -3,6 +3,7 @@ export interface Athlete {
     firstName: string;
     lastName: string;
     sex: "m" | "w" | "d";
+    swimCertificate: boolean;
     dateOfBirth: string;
     goldMedals: number;
     silverMedals: number;
@@ -12,11 +13,53 @@ export interface Athlete {
 }
 
 export interface Feat {
-    discipline: string;
-    exercise: string; 
-    date: string;
-    result: string;
-    score: number;
+    id: number;
+    athlete_id: number;
+    rule_id: number;
+    year: string|undefined;
+    age: number|undefined;
+    result: number;
+    medal: string|undefined;
+    created_at: string|undefined;
+    updated_at: string|undefined;
+    ruling: Rule|undefined;
+}
+
+export interface Rule{
+    id: number;
+
+    discipline_id: number;
+
+    rule_name: string;
+
+    description_m: string;
+    description_f: string;
+
+    unit: string;
+
+    min_age: number;
+    max_age: number;
+
+    thresh_bronze_m: number;
+    thresh_silver_m: number;
+    thresh_gold_m: number;
+
+    thresh_bronze_f: number;
+    thresh_silver_f: number;
+    thresh_gold_f: number;
+
+    valid_start: Date;
+    valid_end: Date;
+
+    version:number;
+
+    created_at:Date;
+    updated_at:Date;
+}
+
+export interface Discipline{
+    id:number;
+    name:string;
 }
 
 export interface Exercise {

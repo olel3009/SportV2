@@ -2,6 +2,7 @@
 
 import { Column, ColumnDef } from "@tanstack/react-table"
 import { Athlete } from "@/models/athlete"
+import { downloadCsv } from "@/exportCsv"
 import {
   ChartNoAxesCombined,
   MoreHorizontal,
@@ -31,6 +32,9 @@ import {
 } from "./ui/dialog"
 import { FeatEntryCard, FeatEntryDialog } from "./featentry"
 import { DialogTitle } from "@radix-ui/react-dialog"
+import { useCallback } from "react"
+
+
 
 
 function sortedHeader(column: Column<any, any>, headerName: string) {
@@ -62,14 +66,16 @@ export const columns: ColumnDef<Athlete>[] = [
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        onCheckedChange={(value) => {table.toggleAllPageRowsSelected(!!value);}}
         aria-label="Select all"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        onCheckedChange={(value) => {
+          row.toggleSelected(!!value); 
+        }}
         onClick={(e) => e.stopPropagation()}
         aria-label="Select row"
       />
@@ -181,7 +187,7 @@ export const columns: ColumnDef<Athlete>[] = [
                   <span>Neue Leistung eintragen</span>
                 </DropdownMenuItem>
               </DialogTrigger>
-              <DropdownMenuItem><Download />Als CSV exportieren</DropdownMenuItem>
+              <DropdownMenuItem  onClick={(e) => {e.stopPropagation(); downloadCsv([row.original.id])}}><Download />Als CSV exportieren</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem><Pen />Editieren</DropdownMenuItem>
               <DropdownMenuItem className="text-red-600"><Trash2 />Löschen</DropdownMenuItem>
