@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify
 from database.models import Rule, Discipline
 from database.schemas import RuleSchema
 from database import db
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bp_rule = Blueprint('rule', __name__)
 
@@ -118,7 +119,10 @@ def delete_rule(id):
     db.session.commit()
     return jsonify({"message": "Rule deleted"})
 
+
+# Import Rules from CSV
 @bp_rule.route('/rules/import', methods=['POST'])
+@jwt_required()
 def import_rules_from_csv():
     """
     Importiert Regeln aus einer CSV-Datei mit deutschen Spalten:

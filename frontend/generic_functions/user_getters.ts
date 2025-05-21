@@ -11,6 +11,9 @@ type RawUser = {
 //Mit Backend verbunden
 export async function getUsers(): Promise<RawUser[]> {
     const res = await fetch("http://127.0.0.1:5000/users", {
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("access_token")
+        },
         method: "GET",
         cache: "no-store"
     });
@@ -46,10 +49,12 @@ export async function LoginKontrolle(email: string, password: string): Promise<n
                 throw new Error(errorBody.error || "Failed to add result");
             } else {
                 const data = await res.json();
-                console.log("Login response:", data);
+                //console.log("Login response:", data);
                 if (data.access_token) {
                 localStorage.setItem("access_token", data.access_token);
-                console.log(data.access_token);
+                //const token = localStorage.getItem("access_token");
+                //console.log(token); // zeigt den JWT-Token im Browser-Log an
+                //console.log(data.access_token);
                 }
 
                 console.log("Login successful");

@@ -2,10 +2,13 @@ from marshmallow import ValidationError
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager  # JWTManager importieren
+
 
 # Initialisiere Extensions
 db = SQLAlchemy()
 migrate = Migrate()
+jwt = JWTManager()  # JWTManager-Instanz erstellen
 
 def create_app():
     # Flask-App erstellen
@@ -13,10 +16,12 @@ def create_app():
     
     # Konfiguration laden
     app.config.from_object('config.Config')
+    app.config["JWT_SECRET_KEY"] = "dein_geheimer_schluessel"  # JWT-Secret setzen
 
     # Extensions initialisieren
     db.init_app(app)
     migrate.init_app(app, db)
+    jwt.init_app(app)  # JWTManager initialisieren
     
     from api.routes.athlete import bp_athlete
     from api.routes.user import bp_user

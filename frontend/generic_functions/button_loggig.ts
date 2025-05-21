@@ -117,6 +117,9 @@ export async function add_rules(file: File): Promise<string | null> {
     const formData = new FormData();
     formData.append("file", file);
     const res = await fetch("http://127.0.0.1:5000/rules/import", {
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("access_token")
+        },
         method: "POST",
         body: formData,
     });
