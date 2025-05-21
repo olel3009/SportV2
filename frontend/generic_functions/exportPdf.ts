@@ -1,0 +1,31 @@
+type pdfReturn ={
+    message:string,
+    pdf_feedback:string
+}
+export async function createPdf(ids:number[]): Promise<string> {
+    let res:Response;
+    if(ids.length!=1){
+        console.log("Please... just one... for now...I'm begging!");
+        return '';
+    }else{
+            res = await fetch("http://127.0.0.1:5000/athletes/"+ids[0]+"/export/pdf", {
+            cache: "no-store"
+        });
+        if (!res.ok) {
+            throw new Error(`API call failed: ${res.status}`);
+        }
+    }
+
+    const data: pdfReturn = await res.json();
+
+    //Mapping
+    let location= data.pdf_feedback;
+
+    console.log(location);
+    return location;
+}
+
+export async function downloadPdf(ids:number[]): Promise <boolean>{
+    let path= await createPdf(ids);
+    return true;
+}

@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 
 import styles from "./page.module.css";
 import DownloadCsvButton from "@/components/ui/csvExportButton";
+import DownloadPdfButton from "@/components/ui/groupDownloadButton";
 import { getSelectedAthleteIds } from "@/components/ui/DataTable";
 import { DataTable } from "@/components/ui/DataTable";
 import { columns } from "@/components/AthleteTableColumns";
@@ -27,6 +28,10 @@ export default function Page() {
       <DownloadCsvButton
         ids={getSelectedAthleteIds}
         text={"Ausgewählte als Csv exportieren"}
+      />
+      <DownloadPdfButton
+        ids={getSelectedAthleteIds}
+        text={"Ausgewählte als PDF exportieren"}
       />
       <DataTable
         columns={columns}
