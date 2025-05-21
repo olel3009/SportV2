@@ -3,6 +3,8 @@ from database import db
 from database.models import User
 from database.schemas import UserSchema
 from sqlalchemy import inspect
+from flask_jwt_extended import create_access_token
+from datetime import timedelta
 
 bp_user = Blueprint('user', __name__)
 
@@ -60,10 +62,14 @@ def login_user():
     if user is None or user.password != password:
         return jsonify({"error": "Ungültige Anmeldedaten"}), 401
 
+    # JWT-Token erzeugen
+    access_token = create_access_token(identity=user.email, expires_delta=timedelta(hours=1))
+
     # Login erfolgreich
     return jsonify({
         "message": "Login erfolgreich",
-        "email": user.email
+        "email": user.email,
+        "access_token": access_token
     }), 200
 
 

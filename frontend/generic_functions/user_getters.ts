@@ -45,6 +45,13 @@ export async function LoginKontrolle(email: string, password: string): Promise<n
                 return 0; // Fehler bei der Überprüfung des Benutzers
                 throw new Error(errorBody.error || "Failed to add result");
             } else {
+                const data = await res.json();
+                console.log("Login response:", data);
+                if (data.access_token) {
+                localStorage.setItem("access_token", data.access_token);
+                console.log(data.access_token);
+                }
+
                 console.log("Login successful");
                 return 2; // Login erfolgreich
             }
