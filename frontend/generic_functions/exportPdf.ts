@@ -1,3 +1,4 @@
+import path from 'path';
 type pdfReturn ={
     message:string,
     pdf_feedback:string
@@ -26,12 +27,11 @@ export async function createPdf(ids:number[]): Promise<string> {
 }
 
 export async function downloadPdf(ids:number[]): Promise <boolean>{
-    let path= await createPdf(ids);
-    console.log(path);
+    let filePath= await createPdf(ids);
     const link = document.createElement('a');
-    link.href = path;  // matches your express.static mount
+    link.href = filePath;  // matches your express.static mount
     console.log(link.href)
-    link.download = 'test.pdf';
+    link.download = path.basename(filePath);;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

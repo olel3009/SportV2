@@ -29,6 +29,8 @@ import {
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUtcTimecodeFromGermanDate } from "@/date_format";
+import DownloadPdfButton from "@/components/ui/groupDownloadButton";
+
 
 
 const getAge = (dateString: string) => {
@@ -143,6 +145,7 @@ export default async function Page({
       </Card>
 
       <DownloadCsvButton ids={[id]} text="Als Csv exportieren" />
+      <DownloadPdfButton ids={[id]} text={"Als PDF exportieren"} />
 
       <h2 className="text-xl font-bold">Schwimmnachweis</h2>
       <div>
