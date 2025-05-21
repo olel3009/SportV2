@@ -68,11 +68,12 @@ def fill_pdf_form(athlete: Athlete) -> str:
     page = writer.pages[0]
     writer.update_page_form_field_values(page, field_values, auto_regenerate=False)
     # 5) Ausgefüllte PDF speichern
-    destination = rf"api/pdfs/{athlete.last_name}_{athlete.first_name}_DSA_Einzelpruefkarte.pdf"
+    path=rf"/downloadFiles/{athlete.last_name}_{athlete.first_name}_DSA_Einzelpruefkarte.pdf"
+    destination = rf"./frontend/public{path}"
     
     # ensure the output directory exists
     output_dir = os.path.dirname(destination)
     os.makedirs(output_dir, exist_ok=True)
     with open(destination, "wb") as f:
         writer.write(f)
-    return f"PDF erstellt unter {destination}"
+    return f"{path}"

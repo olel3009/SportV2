@@ -27,5 +27,14 @@ export async function createPdf(ids:number[]): Promise<string> {
 
 export async function downloadPdf(ids:number[]): Promise <boolean>{
     let path= await createPdf(ids);
+    console.log(path);
+    const link = document.createElement('a');
+    link.href = path;  // matches your express.static mount
+    console.log(link.href)
+    link.download = 'test.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
     return true;
 }
