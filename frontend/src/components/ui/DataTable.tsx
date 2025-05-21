@@ -39,7 +39,7 @@ export function getSelectedAthleteIds():number[]{
     console.log("Rows");
     console.log(rows);
     let activeIds:number[]=[];
-    rows.forEach(row => {
+    rows.forEach((row: any) => {
       console.log(row.original.id);
       activeIds.push(row.original.id);
     });

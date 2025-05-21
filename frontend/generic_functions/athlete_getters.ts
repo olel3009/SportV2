@@ -94,7 +94,7 @@ type RawFeat = {
   id: number;
   athlete_id: number;
   rule_id: number;
-  year: number;
+  year: string;
   age: number;
   result: number;
   medal: string;
@@ -166,8 +166,8 @@ type RawRule= {
   threshold_silver_f: number;
   threshold_gold_f: number;
 
-  valid_start: Date;
-  valid_end: Date;
+  valid_start: string;
+  valid_end: string;
 
   version:number;
 

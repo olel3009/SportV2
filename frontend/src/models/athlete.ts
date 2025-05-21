@@ -48,8 +48,8 @@ export interface Rule{
     thresh_silver_f: number;
     thresh_gold_f: number;
 
-    valid_start: Date;
-    valid_end: Date;
+    valid_start: string;
+    valid_end: string;
 
     version:number;
 

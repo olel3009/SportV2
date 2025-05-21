@@ -4,6 +4,7 @@ import { fromZonedTime } from "date-fns-tz";
 interface UtcTimecodeResult {
   timestamp: number;
   isoString: string;
+  date: Date;
 }
 
 export function getUtcTimecodeFromGermanDate(
@@ -19,6 +20,7 @@ export function getUtcTimecodeFromGermanDate(
     return {
       timestamp: utcDate.getTime(),
       isoString: utcDate.toISOString(),
+      date: utcDate,
     };
   } catch (error) {
     console.error('Error converting date:', error);
