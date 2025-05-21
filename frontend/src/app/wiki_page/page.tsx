@@ -92,20 +92,11 @@ export default function Home() {
           </li>
           <li>
             <a
-              id="link_regelungsverwaltung"
-              href="#regelungsverwaltung"
-              className="text-black hover:text-gray-600"
-            >
-              10. Regelungsverwaltung
-            </a>
-          </li>
-          <li>
-            <a
               id="link_visuelle_darstellung_entwicklung"
               href="#visuelle_darstellung_entwicklung"
               className="text-black hover:text-gray-600"
             >
-              11. Visuelle Darstellung der Entwicklung eines Athleten
+              10. Visuelle Darstellung der Entwicklung eines Athleten
             </a>
           </li>
         </ul>
@@ -151,18 +142,19 @@ export default function Home() {
             <h4 className="text-lg font-semibold">Farbliche Bedeutung des Knopfes:</h4>
             <p>
               - Rot: Die Regelungen wurden in diesem Jahr noch nicht aktualisiert und die ersten vier Wochen des Jahres sind noch nicht vorbei.<br />
-              - Weiß: Die Regelungen wurden bereits aktualisiert oder die ersten vier Wochen des Jahres sind vorbei.<br /><br />
+              - Grün: Die Regelungen wurden bereits aktualisiert oder die ersten vier Wochen des Jahres sind vorbei.<br /><br />
             </p>
             <h4 className="text-lg font-semibold">Schritt-für-Schritt-Anleitung:</h4>
             <p>
               1. Um die Regelungen zu aktualisieren, klicken Sie auf den Knopf "Regelungen aktualisieren".<br />
               2. Warten Sie, bis sich ein Popup öffnet.<br />
               3. Laden Sie anschließend die CSV mit den Regelungen im Standart-Design hoch.<br />
-              4. Wählen Sie das Jahr aus.<br />
-              5. Bestätigen Sie den Vorgang mit "Bestätigen" (grün hinterlegter Knopf) oder brechen Sie den Vorgang mit "Abbrechen" (rot hinterlegter Knopf) ab.<br />
-              6. Warten Sie, bis der Vorgang abgeschlossen ist. Den Status des Vorgangs können Sie am Text unter dem "Regelungen aktualisieren"-Knopf erkennen.<br />
-              7. Überprüfen Sie, ob der Vorgang erfolgreich war oder nicht. Dies können Sie ebenfalls am Text unter dem "Regelungen aktualisieren"-Knopf erkennen.<br />
-              8. Falls der Vorgang nicht erfolgreich war, versuchen Sie es zu einem späteren Zeitpunkt erneut.<br /><br />
+                (Sie können eine Beispiel CSV durch das drücken auf den Knopf mit der Aufschrift "Beispiel CSV" herunterladen.)<br />
+              4. Bestätigen Sie den Vorgang mit "Bestätigen" (grün hinterlegter Knopf) oder brechen Sie den Vorgang mit "Abbrechen" (rot hinterlegter Knopf) ab.<br />
+              5. Warten Sie, bis der Vorgang abgeschlossen ist. Den Status des Vorgangs können Sie am Text unter dem "Regelungen aktualisieren"-Knopf erkennen.<br />
+              6. Überprüfen Sie, ob der Vorgang erfolgreich war oder nicht. Dies können Sie ebenfalls am Text unter dem "Regelungen aktualisieren"-Knopf erkennen.<br />
+              7. Falls der Vorgang nicht erfolgreich war und keine zusätzliche Fehlermeldung kommt,  versuchen Sie es zu einem späteren Zeitpunkt erneut. <br />
+              8. Falls eine Fehlermeldung kommt ist ein Fahler in ihrer Datei dort angegeben, die Sie beheben müssen und können danach erneut Versuchen<br />
             </p>
 
             <h4 className="text-lg font-semibold">Rückmeldungen vom Aktualisierungsprozess:</h4>
@@ -188,12 +180,8 @@ export default function Home() {
           <h2 className="text-xl font-semibold">09. Medaillen Ansicht</h2>
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
-        <div id="regelungsverwaltung" className="mb-8">
-          <h2 className="text-xl font-semibold">10. Regelungsverwaltung</h2>
-          <p>Hier könnte die Beschreibung stehen</p>
-        </div>
         <div id="visuelle_darstellung_entwicklung" className="mb-8">
-          <h2 className="text-xl font-semibold">11. Visuelle Darstellung der Entwicklung eines Athleten</h2>
+          <h2 className="text-xl font-semibold">10. Visuelle Darstellung der Entwicklung eines Athleten</h2>
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
       </div>
