@@ -145,13 +145,20 @@ def fill_out_group(athletenIds: list[Athlete]) -> str:
                 if performances[suffix][key] == prefix:
                     field_values.update({f"ZdÜ_{suffix}{str(i)}" : key})
             field_values.update({f"{suffix}{str(i)}" : prefix})
-            sum = sum + perf.points
+            #sum = sum + perf.points  ##TODO das hier muss iwie über medaillien oder sowas laufen
+            sum=0
             field_values.update({f"Gesamtpunktzahl{i}" : sum})
         writer.update_page_form_field_values(writer.pages[0], field_values, auto_regenerate=False)
-    destination = rf"api/pdfs/{...}_DSA_Gruppenpruefkarte.pdf"
+
+    path=rf"/downloadFiles/{...}_DSA_Gruppenpruefkarte.pdf"
+    destination = rf"./frontend/public{path}"
+    
+    # ensure the output directory exists
+    output_dir = os.path.dirname(destination)
+    os.makedirs(output_dir, exist_ok=True)
     with open(destination, "wb") as f:
         writer.write(f)
-    return f"PDF für eine Gruppenkarte erstellt unter {destination}"
+    return f"{path}"
 
 if __name__ == "__main__":
     fill_out_group(Gruppe1)

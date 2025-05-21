@@ -5,16 +5,28 @@ type pdfReturn ={
 }
 export async function createPdf(ids:number[]): Promise<string> {
     let res:Response;
-    if(ids.length!=1){
-        console.log("Please... just one... for now...I'm begging!");
+    if(ids.length==0){
+        console.log("no input...");
         return '';
-    }else{
+    }else if(ids.length==1){
             res = await fetch("http://127.0.0.1:5000/athletes/"+ids[0]+"/export/pdf", {
             cache: "no-store"
         });
         if (!res.ok) {
             throw new Error(`API call failed: ${res.status}`);
         }
+    }else{
+        let appendage="?ids=";
+        appendage+=ids.join(',');
+        let fetchlink="http://127.0.0.1:5000/gruppen/export/pdf"+appendage;
+        console.log(fetchlink);
+        res = await fetch(fetchlink, {
+            cache: "no-store"
+        });
+        if (!res.ok) {
+            throw new Error(`API call failed: ${res.status}`);
+        }
+
     }
 
     const data: pdfReturn = await res.json();
