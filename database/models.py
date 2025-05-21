@@ -44,7 +44,7 @@ class Result(db.Model):
     rule_id = db.Column(db.Integer, db.ForeignKey('rule.id'), nullable=False)
 
     # Jahr der Prüfung 
-    year = db.Column(db.Integer, nullable=False)
+    year = db.Column(db.Date, nullable=False)
     # Alter des Athleten im Prüfungsjahr
     age = db.Column(db.Integer, nullable=False)
 

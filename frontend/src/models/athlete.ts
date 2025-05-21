@@ -3,6 +3,7 @@ export interface Athlete {
     firstName: string;
     lastName: string;
     sex: "m" | "w" | "d";
+    swimCertificate: boolean;
     dateOfBirth: string;
     goldMedals: number;
     silverMedals: number;
@@ -15,7 +16,7 @@ export interface Feat {
     id: number;
     athlete_id: number;
     rule_id: number;
-    year: number|undefined;
+    year: string|undefined;
     age: number|undefined;
     result: number;
     medal: string|undefined;

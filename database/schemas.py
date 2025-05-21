@@ -33,7 +33,7 @@ class ResultSchema(Schema):
     rule_id = fields.Int(required=True)
 
     # Jahr der Prüfung
-    year = fields.Int(required=True, validate=Range(min=1900, max=2100))
+    year = fields.Date(required=True, format="%d.%m.%Y")
 
     # Alter wird intern berechnet (year - athlete.birth_year),
     age = fields.Int(dump_only=True)

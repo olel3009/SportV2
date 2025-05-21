@@ -8,7 +8,8 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "./ui/chart";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, Label, XAxis, YAxis } from "recharts";
+import { getUtcTimecodeFromGermanDate } from "@/date_format";
 
 const chartConfig = {
   result: {
@@ -19,7 +20,7 @@ const chartConfig = {
 
 interface ResultChartData {
   formattedDate: string;
-  originalDate: Date;
+  originalDate: number;
   result: number;
   unit: string;
 }
@@ -36,15 +37,15 @@ export default function ProgressChart({ results }: { results: Feat[] }) {
 
   const data: ResultChartData[] = results
     .map((feat) => {
-      const originalDate = new Date(feat.year || 0);
+      const originalDate = getUtcTimecodeFromGermanDate(feat.year || "")
       return {
-        originalDate: originalDate,
-        formattedDate: FormatDateDDMMYY(originalDate),
+        originalDate: originalDate?.timestamp || 0,
+        formattedDate: feat.year || "",
         result: feat.result,
         unit: feat.ruling?.unit || "",
       };
     })
-    .sort((a, b) => a.originalDate.getTime() - b.originalDate.getTime());
+    .sort((a, b) => a.originalDate - b.originalDate);
 
   if (data.length === 0) {
     return <></>;
@@ -59,9 +60,9 @@ export default function ProgressChart({ results }: { results: Feat[] }) {
         data={data}
         height={0}
         margin={{
-          left: 24,
-          right: 12,
-          top: 5,
+          left: -20,
+          right: 35,
+          top: 20,
           bottom: 5,
         }}
       >
@@ -70,9 +71,17 @@ export default function ProgressChart({ results }: { results: Feat[] }) {
           dataKey="formattedDate"
           tickLine={true}
           axisLine={false}
-          tickMargin={8}
+          tickMargin={4}
           interval={1}
-          unit={dataUnit}
+        >
+          <Label value="Datum" offset={0} position="insideBottom" />
+        </XAxis>
+        <YAxis
+          label={{ value: dataUnit, angle: -90 }}
+          axisLine={false}
+          tickLine={false}
+          allowDataOverflow={true}
+          type="number"
         />
         <ChartTooltip
           cursor={false}
