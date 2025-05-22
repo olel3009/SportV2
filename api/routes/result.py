@@ -4,6 +4,7 @@ from database import db
 from database.models import Result, Athlete, Rule
 from database.schemas import ResultSchema 
 from marshmallow import ValidationError
+import logging
 
 bp_result = Blueprint('result', __name__)
 
@@ -82,19 +83,21 @@ def create_result():
     )
     db.session.add(new_result)
     db.session.commit()
-
+    logging.info("Ergebnis erfolgreich kreiert!")
     return jsonify({"message": "Result added", "id": new_result.id}), 201
 
 @bp_result.route('/results', methods=['GET'])
 def get_results():
     results = Result.query.all()
     schema = ResultSchema(many=True)
+    logging.info("Alle Ergebnisse erfolgreich aufgerufen!")
     return jsonify(schema.dump(results))
 
 @bp_result.route('/results/<int:id>', methods=['GET'])
 def get_result_id(id):
     result = Result.query.get_or_404(id)
     schema = ResultSchema()
+    logging.info("Ergebnis erfolgreich aufgerufen!")
     return jsonify(schema.dump(result))
 
 @bp_result.route('/results/<int:id>', methods=['PUT'])
@@ -137,6 +140,7 @@ def update_result(id):
     result_obj.medal = determine_medal(rule, result_obj.result, athlete.gender)
 
     db.session.commit()
+    logging.info("Ergebnis erfolgreich aktualisiert!")
     return jsonify({"message": "Result updated"})
 
 @bp_result.route('/results/<int:id>', methods=['DELETE'])
@@ -144,4 +148,5 @@ def delete_result(id):
     result_obj = Result.query.get_or_404(id)
     db.session.delete(result_obj)
     db.session.commit()
+    logging.info("Regel erfolgreich gelöscht!")
     return jsonify({"message": "Result deleted"})
