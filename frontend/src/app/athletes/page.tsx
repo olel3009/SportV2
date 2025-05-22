@@ -7,7 +7,7 @@ import DownloadPdfButton from "@/components/ui/groupDownloadButton";
 import { getSelectedAthleteIds } from "@/components/ui/DataTable";
 import { DataTable } from "@/components/ui/DataTable";
 import { columns } from "@/components/AthleteTableColumns";
-import { getAllAthletes } from "@/athlete_getters";
+import { getAllAthletes, getAllFeats } from "@/athlete_getters";
 import { useEffect, useState } from "react";
 import { Athlete } from "@/models/athlete";
 import { downloadCsv } from "@/exportCsv";
@@ -19,7 +19,25 @@ export default function Page() {
   const [athletes, setAthletes] = useState<Athlete[]>([]);
 
   useEffect(() => {
-    getAllAthletes().then((res) => setAthletes(res));
+    const fetchData = async () => {
+      try {
+        const [athletesResponse, featsResponse] = await Promise.all([
+          getAllAthletes(),
+          getAllFeats(),
+        ]);
+
+        const athletesWithFeats = athletesResponse.map(athlete => ({
+          ...athlete,
+          feats: featsResponse.filter(
+            feat => feat.athlete_id === athlete.id
+          )
+        }));
+        setAthletes(athletesWithFeats);
+      } catch (error) {
+        console.error("Error fetching and processing athlete data:", error);
+      }
+    };
+    fetchData();
   }, []);
 
   return (
