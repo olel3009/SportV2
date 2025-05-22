@@ -1,7 +1,7 @@
 //Fügen Sie hier alle Funktionen ein, die Athleten abrufen, damit sie im bereits vorhandenen Code verwendet werden können
 //Auf diese Weise müssen wir, wenn die API fertig ist, nur die Logik hier ändern und nicht an anderer Stelle im Code
 //Außerdem werden diese Funktionen mit ziemlicher Sicherheit mehr als einmal verwendet, daher ist es gut, sie woanders zu platzieren
-import { Athlete, Feat, Rule, Discipline } from "../src/models/athlete";
+import { Athlete, Feat, Rule, Discipline, csvFeat } from "../src/models/athlete";
 
 export type csvCombo = {
   last_name: string;
