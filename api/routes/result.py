@@ -51,8 +51,10 @@ def create_result():
     data = request.get_json()
     schema = ResultSchema()
     try:
+        print(data)
         valid = schema.load(data)
     except ValidationError as err:
+        print(err.messages)
         return jsonify({"error": "Validation Error", "messages": err.messages}), 400
 
     # Athlete und Rule laden
