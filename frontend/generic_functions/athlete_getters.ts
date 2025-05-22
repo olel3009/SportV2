@@ -2,6 +2,7 @@
 //Auf diese Weise müssen wir, wenn die API fertig ist, nur die Logik hier ändern und nicht an anderer Stelle im Code
 //Außerdem werden diese Funktionen mit ziemlicher Sicherheit mehr als einmal verwendet, daher ist es gut, sie woanders zu platzieren
 import { Athlete, Feat, Rule, Discipline } from "../src/models/athlete";
+import { validateAndGetToken } from "./auth";
 
 export type csvCombo ={
   last_name:string;
@@ -16,10 +17,18 @@ export type csvCombo ={
 }
 
 export async function getAthleteWithFeats(id:number): Promise<csvCombo[]> {
-  let fetchlink:string='http://127.0.0.1:5000/athletes/'+id+'/results';
+if (validateAndGetToken() !== true) {
+        console.log("No access token found");
+        return [];
+
+}else {
+let fetchlink:string='http://127.0.0.1:5000/athletes/'+id+'/results';
   console.log(fetchlink);
   const res = await fetch(fetchlink, {
-    cache: "no-store"
+    cache: "no-store",
+    headers: {
+            "Authorization": "Bearer " + localStorage.getItem("access_token")
+        },
   });
   if (!res.ok) {
     throw new Error(`API call failed: ${res.status}`);
@@ -42,6 +51,11 @@ export async function getAthleteWithFeats(id:number): Promise<csvCombo[]> {
   }));
   return mapped;
 
+
+}
+
+  
+
 }
 
 
@@ -62,8 +76,16 @@ export async function getAthleteById(id: number): Promise<Athlete | undefined> {
 }
 
 export async function getAllAthletes(): Promise<Athlete[]> {
-  const res = await fetch("http://127.0.0.1:5000/athletes", {
-    cache: "no-store"
+  if (validateAndGetToken() !== true) {
+    console.log("No access token found");
+    return [];
+  }else{
+
+const res = await fetch("http://127.0.0.1:5000/athletes", {
+    cache: "no-store",
+    headers: {
+            "Authorization": "Bearer " + localStorage.getItem("access_token")
+        },
   });
   if (!res.ok) {
     throw new Error(`API call failed: ${res.status}`);
@@ -87,6 +109,8 @@ export async function getAllAthletes(): Promise<Athlete[]> {
   }));
 
   return mapped;
+  }
+  
 }
 
 
@@ -94,7 +118,7 @@ type RawFeat = {
   id: number;
   athlete_id: number;
   rule_id: number;
-  year: number;
+  year: string;
   age: number;
   result: number;
   medal: string;
@@ -108,8 +132,15 @@ export async function getFeatsById(id: number): Promise<Feat[] | undefined> {
 }
 
 export async function getAllFeats(forOne:boolean=false, id:number|null=null): Promise<Feat[]> {
-  const res = await fetch("http://127.0.0.1:5000/results", {
-    cache: "no-store"
+  if (validateAndGetToken() !== true) {
+    console.log("No access token found");
+    return [];
+  }else{
+    const res = await fetch("http://127.0.0.1:5000/results", {
+    cache: "no-store",
+    headers: {
+            "Authorization": "Bearer " + localStorage.getItem("access_token")
+        },
   });
   if (!res.ok) {
     throw new Error(`API call failed: ${res.status}`);
@@ -141,6 +172,8 @@ export async function getAllFeats(forOne:boolean=false, id:number|null=null): Pr
   });
 
   return preppedFeats;
+  }
+  
 }
 
 type RawRule= {
@@ -182,8 +215,15 @@ export async function getRulesByDisciplineId(id: number): Promise<Rule[] | undef
 
 
 export async function getAllRules(): Promise<Rule[]> {
-  const res = await fetch("http://127.0.0.1:5000/rules", {
-    cache: "no-store"
+  if (validateAndGetToken() !== true) {
+    console.log("No access token found");
+    return [];
+  }else{
+ const res = await fetch("http://127.0.0.1:5000/rules", {
+    cache: "no-store",
+    headers: {
+            "Authorization": "Bearer " + localStorage.getItem("access_token")
+        },
   });
   if (!res.ok) {
     throw new Error(`API call failed: ${res.status}`);
@@ -225,6 +265,9 @@ export async function getAllRules(): Promise<Rule[]> {
   }));
 
   return mapped;
+  }
+
+ 
 }
 
 type RawDiscipline ={
@@ -236,8 +279,15 @@ type RawDiscipline ={
 
 
 export async function getAllDisciplines(): Promise<Discipline[]> {
-  const res = await fetch("http://127.0.0.1:5000/disciplines", {
-    cache: "no-store"
+  if (validateAndGetToken() !== true) {
+    console.log("No access token found");
+    return [];
+  }else{
+const res = await fetch("http://127.0.0.1:5000/disciplines", {
+    cache: "no-store",
+    headers: {
+            "Authorization": "Bearer " + localStorage.getItem("access_token")
+        },
   });
   if (!res.ok) {
     throw new Error(`API call failed: ${res.status}`);
@@ -253,6 +303,8 @@ export async function getAllDisciplines(): Promise<Discipline[]> {
 
 
   return mapped;
+  }
+  
 }
 
 
@@ -263,7 +315,11 @@ export async function addFeatToAthlete(
   year: number,
   result: string
 ): Promise<{ message: string; id: number}|false> {
-  let athlete = await getAthleteById(athleteId);
+  if (validateAndGetToken() !== true) {
+    console.log("No access token found");
+    return false;
+  }else{
+let athlete = await getAthleteById(athleteId);
   if (!athlete) {
     alert("Bitte einen Athleten auswählen!");
     return false;
@@ -282,7 +338,10 @@ export async function addFeatToAthlete(
   }
   const res = await fetch("http://127.0.0.1:5000/results", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json",
+      "Authorization": "Bearer " + localStorage.getItem("access_token")
+     },
+    
     body: JSON.stringify({
       athlete_id: athleteId,
       rule_id: ruleId,
@@ -296,5 +355,7 @@ export async function addFeatToAthlete(
   }
 
   return res.json();
+  }
+  
   
 }

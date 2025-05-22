@@ -1,5 +1,5 @@
 
-
+import { validateAndGetToken } from "./auth";
 
 type RawUser = {
     email: string;
@@ -10,7 +10,11 @@ type RawUser = {
 
 //Mit Backend verbunden
 export async function getUsers(): Promise<RawUser[]> {
-    const res = await fetch("http://127.0.0.1:5000/users", {
+    if (validateAndGetToken() != true) {
+        console.log("No access token found");
+        return [];
+    }else{
+const res = await fetch("http://127.0.0.1:5000/users", {
         headers: {
             "Authorization": "Bearer " + localStorage.getItem("access_token")
         },
@@ -28,6 +32,9 @@ export async function getUsers(): Promise<RawUser[]> {
         updated_at: new Date(raw.updated_at),
     }));
     return mapped;
+    }
+    
+    
 }
 
 //Mit Backend verbunden

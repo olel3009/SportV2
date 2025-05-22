@@ -49,7 +49,11 @@ export function button_loggig_date(): number {
 }
 
 export async function button_loggig_dbresults(): Promise<number> {
-    console.log("button_loggig_dbresults");
+    if (validateAndGetToken() !== true) {
+        console.log("No access token found");
+        return 0;
+    }else{
+console.log("button_loggig_dbresults");
     //Hier wird der Wert der Datenbankabfrage zurückgegeben, ob die Regelungen schon mal in diesem Jahr aktualisiert wurden
     //1 für positive und 0 für negative rückmeldung
     const res = await fetch("http://127.0.0.1:5000/rules", {
@@ -85,6 +89,8 @@ export async function button_loggig_dbresults(): Promise<number> {
         console.log("Regelungen wurden in diesem Jahr noch nicht aktualisiert");
     }
     return dbresults;
+    }
+    
 }
 
 export function button_loggig_other_date_changer(x: number): void {
