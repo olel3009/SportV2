@@ -289,7 +289,6 @@ def import_results_from_csv():
             existing.result = value
             existing.age = age
             existing.medal = medal
-            existing.version += 1
             updated.append({
                 "athlete_id": athlete.id,
                 "first_name": athlete.first_name,
