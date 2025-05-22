@@ -260,7 +260,7 @@ export async function getAllDisciplines(): Promise<Discipline[]> {
 export async function addFeatToAthlete(
   athleteId: number,
   ruleId: number,
-  year: number,
+  year: string,
   result: string
 ): Promise<{ message: string; id: number}|false> {
   let athlete = await getAthleteById(athleteId);
@@ -280,6 +280,7 @@ export async function addFeatToAthlete(
     alert("Bitte ein Ergebnis eingeben!");
     return false;
   }
+  result=result.replace(",", ".");
   const res = await fetch("http://127.0.0.1:5000/results", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -293,6 +294,8 @@ export async function addFeatToAthlete(
   if (!res.ok) {
     const errorBody = await res.json();
     throw new Error(errorBody.error || "Failed to add result");
+  }else{
+    alert("Ergebnis wurde eingetragen!")
   }
 
   return res.json();
