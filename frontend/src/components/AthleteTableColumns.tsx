@@ -1,7 +1,7 @@
 "use client";
 
 import { Column, ColumnDef } from "@tanstack/react-table";
-import { Athlete } from "@/models/athlete";
+import { Athlete, Feat } from "@/models/athlete";
 import { downloadCsv } from "@/exportCsv";
 import {
   ChartNoAxesCombined,
@@ -33,6 +33,24 @@ import {
 import { FeatEntryCard, FeatEntryDialog } from "./featentry";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useCallback } from "react";
+import { findBestMedal } from "@/medal_functions";
+
+const MedalDisplay = ({ type, text }: { type: string; text: string }) => {
+  const colors =
+    type === "Gold"
+      ? "bg-yellow-300 text-yellow-900"
+      : type === "Bronze"
+      ? "bg-orange-300 text-orange-900"
+      : type === "Silber"
+      ? "bg-gray-300 text-gray-800"
+      : "invisible";
+  return (
+    <Badge className={`${colors} flex items-center pointer-events-none`}>
+      <Medal className="h-5 w-5 mr-1" />
+      {text && <span className="">{text}</span>}
+    </Badge>
+  );
+};
 
 function sortedHeader(column: Column<any, any>, headerName: string) {
   return (
@@ -101,7 +119,12 @@ export const columns: ColumnDef<Athlete>[] = [
   {
     accessorKey: "sex",
     header: "Geschlecht",
-    cell: ({ row }) => row.original.sex.toUpperCase(),
+    cell: ({ row }) => {
+      const sex = row.original.sex;
+      if (sex === "m") return "Männlich"
+      if (sex === "f") return "Weiblich"
+      if (sex === "d") return "Divers"
+    },
     enableGlobalFilter: false,
   },
 
@@ -128,29 +151,29 @@ export const columns: ColumnDef<Athlete>[] = [
     header: ({ column }) => sortedHeader(column, "Medaillen"),
     enableGlobalFilter: false,
     cell: ({ row }) => {
+      const feats = row.original.feats || [];
+      const groupedByDiscipline = feats.reduce((accumulator, currentFeat) => {
+        const disciplineId = currentFeat.ruling?.discipline_id || 0;
+        if (!accumulator[disciplineId]) {
+          accumulator[disciplineId] = [];
+        }
+        accumulator[disciplineId].push(currentFeat);
+        return accumulator;
+      }, {} as Record<number, Feat[]>);
 
-      // Display icons for medals
       return (
-        <div className="flex items-center justify-between gap-1">
-          <div className="flex items-center space-x-2">
-            {row.original.goldMedals >= 1 && (
-              <Badge className="bg-yellow-300 text-yellow-900 pointer-events-none">
-                <Medal className="h-5 w-5 mr-1" /> {row.original.goldMedals}
-              </Badge>
-            )}
-
-            {row.original.silverMedals >= 1 && (
-              <Badge className="bg-gray-300 text-gray-800 pointer-events-none">
-                <Medal className="h-5 w-5 mr-1" /> {row.original.silverMedals}
-              </Badge>
-            )}
-
-            {row.original.bronzeMedals >= 1 && (
-              <Badge className="bg-orange-300 text-orange-900 pointer-events-none">
-                <Medal className="h-5 w-5 mr-1" /> {row.original.bronzeMedals}
-              </Badge>
-            )}
-          </div>
+        <div className="flex gap-2 flex-wrap">
+          {Object.entries(groupedByDiscipline).map(([key, feats]) => {
+            const bestMedal = findBestMedal(feats);
+            if (!bestMedal) return;
+            return (
+              <MedalDisplay
+                type={bestMedal.medal || ""}
+                text={bestMedal.ruling?.discipline?.name || ""}
+                key={key}
+              />
+            );
+          })}
         </div>
       );
     },

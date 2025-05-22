@@ -99,9 +99,6 @@ export default async function Page({
     if (sex === "d") return "Divers";
   }
   let usedExercises: number[] = [];
-  let idIndex = 1;
-  let temp: number;
-  let tabMap: number[] = [];
 
   if (athlete === undefined)
     return (
@@ -154,7 +151,7 @@ export default async function Page({
 
       <h2 className="text-xl font-bold">Leistungen</h2>
       <div>
-        <Tabs defaultValue={disciplines[0].id.toString()} className="w-full">
+        <Tabs defaultValue={(actDiscIds.findIndex(val => val) + 1).toString()} className="w-full">
           <TabsList>
             {actDiscIds.map((yes, index) => {
               if (!yes) return null;
