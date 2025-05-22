@@ -31,29 +31,72 @@ export default function Startpage() {
       return;
     }
     setUploading(true);
+    let csvType=0;
     try {
       const formData = new FormData();
       formData.append('file', file);
+      await file.text()
+        .then(csvString => {
+          // csvString is now the full contents of your CSV as a JavaScript string
+          if (csvString.includes("Vorname;Nachname;Geburtstag;Geschlecht;Schwimmzertifikat")) {
+            console.log("Person Csv");
+            csvType=2;
+          } else if (csvString.includes("Name;Vorname;Geschlecht;Geburtstag;Übung;Kategorie;Datum;Ergebnis;Punkte")) {
+            console.log("Leistungs Csv");
+            csvType=1;
+          }  else {
+            console.log("Not found.");
+          }
+        })
+        .catch(err => console.error("Failed to read file:", err));
+      
 
-      const res = await fetch('http://127.0.0.1:5000/results/import', {
-        method: 'POST',
-        body: formData,
-      });
+      let res:any;
+      if(csvType==1){
+          console.log("Working with this form Data:");
+          console.log(formData);
+          res = await fetch('http://127.0.0.1:5000/results/import', {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          console.error('Import-Fehler:', data);
+          alert(`Fehler beim Import: ${data.error || JSON.stringify(data)}`);
+        } else {
+          console.log('Import-Ergebnis:', data);
+          alert(`Import erfolgreich! Erstellt: ${data.created.length}, Aktualisiert: ${data.updated.length}`);
+          if (data.missing_athletes) {
+            console.warn('Fehlende Athleten:', data.missing_athletes);
+          }
+          if (data.duplicate_athletes) {
+            console.warn('Doppelte Athleten:', data.duplicate_athletes);
+          }
+        }
+      } else if(csvType==2){
+        console.log(formData);
+        let csvText= await file.text();
+        res = await fetch('http://127.0.0.1:5000/athletes/csv', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/csv; charset=utf-8'
+          },
+          body: csvText,
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          console.error('Import-Fehler:', data);
+          alert(`Fehler beim Import: ${data.error || JSON.stringify(data)}`);
+        } else {
+          console.log('Import-Ergebnis:', data);
+          alert(`Import erfolgreich! Erstellt`);
+          
+        }
 
-      const data = await res.json();
-      if (!res.ok) {
-        console.error('Import-Fehler:', data);
-        alert(`Fehler beim Import: ${data.error || JSON.stringify(data)}`);
-      } else {
-        console.log('Import-Ergebnis:', data);
-        alert(`Import erfolgreich! Erstellt: ${data.created.length}, Aktualisiert: ${data.updated.length}`);
-        if (data.missing_athletes) {
-          console.warn('Fehlende Athleten:', data.missing_athletes);
-        }
-        if (data.duplicate_athletes) {
-          console.warn('Doppelte Athleten:', data.duplicate_athletes);
-        }
+      } else{
+        alert("CSV Typ nicht erkannt!")
       }
+
     } catch (error) {
       console.error('Fetch-Fehler:', error);
       alert('Netzwerkfehler beim Import');
