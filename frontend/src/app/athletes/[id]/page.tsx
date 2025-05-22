@@ -141,10 +141,10 @@ export default async function Page({
           <div className="pl-7 grow gap-1 xl:gap-7 flex justify-evenly items-center"></div>
         </CardContent>
       </Card>
-
-      <DownloadCsvButton ids={[id]} text="Als Csv exportieren" />
-      <DownloadPdfButton ids={[id]} text={"Als PDF exportieren"} />
-
+      <div className="grid grid-cols-2 gap-2">
+        <DownloadCsvButton ids={[id]} text="Als Csv exportieren" />
+        <DownloadPdfButton ids={[id]} text="Als PDF exportieren" />
+      </div>
       <h2 className="text-xl font-bold">Schwimmnachweis</h2>
       <div>
         {!athlete.swimCertificate && (

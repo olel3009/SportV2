@@ -43,14 +43,16 @@ export default function Page() {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Athleten</h1>
-      <DownloadCsvButton
-        ids={getSelectedAthleteIds}
-        text={"Ausgewählte als Csv exportieren"}
-      />
-      <DownloadPdfButton
-        ids={getSelectedAthleteIds}
-        text={"Ausgewählte als PDF exportieren"}
-      />
+      <div className="grid grid-cols-2 gap-2">
+        <DownloadCsvButton
+          ids={getSelectedAthleteIds}
+          text={"Ausgewählte als Csv exportieren"}
+        />
+        <DownloadPdfButton
+          ids={getSelectedAthleteIds}
+          text={"Ausgewählte als PDF exportieren"}
+        />
+      </div>
       <DataTable
         columns={columns}
         data={athletes}
