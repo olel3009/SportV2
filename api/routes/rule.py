@@ -10,6 +10,7 @@ bp_rule = Blueprint('rule', __name__)
 
 # CREATE Rule
 @bp_rule.route('/rules', methods=['POST'])
+@jwt_required()
 def create_rule():
     data = request.json
     schema = RuleSchema()
@@ -50,6 +51,7 @@ def create_rule():
 
 # READ Rules
 @bp_rule.route('/rules', methods=['GET'])
+@jwt_required()
 def get_rules():
     all_rules = Rule.query.all()
     schema = RuleSchema(many=True)
@@ -57,6 +59,7 @@ def get_rules():
     return jsonify(result)
 
 @bp_rule.route('/rules/<int:id>', methods=['GET'])
+@jwt_required()
 def get_rule(id):
     rule = Rule.query.get_or_404(id)
     schema = RuleSchema()
@@ -64,6 +67,7 @@ def get_rule(id):
 
 # UPDATE Rule
 @bp_rule.route('/rules/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_rule_id(id):
     rule = Rule.query.get_or_404(id)
     data = request.json
@@ -113,6 +117,7 @@ def update_rule_id(id):
 
 # DELETE Rule
 @bp_rule.route('/rules/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_rule(id):
     rule = Rule.query.get_or_404(id)
     db.session.delete(rule)

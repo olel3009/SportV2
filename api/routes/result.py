@@ -1,6 +1,8 @@
 import io, csv
 from flask import Blueprint, request, jsonify
 from datetime import datetime, date
+
+from flask_jwt_extended import jwt_required
 from database import db
 from database.models import Result, Athlete, Rule, Discipline
 from database.schemas import ResultSchema
@@ -47,6 +49,7 @@ def determine_medal(rule, result_value, athlete_gender):
     return None
 
 @bp_result.route('/results', methods=['POST'])
+@jwt_required()
 def create_result():
     data = request.get_json()
     schema = ResultSchema()
@@ -92,6 +95,7 @@ def create_result():
 
 
 @bp_result.route('/results', methods=['GET'])
+@jwt_required()
 def get_results():
     all = Result.query.all()
     schema = ResultSchema(many=True)
@@ -99,6 +103,7 @@ def get_results():
 
 
 @bp_result.route('/results/<int:id>', methods=['GET'])
+@jwt_required()
 def get_result_id(id):
     res = Result.query.get_or_404(id)
     schema = ResultSchema()
@@ -106,6 +111,7 @@ def get_result_id(id):
 
 
 @bp_result.route('/results/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_result(id):
     res = Result.query.get_or_404(id)
     data = request.get_json()
@@ -155,6 +161,7 @@ def update_result(id):
 
 
 @bp_result.route('/results/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_result(id):
     res = Result.query.get_or_404(id)
     db.session.delete(res)
@@ -162,6 +169,7 @@ def delete_result(id):
     return jsonify({"message": "Result deleted"}), 200
 
 @bp_result.route('/results/import', methods=['POST'])
+@jwt_required()
 def import_results_from_csv():
     """
     Importiert Results aus einer deutschen CSV mit Spalten:

@@ -3,7 +3,7 @@ from database import db
 from database.models import User
 from database.schemas import UserSchema
 from sqlalchemy import inspect
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 from datetime import timedelta
 
 bp_user = Blueprint('user', __name__)
@@ -22,23 +22,25 @@ def create_user():
         email=valid_data["email"],
         password=valid_data["password"]
     )
-
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({"id": new_user.id, "message": "User erstellt"}), 201
+    access_token = create_access_token(identity=new_user.email, expires_delta=timedelta(hours=1))
+
+    return jsonify({"email": new_user.email, "message": "User erstellt", "access_token": access_token}), 201
 
 # READ Users
 @bp_user.route('/users', methods=['GET'])
+@jwt_required()
 def get_users():
     users = User.query.all()
     return jsonify([{
-        "id": user.id,
         "email": user.email,
         "created_at": user.created_at,
         "updated_at": user.updated_at
     } for user in users])
 
 @bp_user.route('/users/<string:email>', methods=['GET'])
+@jwt_required()
 def get_user_email(email):
     user = User.query.get_or_404(email)
     schema = UserSchema()
@@ -76,6 +78,7 @@ def login_user():
 
 # UPDATE User
 @bp_user.route('/users/<string:email>', methods=['PUT'])
+@jwt_required()
 def update_user(email):
     user = User.query.get_or_404(email)
     data = request.json
@@ -90,6 +93,7 @@ def update_user(email):
 
 # DELETE User
 @bp_user.route('/users/<string:email>', methods=['DELETE'])
+@jwt_required()
 def delete_user(email):
     user = User.query.get_or_404(email)
     db.session.delete(user)

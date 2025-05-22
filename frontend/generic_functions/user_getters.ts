@@ -90,6 +90,8 @@ export async function createUser(email: string, password: string): Promise<boole
     if (!res.ok) {
         return false; // User creation failed
     } else {
+        const data = await res.json();
+        localStorage.setItem("access_token", data.access_token);
         console.log("User created successfully");
         return true; // User creation successful
     }
