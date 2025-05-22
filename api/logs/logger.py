@@ -18,14 +18,6 @@ logger = logging.getLogger(__name__)
 logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 
-#@app.before_request
-def log_request_info():
-    #logger.info(f"Request: {request.method} {request.url} - Data: {request.json}")
-    pass
-
-#logging modul erstellen zum import für jede benötigte Datei
-#keine personenbezogene Daten loggen nur die Veränderungen
-
 if __name__ == "__main__":
     while True:
         logger.debug("TEST")

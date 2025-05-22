@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from database.models import Discipline
 from database.schemas import DisciplineSchema
 from database import db
-import logging
+from api.logs.logger import logger
 
 bp_discipline = Blueprint('discipline', __name__)
 
@@ -18,7 +18,7 @@ def create_discipline():
     )
     db.session.add(new_disc)
     db.session.commit()
-    logging.info("Disziplin erfolgreich kreiert!")
+    logger.info("Disziplin erfolgreich kreiert!")
     return jsonify({"message": "Discipline created", "id": new_disc.id}), 201
 
 # READ Disciplines
@@ -27,14 +27,14 @@ def get_disciplines():
     all_disc = Discipline.query.all()
     schema = DisciplineSchema(many=True)
     result = schema.dump(all_disc)
-    logging.info("Alle Disziplinen erfolgreich aufgerufen")
+    logger.info("Alle Disziplinen erfolgreich aufgerufen")
     return jsonify(result)
 
 @bp_discipline.route('/disciplines/<int:id>', methods=['GET'])
 def get_discipline_id(id):
     discipline = Discipline.query.get_or_404(id)
     schema = DisciplineSchema()
-    logging.info("Disziplin erfolgreich aufgerufen!")
+    logger.info("Disziplin erfolgreich aufgerufen!")
     return jsonify(schema.dump(discipline))
 
 # UPDATE Discipline
@@ -51,7 +51,7 @@ def update_discipline(id):
         disc.discipline_name = valid_data['discipline_name']
 
     db.session.commit()
-    logging.info("Disziplin erfolgreich aktualisiert!")
+    logger.info("Disziplin erfolgreich aktualisiert!")
     return jsonify({"message": "Discipline updated"})
 
 # DELETE Discipline
@@ -60,5 +60,5 @@ def delete_discipline(id):
     disc = Discipline.query.get_or_404(id)
     db.session.delete(disc)
     db.session.commit()
-    logging.info("Disziplin erfolgreich gelöscht!")
+    logger.info("Disziplin erfolgreich gelöscht!")
     return jsonify({"message": "Discipline deleted"})
