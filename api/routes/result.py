@@ -174,7 +174,7 @@ def import_results_from_csv():
         return jsonify({"error": "Keine CSV-Datei hochgeladen"}), 400
 
     # CSV öffnen
-    data = f.stream.read().decode('utf-8')
+    data = f.stream.read().decode('utf-8-sig')
     reader = csv.DictReader(io.StringIO(data), delimiter=';')
 
     # Mapping deutsch -> englisch
@@ -182,10 +182,12 @@ def import_results_from_csv():
         'Name': 'last_name',
         'Vorname': 'first_name',
         'Geburtstag': 'birth_date',
-        'Uebung': 'rule_name',
+        'Übung': 'rule_name',
         'Kategorie': 'discipline_name',
-        'Leistung': 'result_value',
-        'Datum': 'date'
+        'Ergebnis': 'result_value',
+        'Datum': 'date',
+        'Geschlecht': 'sex',
+        'Punkte': 'points'
     }
 
     required = set(DE_TO_EN.keys())
@@ -201,16 +203,19 @@ def import_results_from_csv():
     for idx, row in enumerate(rows, start=1):
         # 1) Pflichtspalten prüfen
         if not required.issubset(row.keys()):
-            return jsonify({"error": f"Zeile {idx}: Fehlende Spalten"}), 400
+            return jsonify({"error": f"Zeile {idx}: Fehlende Spalten, will {required}, hat {row.keys()}"}), 400
 
         # 2) Übersetze Feldnamen
         rec = {DE_TO_EN[k]: v.strip() for k, v in row.items()}
 
         # 3) Geburtstag parsen (DD.MM.YYYY)
         try:
+            print(rec['birth_date'])
             bd = datetime.strptime(rec['birth_date'], '%d.%m.%Y').date()
-        except ValueError:
-            return jsonify({"error": f"Zeile {idx}: Ungültiges Datum im Feld Geburtstag"}), 400
+
+        except ValueError as e:
+            print("Parsing birth_date failed:", e)
+            return jsonify({"error": f"Zeile {idx}: Ungültiges Datum im Feld Geburtstag {e}"}), 400
 
         # 4) Athlet suchen
         matches = Athlete.query.filter_by(
@@ -238,8 +243,13 @@ def import_results_from_csv():
 
         # 5) Datum der Leistung parsen (DD.MM.YYYY)
         try:
-            perf_date = datetime.strptime(rec['date'], '%d.%m.%Y').date()
-        except ValueError:
+            dt = datetime.fromisoformat(rec['date'])
+
+            # 2) Format as DD.MM.YYYY
+            german_date = dt.strftime('%d.%m.%Y')
+            perf_date = datetime.strptime(german_date, '%d.%m.%Y').date()
+        except ValueError as e:
+            print("Parsing birth_date failed:", e)
             return jsonify({"error": f"Zeile {idx}: Ungültiges Datum im Feld Datum"}), 400
 
         # 6) Disziplin und Rule suchen
@@ -256,9 +266,9 @@ def import_results_from_csv():
 
         # 7) Ergebniswert als Float
         try:
-            value = float(rec['result_value'].replace(',', '.'))
+            value = float(rec['points'].replace(',', '.'))
         except ValueError:
-            return jsonify({"error": f"Zeile {idx}: Ungültiger Leistungswert '{rec['result_value']}'"}), 400
+            return jsonify({"error": f"Zeile {idx}: Ungültiger Leistungswert '{rec['points']}'"}), 400
 
         # 8) Alter im Prüfungsjahr
         year = perf_date.year

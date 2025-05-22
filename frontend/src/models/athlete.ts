@@ -76,3 +76,15 @@ export interface Expectation {
     medalThresholdsW: [number, number, number];
     action: [string, string]|string; //eg. "Medizinball (1kg)" usw. its [m, w] in the array
 }
+
+export interface csvFeat{  
+    datum: string;
+    ergebnis:  string;
+    geburtstag:  string;
+    geschlecht:  string;
+    kategorie:  string;
+    name:  string;
+    punkte: string; 
+    vorname:  string; 
+    uebung:  string; 
+}
