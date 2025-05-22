@@ -2,7 +2,7 @@ export interface Athlete {
     id: number;
     firstName: string;
     lastName: string;
-    sex: "m" | "w" | "d";
+    sex: "m" | "f" | "d";
     swimCertificate: boolean;
     dateOfBirth: string;
     goldMedals: number;
@@ -29,6 +29,7 @@ export interface Rule{
     id: number;
 
     discipline_id: number;
+    discipline: Discipline | undefined;
 
     rule_name: string;
 
