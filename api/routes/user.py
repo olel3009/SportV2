@@ -64,6 +64,7 @@ def login_user():
 
     # JWT-Token erzeugen
     access_token = create_access_token(identity=user.email, expires_delta=timedelta(hours=1))
+    #access_token = create_access_token(identity=user.email, expires_delta=timedelta(minutes=1))
 
     # Login erfolgreich
     return jsonify({

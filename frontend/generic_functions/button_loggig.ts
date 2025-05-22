@@ -1,3 +1,4 @@
+import { validateAndGetToken } from "./auth";
 
 //1 für positive und 0 für negative rückmeldung
 let dbresults = 0;
@@ -52,6 +53,9 @@ export async function button_loggig_dbresults(): Promise<number> {
     //Hier wird der Wert der Datenbankabfrage zurückgegeben, ob die Regelungen schon mal in diesem Jahr aktualisiert wurden
     //1 für positive und 0 für negative rückmeldung
     const res = await fetch("http://127.0.0.1:5000/rules", {
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("access_token")
+        },
         method: "GET",
         cache: "no-store"
     });
@@ -114,9 +118,11 @@ export async function button_loggig_color(): Promise<number> {
 }
 
 export async function add_rules(file: File): Promise<string | null> {
-    const formData = new FormData();
-    formData.append("file", file);
-    const res = await fetch("http://127.0.0.1:5000/rules/import", {
+    
+    if(validateAndGetToken() == true) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await fetch("http://127.0.0.1:5000/rules/import", {
         headers: {
             "Authorization": "Bearer " + localStorage.getItem("access_token")
         },
@@ -138,4 +144,12 @@ export async function add_rules(file: File): Promise<string | null> {
         console.log("Rule added successfully");
         return null; // kein Fehler
     }
+    }else {
+        console.log("Token invalid or not found");
+        return "Token invalid or not found";
+    }
+    
+    
 }
+
+
