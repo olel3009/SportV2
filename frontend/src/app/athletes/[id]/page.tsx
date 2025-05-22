@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUtcTimecodeFromGermanDate } from "@/date_format";
-
+import { findBestMedal } from "@/medal_functions";
 
 const getAge = (dateString: string) => {
   const [day, month, year] = dateString.split(".").map(Number);
@@ -99,9 +99,6 @@ export default async function Page({
     if (sex === "d") return "Divers";
   }
   let usedExercises: number[] = [];
-  let idIndex = 1;
-  let temp: number;
-  let tabMap: number[] = [];
 
   if (athlete === undefined)
     return (
@@ -154,7 +151,7 @@ export default async function Page({
 
       <h2 className="text-xl font-bold">Leistungen</h2>
       <div>
-        <Tabs defaultValue={disciplines[0].id.toString()} className="w-full">
+        <Tabs defaultValue={(actDiscIds.findIndex(val => val) + 1).toString()} className="w-full">
           <TabsList>
             {actDiscIds.map((yes, index) => {
               if (!yes) return null;
@@ -177,9 +174,37 @@ export default async function Page({
             let relFeats = feats?.filter(
               (a) => a.ruling?.discipline_id === index + 1
             );
-            console.log(relFeats);
+
+            // Calculate best medal
+            // Get all feats of the discipline that are from the current years ruling
+            let viableFeats = relFeats?.filter((a) => {
+              const currentYear = new Date().getFullYear();
+              const ruleDate = getUtcTimecodeFromGermanDate(
+                a.ruling?.valid_start || ""
+              )?.date;
+              return currentYear === ruleDate?.getFullYear() || 0;
+            });
+            const bestFeat = findBestMedal(viableFeats);
+
             return (
-              <TabsContent key={index} value={disc.id.toString()}>
+              <TabsContent className="" key={index} value={disc.id.toString()}>
+                <div className="mb-2 flex w-full border rounded-xl p-3 gap-4 items-center">
+                  {!bestFeat && (
+                    <span>
+                      Es wurde für {new Date().getFullYear()} keine Medaille
+                      erreicht.
+                    </span>
+                  )}
+                  {bestFeat && (
+                    <>
+                      <MedalDisplay displayName="" type={bestFeat.medal} />
+                      <span>{bestFeat.medal} in {disc.name} für {new Date().getFullYear()}:</span>
+                      <span className="font-semibold">{bestFeat.result} {bestFeat.ruling?.unit}</span>
+                      in
+                      <span className="font-semibold">{bestFeat.ruling?.rule_name}</span>
+                    </>
+                  )}
+                </div>
                 <Card>
                   <CardContent>
                     <Accordion type="single" collapsible>
@@ -187,8 +212,12 @@ export default async function Page({
                         let ruleSpecificResults = feats
                           ?.filter((f) => f.rule_id === feat.rule_id)
                           .sort((a, b) => {
-                            const yearA = getUtcTimecodeFromGermanDate(a.year || "")?.timestamp || 0
-                            const yearB = getUtcTimecodeFromGermanDate(b.year || "")?.timestamp || 0
+                            const yearA =
+                              getUtcTimecodeFromGermanDate(a.year || "")
+                                ?.timestamp || 0;
+                            const yearB =
+                              getUtcTimecodeFromGermanDate(b.year || "")
+                                ?.timestamp || 0;
                             return yearB - yearA;
                           });
                         if (!ruleSpecificResults) return <></>;

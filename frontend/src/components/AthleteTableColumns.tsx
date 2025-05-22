@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { Column, ColumnDef } from "@tanstack/react-table"
-import { Athlete } from "@/models/athlete"
-import { downloadCsv } from "@/exportCsv"
+import { Column, ColumnDef } from "@tanstack/react-table";
+import { Athlete, Feat } from "@/models/athlete";
+import { downloadCsv } from "@/exportCsv";
 import {
   ChartNoAxesCombined,
   MoreHorizontal,
@@ -11,31 +11,46 @@ import {
   ArrowDown,
   Pen,
   Download,
-  Trash2
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Badge } from "@/components/ui/badge"
+  Trash2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTrigger,
-} from "./ui/dialog"
-import { FeatEntryCard, FeatEntryDialog } from "./featentry"
-import { DialogTitle } from "@radix-ui/react-dialog"
-import { useCallback } from "react"
+} from "./ui/dialog";
+import { FeatEntryCard, FeatEntryDialog } from "./featentry";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { useCallback } from "react";
+import { findBestMedal } from "@/medal_functions";
 
-
-
+const MedalDisplay = ({ type, text }: { type: string; text: string }) => {
+  const colors =
+    type === "Gold"
+      ? "bg-yellow-300 text-yellow-900"
+      : type === "Bronze"
+      ? "bg-orange-300 text-orange-900"
+      : type === "Silber"
+      ? "bg-gray-300 text-gray-800"
+      : "invisible";
+  return (
+    <Badge className={`${colors} flex items-center pointer-events-none`}>
+      <Medal className="h-5 w-5 mr-1" />
+      {text && <span className="">{text}</span>}
+    </Badge>
+  );
+};
 
 function sortedHeader(column: Column<any, any>, headerName: string) {
   return (
@@ -43,8 +58,8 @@ function sortedHeader(column: Column<any, any>, headerName: string) {
       className="flex justify-start items-center gap-1 pl-0"
       variant="ghost"
       onClick={() => {
-        column.toggleSorting(column.getIsSorted() === "asc")
-        console.log(column.getIsSorted())
+        column.toggleSorting(column.getIsSorted() === "asc");
+        console.log(column.getIsSorted());
       }}
     >
       {headerName}
@@ -52,7 +67,7 @@ function sortedHeader(column: Column<any, any>, headerName: string) {
       {column.getIsSorted() === "desc" && <ArrowDown className="" />}
       {column.getIsSorted() === false && <ArrowDown className="opacity-0" />}
     </Button>
-  )
+  );
 }
 
 export const columns: ColumnDef<Athlete>[] = [
@@ -66,7 +81,9 @@ export const columns: ColumnDef<Athlete>[] = [
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
-        onCheckedChange={(value) => {table.toggleAllPageRowsSelected(!!value);}}
+        onCheckedChange={(value) => {
+          table.toggleAllPageRowsSelected(!!value);
+        }}
         aria-label="Select all"
       />
     ),
@@ -74,7 +91,7 @@ export const columns: ColumnDef<Athlete>[] = [
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => {
-          row.toggleSelected(!!value); 
+          row.toggleSelected(!!value);
         }}
         onClick={(e) => e.stopPropagation()}
         aria-label="Select row"
@@ -89,20 +106,25 @@ export const columns: ColumnDef<Athlete>[] = [
   // First Name
   {
     accessorKey: "firstName",
-    header: ({ column }) => sortedHeader(column, "Vorname")
+    header: ({ column }) => sortedHeader(column, "Vorname"),
   },
 
   // Last Name
   {
     accessorKey: "lastName",
-    header: ({ column }) => sortedHeader(column, "Nachname")
+    header: ({ column }) => sortedHeader(column, "Nachname"),
   },
 
   // Sex
   {
     accessorKey: "sex",
     header: "Geschlecht",
-    cell: ({ row }) => row.original.sex.toUpperCase(),
+    cell: ({ row }) => {
+      const sex = row.original.sex;
+      if (sex === "m") return "Männlich"
+      if (sex === "f") return "Weiblich"
+      if (sex === "d") return "Divers"
+    },
     enableGlobalFilter: false,
   },
 
@@ -118,7 +140,7 @@ export const columns: ColumnDef<Athlete>[] = [
 
       const dateA = parseGermanDate(rowA.original.dateOfBirth).getTime();
       const dateB = parseGermanDate(rowB.original.dateOfBirth).getTime();
-      console.log(dateA)
+      console.log(dateA);
       return dateA - dateB;
     },
   },
@@ -129,38 +151,37 @@ export const columns: ColumnDef<Athlete>[] = [
     header: ({ column }) => sortedHeader(column, "Medaillen"),
     enableGlobalFilter: false,
     cell: ({ row }) => {
-      const allMedals = row.original.goldMedals + row.original.silverMedals + row.original.bronzeMedals
+      const feats = row.original.feats || [];
+      const groupedByDiscipline = feats.reduce((accumulator, currentFeat) => {
+        const disciplineId = currentFeat.ruling?.discipline_id || 0;
+        if (!accumulator[disciplineId]) {
+          accumulator[disciplineId] = [];
+        }
+        accumulator[disciplineId].push(currentFeat);
+        return accumulator;
+      }, {} as Record<number, Feat[]>);
 
-      // Display icons for medals
       return (
-        <div className="flex items-center justify-between gap-1">
-          <div className="flex items-center space-x-2">
-            {row.original.goldMedals >= 1 && (
-              <Badge className="bg-yellow-300 text-yellow-900 pointer-events-none">
-                <Medal className="h-5 w-5 mr-1" /> {row.original.goldMedals}
-              </Badge>
-            )}
-
-            {row.original.silverMedals >= 1 && (
-              <Badge className="bg-gray-300 text-gray-800 pointer-events-none">
-                <Medal className="h-5 w-5 mr-1" /> {row.original.silverMedals}
-              </Badge>
-            )}
-
-            {row.original.bronzeMedals >= 1 && (
-              <Badge className="bg-orange-300 text-orange-900 pointer-events-none">
-                <Medal className="h-5 w-5 mr-1" /> {row.original.bronzeMedals}
-              </Badge>
-            )}
-          </div>
+        <div className="flex gap-2 flex-wrap">
+          {Object.entries(groupedByDiscipline).map(([key, feats]) => {
+            const bestMedal = findBestMedal(feats);
+            if (!bestMedal) return;
+            return (
+              <MedalDisplay
+                type={bestMedal.medal || ""}
+                text={bestMedal.ruling?.discipline?.name || ""}
+                key={key}
+              />
+            );
+          })}
         </div>
-      )
-
+      );
     },
     sortingFn: (rowA, rowB) => {
-      const totalMedals = (athlete: Athlete) => athlete.bronzeMedals + athlete.goldMedals + athlete.silverMedals
-      return totalMedals(rowA.original) - totalMedals(rowB.original)
-    }
+      const totalMedals = (athlete: Athlete) =>
+        athlete.bronzeMedals + athlete.goldMedals + athlete.silverMedals;
+      return totalMedals(rowA.original) - totalMedals(rowB.original);
+    },
   },
 
   // Action
@@ -169,10 +190,8 @@ export const columns: ColumnDef<Athlete>[] = [
     enableColumnFilter: false,
     enableGlobalFilter: false,
     cell: ({ row }) => {
-
       return (
         <Dialog>
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
@@ -180,24 +199,43 @@ export const columns: ColumnDef<Athlete>[] = [
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+            <DropdownMenuContent
+              align="end"
+              onClick={(e) => e.stopPropagation()}
+            >
               <DialogTrigger asChild>
                 <DropdownMenuItem>
                   <ChartNoAxesCombined />
                   <span>Neue Leistung eintragen</span>
                 </DropdownMenuItem>
               </DialogTrigger>
-              <DropdownMenuItem  onClick={(e) => {e.stopPropagation(); downloadCsv([row.original.id])}}><Download />Als CSV exportieren</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  downloadCsv([row.original.id]);
+                }}
+              >
+                <Download />
+                Als CSV exportieren
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem><Pen />Editieren</DropdownMenuItem>
-              <DropdownMenuItem className="text-red-600"><Trash2 />Löschen</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Pen />
+                Editieren
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-red-600">
+                <Trash2 />
+                Löschen
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <FeatEntryDialog athlete={row.original.firstName + " " + row.original.lastName} id={row.original.id} />
-
+          <FeatEntryDialog
+            athlete={row.original.firstName + " " + row.original.lastName}
+            id={row.original.id}
+          />
         </Dialog>
-      )
-    }
+      );
+    },
   },
-]
+];
