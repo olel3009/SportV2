@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify
 from database.models import Rule, Discipline
 from database.schemas import RuleSchema
 from database import db
+from api.logs.logger import logger
 
 bp_rule = Blueprint('rule', __name__)
 
@@ -45,6 +46,7 @@ def create_rule():
     )
     db.session.add(new_rule)
     db.session.commit()
+    logger.info("Regel erfolgreich kreiert!")
     return jsonify({"message": "Rule created", "id": new_rule.id, "version": new_rule.version}), 201
 
 # READ Rules
@@ -53,12 +55,14 @@ def get_rules():
     all_rules = Rule.query.all()
     schema = RuleSchema(many=True)
     result = schema.dump(all_rules)
+    logger.info("Alle Regeln erfolgreich aufgerufen!")
     return jsonify(result)
 
 @bp_rule.route('/rules/<int:id>', methods=['GET'])
 def get_rule(id):
     rule = Rule.query.get_or_404(id)
     schema = RuleSchema()
+    logger.info("Regel erfolgreich aufgerufen!")
     return jsonify(schema.dump(rule))
 
 # UPDATE Rule
@@ -108,6 +112,7 @@ def update_rule_id(id):
         rule.valid_end = valid_data['valid_end']
 
     db.session.commit()
+    logger.info("Regel erfolgreich aktualisiert!")
     return jsonify({"message": "Rule updated"})
 
 # DELETE Rule
@@ -116,6 +121,7 @@ def delete_rule(id):
     rule = Rule.query.get_or_404(id)
     db.session.delete(rule)
     db.session.commit()
+    logger.info("Regel erfolgreich gelöscht!")
     return jsonify({"message": "Rule deleted"})
 
 @bp_rule.route('/rules/import', methods=['POST'])

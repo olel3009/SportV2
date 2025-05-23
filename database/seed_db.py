@@ -1,6 +1,7 @@
 from database import db, create_app
 from database.models import Trainer, Athlete, Discipline, Rule, Result, User
 from datetime import datetime, date as _date
+from api.logs.logger import logger
 
 def parse_date(d: str) -> _date:
     """
@@ -419,7 +420,7 @@ def seed_test_data():
     ]
         db.session.add_all(results)
         db.session.commit()
-        print("Testdatensätze wurden erfolgreich eingefügt.")
+        logger.info("Testdatensätze wurden erfolgreich eingefügt!")
 
 app = create_app()
 if __name__ == '__main__':
