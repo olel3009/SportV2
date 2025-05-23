@@ -2,7 +2,7 @@ export interface Athlete {
     id: number;
     firstName: string;
     lastName: string;
-    sex: "m" | "w" | "d";
+    sex: "m" | "f" | "d";
     swimCertificate: boolean;
     dateOfBirth: string;
     goldMedals: number;
@@ -29,6 +29,7 @@ export interface Rule{
     id: number;
 
     discipline_id: number;
+    discipline: Discipline | undefined;
 
     rule_name: string;
 
@@ -48,8 +49,8 @@ export interface Rule{
     thresh_silver_f: number;
     thresh_gold_f: number;
 
-    valid_start: Date;
-    valid_end: Date;
+    valid_start: string;
+    valid_end: string;
 
     version:number;
 
@@ -74,4 +75,16 @@ export interface Expectation {
     medalThresholdsM: [number, number, number]; //values for bronze, silver, gold
     medalThresholdsW: [number, number, number];
     action: [string, string]|string; //eg. "Medizinball (1kg)" usw. its [m, w] in the array
+}
+
+export interface csvFeat{  
+    datum: string;
+    ergebnis:  string;
+    geburtstag:  string;
+    geschlecht:  string;
+    kategorie:  string;
+    name:  string;
+    punkte: string; 
+    vorname:  string; 
+    uebung:  string; 
 }

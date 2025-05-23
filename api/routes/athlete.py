@@ -241,7 +241,7 @@ def create_athletes_from_csv():
                 continue
 
             try:
-                birth_date_obj = datetime.strptime(birth_date_str, '%Y-%m-%d').date()
+                birth_date_obj = datetime.strptime(birth_date_str, '%d.%m.%Y').date()
             except ValueError:
                 errors_list.append({
                     "line_number": line_number,

@@ -1,29 +1,29 @@
 //Fügen Sie hier alle Funktionen ein, die Athleten abrufen, damit sie im bereits vorhandenen Code verwendet werden können
 //Auf diese Weise müssen wir, wenn die API fertig ist, nur die Logik hier ändern und nicht an anderer Stelle im Code
 //Außerdem werden diese Funktionen mit ziemlicher Sicherheit mehr als einmal verwendet, daher ist es gut, sie woanders zu platzieren
-import { Athlete, Feat, Rule, Discipline } from "../src/models/athlete";
+import { Athlete, Feat, Rule, Discipline, csvFeat } from "../src/models/athlete";
 import { validateAndGetToken } from "./auth";
 
-export type csvCombo ={
-  last_name:string;
-  first_name:string;
-  gender:string;
-  birth_date:string;
-  exercise:string;
-  category:string;
-  date:string;
-  medal:string;
-  result:number;
-}
+export type csvCombo = {
+  last_name: string;
+  first_name: string;
+  gender: string;
+  birth_date: string;
+  exercise: string;
+  category: string;
+  date: string;
+  medal: string;
+  result: number;
+};
 
-export async function getAthleteWithFeats(id:number): Promise<csvCombo[]> {
+export async function getAthleteWithFeats(id: number): Promise<csvCombo[]> {
 const token = validateAndGetToken();
     if (token === null || token === false) {
         // Token ist ungültig, validateAndGetToken leitet bereits weiter
         return [];
 
 }else {
-let fetchlink:string='http://127.0.0.1:5000/athletes/'+id+'/results';
+let fetchlink: string = "http://127.0.0.1:5000/athletes/" + id + "/results";
   console.log(fetchlink);
   const res = await fetch(fetchlink, {
     cache: "no-store",
@@ -35,23 +35,22 @@ let fetchlink:string='http://127.0.0.1:5000/athletes/'+id+'/results';
     throw new Error(`API call failed: ${res.status}`);
   }
   let data = await res.json();
-  let last_name_raw:string=data.athlete.last_name;
-  let first_name_raw:string=data.athlete.first_name;
-  let gender_raw:string=data.athlete.gender;
-  let birth_date_raw:string=data.athlete.birth_date;
-  const mapped:csvCombo[]=data.results.map((raw: any)=>({
-    last_name:last_name_raw,
-    first_name:first_name_raw,
-    gender:gender_raw,
-    birth_date:birth_date_raw,
-    exercise:raw.rule.rule_name,
-    category:raw.rule.discipline.discipline_name,
-    date:raw.created_at,
-    medal:raw.medal,
-    result:raw.result
+  let last_name_raw: string = data.athlete.last_name;
+  let first_name_raw: string = data.athlete.first_name;
+  let gender_raw: string = data.athlete.gender;
+  let birth_date_raw: string = data.athlete.birth_date;
+  const mapped: csvCombo[] = data.results.map((raw: any) => ({
+    last_name: last_name_raw,
+    first_name: first_name_raw,
+    gender: gender_raw,
+    birth_date: birth_date_raw,
+    exercise: raw.rule.rule_name,
+    category: raw.rule.discipline.discipline_name,
+    date: raw.created_at,
+    medal: raw.medal,
+    result: raw.result,
   }));
   return mapped;
-
 
 }
 
@@ -59,12 +58,11 @@ let fetchlink:string='http://127.0.0.1:5000/athletes/'+id+'/results';
 
 }
 
-
 type RawAthlete = {
   id: number;
   first_name: string;
   last_name: string;
-  gender: "m" | "w" | "d";
+  gender: "m" | "f" | "d";
   birth_date: string;
   swim_certificate: boolean;
   created_at: string;
@@ -73,7 +71,7 @@ type RawAthlete = {
 
 export async function getAthleteById(id: number): Promise<Athlete | undefined> {
   const all = await getAllAthletes();
-  return all.find(a => a.id === id);
+  return all.find((a) => a.id === id);
 }
 
 export async function getAllAthletes(): Promise<Athlete[]> {
@@ -130,10 +128,13 @@ type RawFeat = {
 
 export async function getFeatsById(id: number): Promise<Feat[] | undefined> {
   const all = await getAllFeats(true, id);
-  return all.filter(a => a.athlete_id === id);
+  return all.filter((a) => a.athlete_id === id);
 }
 
-export async function getAllFeats(forOne:boolean=false, id:number|null=null): Promise<Feat[]> {
+export async function getAllFeats(
+  forOne: boolean = false,
+  id: number | null = null
+): Promise<Feat[]> {
 const token = validateAndGetToken();
     if (token === null || token === false) {
         // Token ist ungültig, validateAndGetToken leitet bereits weiter
@@ -162,16 +163,19 @@ const token = validateAndGetToken();
     medal: raw.medal,
     created_at: raw.created_at,
     updated_at: raw.updated_at,
-    ruling:undefined,
+    ruling: undefined,
   }));
 
-  const rules= await getAllRules();
-  if(forOne){
-    preppedFeats=preppedFeats.filter(a => a.athlete_id === id);
+  const rules = await getAllRules();
+  const disciplines = await getAllDisciplines();
+  if (forOne) {
+    preppedFeats = preppedFeats.filter((a) => a.athlete_id === id);
   }
 
-  preppedFeats.forEach( feat=>{
-    feat.ruling=rules.find(r=>r.id==feat.rule_id);
+  preppedFeats.forEach((feat) => {
+    feat.ruling = rules.find((r) => r.id == feat.rule_id);
+    if (feat.ruling === undefined) return;
+    feat.ruling.discipline = disciplines.find(d => d.id === feat.ruling!.discipline_id) || {id:0, name:""}
   });
 
   return preppedFeats;
@@ -179,7 +183,7 @@ const token = validateAndGetToken();
   
 }
 
-type RawRule= {
+type RawRule = {
   id: number;
 
   discipline_id: number;
@@ -202,20 +206,21 @@ type RawRule= {
   threshold_silver_f: number;
   threshold_gold_f: number;
 
-  valid_start: Date;
-  valid_end: Date;
+  valid_start: string;
+  valid_end: string;
 
-  version:number;
+  version: number;
 
-  created_at:Date;
-  updated_at:Date;
-}
+  created_at: Date;
+  updated_at: Date;
+};
 
-export async function getRulesByDisciplineId(id: number): Promise<Rule[] | undefined> {
+export async function getRulesByDisciplineId(
+  id: number
+): Promise<Rule[] | undefined> {
   const all = await getAllRules();
-  return all.filter(a => a.discipline_id === id);
+  return all.filter((a) => a.discipline_id === id);
 }
-
 
 export async function getAllRules(): Promise<Rule[]> {
   const token = validateAndGetToken();
@@ -240,6 +245,7 @@ export async function getAllRules(): Promise<Rule[]> {
     id: raw.id,
 
     discipline_id: raw.discipline_id,
+    discipline: undefined,
 
     rule_name: raw.rule_name,
 
@@ -262,10 +268,10 @@ export async function getAllRules(): Promise<Rule[]> {
     valid_start: raw.valid_start,
     valid_end: raw.valid_end,
 
-    version:raw.version,
+    version: raw.version,
 
-    created_at:raw.created_at,
-    updated_at:raw.updated_at,
+    created_at: raw.created_at,
+    updated_at: raw.updated_at,
   }));
 
   return mapped;
@@ -274,13 +280,12 @@ export async function getAllRules(): Promise<Rule[]> {
  
 }
 
-type RawDiscipline ={
-  id:number;
-  discipline_name:string;
-  created_at:Date;
-  updated_at:Date;
-}
-
+type RawDiscipline = {
+  id: number;
+  discipline_name: string;
+  created_at: Date;
+  updated_at: Date;
+};
 
 export async function getAllDisciplines(): Promise<Discipline[]> {
   const token = validateAndGetToken();
@@ -304,23 +309,19 @@ const res = await fetch("http://127.0.0.1:5000/disciplines", {
   //Mapping
   let mapped: Discipline[] = data.map((raw) => ({
     id: raw.id,
-    name: raw.discipline_name
+    name: raw.discipline_name,
   }));
 
-
   return mapped;
-  }
-  
 }
-
-
+}
 
 export async function addFeatToAthlete(
   athleteId: number,
   ruleId: number,
-  year: number,
+  year: string,
   result: string
-): Promise<{ message: string; id: number}|false> {
+): Promise<{ message: string; id: number } | false> {
   const token = validateAndGetToken();
     if (token === null || token === false) {
         // Token ist ungültig, validateAndGetToken leitet bereits weiter
@@ -343,6 +344,7 @@ let athlete = await getAthleteById(athleteId);
     alert("Bitte ein Ergebnis eingeben!");
     return false;
   }
+  result=result.replace(",", ".");
   const res = await fetch("http://127.0.0.1:5000/results", {
     method: "POST",
     headers: { "Content-Type": "application/json",
@@ -353,16 +355,17 @@ let athlete = await getAthleteById(athleteId);
       athlete_id: athleteId,
       rule_id: ruleId,
       year,
-      result
-    })
+      result,
+    }),
   });
   if (!res.ok) {
     const errorBody = await res.json();
     throw new Error(errorBody.error || "Failed to add result");
+  }else{
+    alert("Ergebnis wurde eingetragen!")
   }
 
   return res.json();
   }
-  
   
 }

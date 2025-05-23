@@ -35,6 +35,11 @@ const items = [
     icon: ClipboardList
   },
   {
+    title: "CSV-Eingabe",
+    url: "/csv_entry",
+    icon: ClipboardList
+  },
+  {
     title: "Wiki",
     url: "/wiki_page",
     icon: BookOpenText

@@ -1,9 +1,10 @@
 "use client";
 import { Athlete, Rule } from "@/models/athlete";
-import { getAllAthletes, addFeatToAthlete, getAllDisciplines, getAllRules, getRulesByDisciplineId } from "@/../generic_functions/athlete_getters";
+import { getAllAthletes, addFeatToAthlete, getAllDisciplines, getAllRules, getRulesByDisciplineId, getAthleteById } from "@/../generic_functions/athlete_getters";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
+import { calculateAge } from "@/generalHelpers";
 import {
   Select,
   SelectContent,
@@ -33,6 +34,12 @@ import {
 } from "./ui/dialog";
 import { useEffect, useState } from "react";
 
+type athAgeMap={
+  athId:string;
+  age:number;
+}
+
+let ageMapper: athAgeMap[]=[];
 
 function AthleteSelect({
   value,
@@ -49,7 +56,14 @@ function AthleteSelect({
   useEffect(() => {
     getAllAthletes().then(setAthletes)
   }, [])
+  athletes.forEach(ath=>{
+    const athId = String(ath.id);
+    const age   = calculateAge(ath.dateOfBirth);
+    
+    const map: athAgeMap = { athId, age }; 
 
+    ageMapper.push(map);
+  });
   return (
     <Select value={value} onValueChange={onChange} disabled={athleteSet}>
       <SelectTrigger id="athlete">
@@ -101,16 +115,20 @@ export function DisciplineSelect({
   );
 }
 
+
+
 export function ExerciseSelect({
   disciplineId,
   value,
+  age,
   onChange
 }: {
   disciplineId: string;
   value: string;
+  age:number;
   onChange: (val: string) => void;
 }) {
-  const [exercises, setExercises] = useState<{ id: number; rule_name: string }[] | null>(null);
+  const [exercises, setExercises] = useState<{ id: number; rule_name: string; min_age: number; max_age: number; }[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -129,50 +147,57 @@ export function ExerciseSelect({
         <SelectValue placeholder="Übung wählen" />
       </SelectTrigger>
       <SelectContent>
-        {exercises.map((exer) => (
-          <SelectItem value={String(exer.id)} key={exer.id}>
-            {exer.rule_name}
-          </SelectItem>
-        ))}
+        {exercises.map((exer) => {
+          if(age>=exer.min_age&&age<=exer.max_age){
+            return(<SelectItem value={String(exer.id)} key={exer.id}>
+                    {exer.rule_name}
+                  </SelectItem>)
+          }
+          else{
+            return null;
+          }
+      })}
       </SelectContent>
     </Select>
   );
 }
 
-function formatDate(date: Date): number {
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // months are zero-based
-  const year = date.getFullYear();
-  //return `${day}.${month}.${year}`;
-  return year;
-}
 
 let uebID=0
-let dat=0
+let dat=""
 let erg = "";
 let ath = 0;
 const submit = () => {
+
   console.log("Uebung:", uebID, "Athlet:", ath, "Datum:", dat, "Ergebnis:", erg);
   addFeatToAthlete(ath, uebID, dat, erg);
 }
 
+
+function formatGermanDate(d: Date): string {
+  const day   = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0'); // months are 0–11
+  const year  = d.getFullYear();
+  return `${day}.${month}.${year}`;
+}
+
 export function FeatEntryContent({ id = -1 }: { id?: number }) {
   const today = new Date();
-  const formatted = formatDate(today);
+  const formatted = formatGermanDate(today);
   let resDesc="erg in whatever";
 
   // fetched data
   const [exercises, setExercises] = useState<Rule[]>([]);
-  const [disciplines, setDisciplines] = useState<Discipline[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // form state
   const [selectedAthlete, setSelectedAthlete] = useState("");
+  const [athleteAge, setAthleteAge] = useState<number>(0);
   const [selectedDiscipline, setSelectedDiscipline] = useState("");
   const [selectedExercise, setSelectedExercise] = useState("");
   const [result, setResult] = useState("");
-  const [date, setDate] = useState<number>(formatted);
+  const [date, setDate] = useState(String(formatted));
 
   // load rules + disciplines once
   useEffect(() => {
@@ -186,7 +211,6 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
         if (cancelled) return;
 
         setExercises(allRules);
-        setDisciplines(allDisc);
 
         // default discipline → first discipline
         if (allDisc.length > 0) {
@@ -200,7 +224,7 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
 
         // default athlete if passed in
         if (id !== -1) {
-          setSelectedAthlete(String(id));
+          handleAthleteChange(String(id));
         }
       } catch (err: any) {
         if (!cancelled) setError(err.message);
@@ -253,6 +277,14 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
 
   if (loading) return <div>Loading form…</div>;
   if (error) return <div className="text-red-600">Error: {error}</div>;
+  const handleAthleteChange=(newAth:string)=>{
+    setSelectedAthlete(newAth);
+      // find the one entry whose athId matches newAth
+    const found = ageMapper.find(m => m.athId === newAth);
+
+    // if we found it, setAthleteAge to that age, otherwise 0 (or whatever default makes sense)
+    setAthleteAge(found?.age ?? 0);
+  }
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -261,7 +293,7 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
         <AthleteSelect
           id={id}
           value={selectedAthlete}
-          onChange={setSelectedAthlete}
+          onChange={handleAthleteChange}
         />
       </div>
 
@@ -278,6 +310,7 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
         <ExerciseSelect
           disciplineId={selectedDiscipline}
           value={selectedExercise}
+          age={athleteAge}
           onChange={setSelectedExercise}
         />
       </div>
@@ -287,10 +320,9 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
         <Input
           id="datum"
           name="datum"
-          type="number"
           placeholder="Datum des Ergebnis"
           value={date}
-          onChange={(e) => setDate(Number(e.target.value))}
+          onChange={(e) => setDate(e.target.value)}
         />
       </div>
 
