@@ -17,8 +17,9 @@ export type csvCombo ={
 }
 
 export async function getAthleteWithFeats(id:number): Promise<csvCombo[]> {
-if (validateAndGetToken() !== true) {
-        console.log("No access token found");
+const token = validateAndGetToken();
+    if (token === null || token === false) {
+        // Token ist ungültig, validateAndGetToken leitet bereits weiter
         return [];
 
 }else {
@@ -76,8 +77,9 @@ export async function getAthleteById(id: number): Promise<Athlete | undefined> {
 }
 
 export async function getAllAthletes(): Promise<Athlete[]> {
-  if (validateAndGetToken() !== true) {
-    console.log("No access token found");
+const token = validateAndGetToken();
+    if (token === null || token === false) {
+        // Token ist ungültig, validateAndGetToken leitet bereits weiter
     return [];
   }else{
 
@@ -132,8 +134,9 @@ export async function getFeatsById(id: number): Promise<Feat[] | undefined> {
 }
 
 export async function getAllFeats(forOne:boolean=false, id:number|null=null): Promise<Feat[]> {
-  if (validateAndGetToken() !== true) {
-    console.log("No access token found");
+const token = validateAndGetToken();
+    if (token === null || token === false) {
+        // Token ist ungültig, validateAndGetToken leitet bereits weiter
     return [];
   }else{
     const res = await fetch("http://127.0.0.1:5000/results", {
@@ -215,8 +218,9 @@ export async function getRulesByDisciplineId(id: number): Promise<Rule[] | undef
 
 
 export async function getAllRules(): Promise<Rule[]> {
-  if (validateAndGetToken() !== true) {
-    console.log("No access token found");
+  const token = validateAndGetToken();
+    if (token === null || token === false) {
+        // Token ist ungültig, validateAndGetToken leitet bereits weiter
     return [];
   }else{
  const res = await fetch("http://127.0.0.1:5000/rules", {
@@ -279,8 +283,10 @@ type RawDiscipline ={
 
 
 export async function getAllDisciplines(): Promise<Discipline[]> {
-  if (validateAndGetToken() !== true) {
-    console.log("No access token found");
+  const token = validateAndGetToken();
+    if (token === null || token === false) {
+        // Token ist ungültig, validateAndGetToken leitet bereits weiter
+        let errorMsg ="Token ist ungültig";
     return [];
   }else{
 const res = await fetch("http://127.0.0.1:5000/disciplines", {
@@ -315,8 +321,9 @@ export async function addFeatToAthlete(
   year: number,
   result: string
 ): Promise<{ message: string; id: number}|false> {
-  if (validateAndGetToken() !== true) {
-    console.log("No access token found");
+  const token = validateAndGetToken();
+    if (token === null || token === false) {
+        // Token ist ungültig, validateAndGetToken leitet bereits weiter
     return false;
   }else{
 let athlete = await getAthleteById(athleteId);

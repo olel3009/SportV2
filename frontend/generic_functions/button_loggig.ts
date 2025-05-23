@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { validateAndGetToken } from "./auth";
+import { error } from "console";
 
 //1 für positive und 0 für negative rückmeldung
 let dbresults = 0;
@@ -49,9 +51,10 @@ export function button_loggig_date(): number {
 }
 
 export async function button_loggig_dbresults(): Promise<number> {
-    if (validateAndGetToken() !== true) {
-        console.log("No access token found");
-        return 0;
+    const token = validateAndGetToken();
+    if (token === null || token === false) {
+        // Token ist ungültig, validateAndGetToken leitet bereits weiter
+        return 0; // Fehlertext zurückgeben
     }else{
 console.log("button_loggig_dbresults");
     //Hier wird der Wert der Datenbankabfrage zurückgegeben, ob die Regelungen schon mal in diesem Jahr aktualisiert wurden
@@ -124,8 +127,13 @@ export async function button_loggig_color(): Promise<number> {
 }
 
 export async function add_rules(file: File): Promise<string | null> {
-    
-    if(validateAndGetToken() == true) {
+
+    const token = validateAndGetToken();
+    if (token === null || token === false) {
+        // Token ist ungültig, validateAndGetToken leitet bereits weiter
+        let errorMsg ="Token ist ungültig";
+        return errorMsg; // Fehlertext zurückgeben
+    }else{
         const formData = new FormData();
         formData.append("file", file);
         const res = await fetch("http://127.0.0.1:5000/rules/import", {
@@ -149,13 +157,8 @@ export async function add_rules(file: File): Promise<string | null> {
     } else {
         console.log("Rule added successfully");
         return null; // kein Fehler
-    }
-    }else {
-        console.log("Token invalid or not found");
-        return "Token invalid or not found";
-    }
-    
-    
+    } 
+}
 }
 
 

@@ -10,9 +10,11 @@ type RawUser = {
 
 //Mit Backend verbunden
 export async function getUsers(): Promise<RawUser[]> {
-    if (validateAndGetToken() != true) {
-        console.log("No access token found");
-        return [];
+    const token = validateAndGetToken();
+    if (token === null || token === false) {
+        // Token ist ungültig, validateAndGetToken leitet bereits weiter
+        let errorMsg ="Token ist ungültig";
+        throw new Error(errorMsg) // Fehlertext zurückgeben
     }else{
 const res = await fetch("http://127.0.0.1:5000/users", {
         headers: {
