@@ -4,8 +4,8 @@ import RegelungenButton from "@/components/RegelungenButton";
 import { useEffect, useState } from "react";
 
 export default function Startpage() {
-  
-  
+
+
   const [tokenValid, setTokenValid] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -27,5 +27,5 @@ export default function Startpage() {
       <RegelungenButton />
     </div>
   );
-  
+
 }

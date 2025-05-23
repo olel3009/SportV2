@@ -1,10 +1,24 @@
 "use client"
-
-import React, { useState, DragEvent } from 'react';
+import { validateAndGetToken } from '@/auth';
+import React, { useState, DragEvent, useEffect } from 'react';
 
 export default function Startpage() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setTokenValid(validateAndGetToken());
+  }, []);
+
+  if (tokenValid === null) {
+    // Noch nicht geprüft, z.B. Ladeanzeige oder leer
+    return null;
+  }
+  if (!tokenValid) {
+    // Token ist ungültig, validateAndGetToken leitet bereits weiter
+    return null;
+  }
 
   // Handle file selection via input
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,12 +40,17 @@ export default function Startpage() {
 
   // Handle file submission to backend
   const handleSubmit = async () => {
+    const token = validateAndGetToken();
+    if (token === null || token === false) {
+        // Token ist ungültig, validateAndGetToken leitet bereits weiter
+    } else {
+
     if (!file) {
       alert('Bitte eine CSV-Datei auswählen!');
       return;
     }
     setUploading(true);
-    let csvType=0;
+    let csvType = 0;
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -40,22 +59,25 @@ export default function Startpage() {
           // csvString is now the full contents of your CSV as a JavaScript string
           if (csvString.includes("Vorname;Nachname;Geburtstag;Geschlecht;Schwimmzertifikat")) {
             console.log("Person Csv");
-            csvType=2;
+            csvType = 2;
           } else if (csvString.includes("Name;Vorname;Geschlecht;Geburtstag;Übung;Kategorie;Datum;Ergebnis;Punkte")) {
             console.log("Leistungs Csv");
-            csvType=1;
-          }  else {
+            csvType = 1;
+          } else {
             console.log("Not found.");
           }
         })
         .catch(err => console.error("Failed to read file:", err));
-      
 
-      let res:any;
-      if(csvType==1){
-          console.log("Working with this form Data:");
-          console.log(formData);
-          res = await fetch('http://127.0.0.1:5000/results/import', {
+
+      let res: any;
+      if (csvType == 1) {
+        console.log("Working with this form Data:");
+        console.log(formData);
+        res = await fetch('http://127.0.0.1:5000/results/import', {
+          headers: {
+            "Authorization": "Bearer " + localStorage.getItem("access_token")
+          },
           method: 'POST',
           body: formData,
         });
@@ -73,12 +95,14 @@ export default function Startpage() {
             console.warn('Doppelte Athleten:', data.duplicate_athletes);
           }
         }
-      } else if(csvType==2){
+      } else if (csvType == 2) {
         console.log(formData);
-        let csvText= await file.text();
+        let csvText = await file.text();
         res = await fetch('http://127.0.0.1:5000/athletes/csv', {
+
           method: 'POST',
           headers: {
+            "Authorization": "Bearer " + localStorage.getItem("access_token"),
             'Content-Type': 'text/csv; charset=utf-8'
           },
           body: csvText,
@@ -90,10 +114,10 @@ export default function Startpage() {
         } else {
           console.log('Import-Ergebnis:', data);
           alert(`Import erfolgreich! Erstellt`);
-          
+
         }
 
-      } else{
+      } else {
         alert("CSV Typ nicht erkannt!")
       }
 
@@ -103,6 +127,7 @@ export default function Startpage() {
     } finally {
       setUploading(false);
     }
+  }
   };
 
   return (
@@ -131,12 +156,15 @@ export default function Startpage() {
       <button
         onClick={handleSubmit}
         disabled={uploading}
-        className={`${
-          uploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-        } text-white px-4 py-2 rounded`}
+        className={`${uploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+          } text-white px-4 py-2 rounded`}
       >
         {uploading ? 'Lädt...' : 'CSV importieren'}
       </button>
     </div>
   );
 }
+function setTokenValid(arg0: any) {
+  throw new Error('Function not implemented.');
+}
+

@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUtcTimecodeFromGermanDate } from "@/date_format";
-import { findBestMedal } from "@/medal_functions";import { useEffect, useState } from "react";
+import { findBestMedal } from "@/medal_functions"; import { useEffect, useState } from "react";
 import { validateAndGetToken } from "@/auth";
 
 
@@ -64,10 +64,10 @@ function MedalDisplay({
     type === "Gold"
       ? "bg-yellow-300 text-yellow-900"
       : type === "Bronze"
-      ? "bg-orange-300 text-orange-900"
-      : type === "Silber"
-      ? "bg-gray-300 text-gray-800"
-      : "invisible";
+        ? "bg-orange-300 text-orange-900"
+        : type === "Silber"
+          ? "bg-gray-300 text-gray-800"
+          : "invisible";
   return (
     <Badge className={`${colors} flex gap-2 pointer-events-none`}>
       <Medal size={size} />
@@ -104,19 +104,19 @@ export default async function Page({
   let usedExercises: number[] = [];
 
   const [tokenValid, setTokenValid] = useState<boolean | null>(null);
-  
-    useEffect(() => {
-      setTokenValid(validateAndGetToken());
-    }, []);
-  
-    if (tokenValid === null) {
-      // Noch nicht geprüft, z.B. Ladeanzeige oder leer
-      return null;
-    }
-    if (!tokenValid) {
-      // Token ist ungültig, validateAndGetToken leitet bereits weiter
-      return null;
-    }
+
+  useEffect(() => {
+    setTokenValid(validateAndGetToken());
+  }, []);
+
+  if (tokenValid === null) {
+    // Noch nicht geprüft, z.B. Ladeanzeige oder leer
+    return null;
+  }
+  if (!tokenValid) {
+    // Token ist ungültig, validateAndGetToken leitet bereits weiter
+    return null;
+  }
 
   if (athlete === undefined)
     return (

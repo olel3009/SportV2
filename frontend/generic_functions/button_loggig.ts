@@ -7,13 +7,13 @@ let dbresults = 0;
 //0 für aktuelles Datum und 1 für nicht aktuelles Datum welche keine hinterlegung triggert, 2 für hervorheben
 let other_date = 0;
 
-type RawRule ={
-  id:number;
-  discipline_id:number;
-  rule_name:string;
-  created_at:Date;
-  updated_at:Date;
-  valid_start:Date;
+type RawRule = {
+    id: number;
+    discipline_id: number;
+    rule_name: string;
+    created_at: Date;
+    updated_at: Date;
+    valid_start: Date;
 }
 
 
@@ -55,45 +55,45 @@ export async function button_loggig_dbresults(): Promise<number> {
     if (token === null || token === false) {
         // Token ist ungültig, validateAndGetToken leitet bereits weiter
         return 0; // Fehlertext zurückgeben
-    }else{
-console.log("button_loggig_dbresults");
-    //Hier wird der Wert der Datenbankabfrage zurückgegeben, ob die Regelungen schon mal in diesem Jahr aktualisiert wurden
-    //1 für positive und 0 für negative rückmeldung
-    const res = await fetch("http://127.0.0.1:5000/rules", {
-        headers: {
-            "Authorization": "Bearer " + localStorage.getItem("access_token")
-        },
-        method: "GET",
-        cache: "no-store"
-    });
-    if (!res.ok) {
-        return 0; // Fehler bei der API-Abfrage
-        throw new Error(`API call failed: ${res.status}`);
-    }
-    const data: RawRule[] = await res.json();
-    const mapped: RawRule[] = data.map((raw) => ({
-        id: raw.id,
-        discipline_id: raw.discipline_id,
-        rule_name: raw.rule_name,
-        created_at: new Date(raw.created_at),
-        updated_at: new Date(raw.updated_at),
-        valid_start: new Date(raw.valid_start)
-    }));
-    //console.log("Mapped data:", mapped);
-    const year =  new Date().getFullYear();
-    //console.log("Current year:", year);
-    //console.log("Mapped years:", mapped.some((rule) => rule.created_at.getFullYear()));
+    } else {
+        console.log("button_loggig_dbresults");
+        //Hier wird der Wert der Datenbankabfrage zurückgegeben, ob die Regelungen schon mal in diesem Jahr aktualisiert wurden
+        //1 für positive und 0 für negative rückmeldung
+        const res = await fetch("http://127.0.0.1:5000/rules", {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("access_token")
+            },
+            method: "GET",
+            cache: "no-store"
+        });
+        if (!res.ok) {
+            return 0; // Fehler bei der API-Abfrage
+            throw new Error(`API call failed: ${res.status}`);
+        }
+        const data: RawRule[] = await res.json();
+        const mapped: RawRule[] = data.map((raw) => ({
+            id: raw.id,
+            discipline_id: raw.discipline_id,
+            rule_name: raw.rule_name,
+            created_at: new Date(raw.created_at),
+            updated_at: new Date(raw.updated_at),
+            valid_start: new Date(raw.valid_start)
+        }));
+        //console.log("Mapped data:", mapped);
+        const year = new Date().getFullYear();
+        //console.log("Current year:", year);
+        //console.log("Mapped years:", mapped.some((rule) => rule.created_at.getFullYear()));
 
-    if (mapped.some((rule) => rule.created_at.getFullYear() === year )) {
-        dbresults = 1; // Regelungen wurden in diesem Jahr aktualisiert
-        console.log("Regelungen wurden in diesem Jahr aktualisiert");
-    }else{
-        dbresults = 0; // Regelungen wurden in diesem Jahr noch nicht aktualisiert
-        console.log("Regelungen wurden in diesem Jahr noch nicht aktualisiert");
+        if (mapped.some((rule) => rule.created_at.getFullYear() === year)) {
+            dbresults = 1; // Regelungen wurden in diesem Jahr aktualisiert
+            console.log("Regelungen wurden in diesem Jahr aktualisiert");
+        } else {
+            dbresults = 0; // Regelungen wurden in diesem Jahr noch nicht aktualisiert
+            console.log("Regelungen wurden in diesem Jahr noch nicht aktualisiert");
+        }
+        return dbresults;
     }
-    return dbresults;
-    }
-    
+
 }
 
 export function button_loggig_other_date_changer(x: number): void {
@@ -131,34 +131,34 @@ export async function add_rules(file: File): Promise<string | null> {
     const token = validateAndGetToken();
     if (token === null || token === false) {
         // Token ist ungültig, validateAndGetToken leitet bereits weiter
-        let errorMsg ="Token ist ungültig";
+        let errorMsg = "Token ist ungültig";
         return errorMsg; // Fehlertext zurückgeben
-    }else{
+    } else {
         const formData = new FormData();
         formData.append("file", file);
         const res = await fetch("http://127.0.0.1:5000/rules/import", {
-        headers: {
-            "Authorization": "Bearer " + localStorage.getItem("access_token")
-        },
-        method: "POST",
-        body: formData,
-    });
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("access_token")
+            },
+            method: "POST",
+            body: formData,
+        });
 
-    if (!res.ok) {
-        let errorMsg = "Unbekannter Fehler";
-        try {
-            const error = await res.json();
-            errorMsg = error.error || JSON.stringify(error);
-        } catch (e) {
-            errorMsg = res.statusText;
+        if (!res.ok) {
+            let errorMsg = "Unbekannter Fehler";
+            try {
+                const error = await res.json();
+                errorMsg = error.error || JSON.stringify(error);
+            } catch (e) {
+                errorMsg = res.statusText;
+            }
+            console.log("Error adding rule:", errorMsg);
+            return errorMsg; // Fehlertext zurückgeben
+        } else {
+            console.log("Rule added successfully");
+            return null; // kein Fehler
         }
-        console.log("Error adding rule:", errorMsg);
-        return errorMsg; // Fehlertext zurückgeben
-    } else {
-        console.log("Rule added successfully");
-        return null; // kein Fehler
-    } 
-}
+    }
 }
 
 
