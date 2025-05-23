@@ -123,8 +123,8 @@ export default function Home() {
           <h2 className="text-xl font-semibold">04. Export eines Athleten</h2>
           <p>Sowohl unter der Athleten-Detailansicht als auch der Athletenübersicht können einzelne Athleten als CSV exportiert werden</p>
           <p>Hierbei werden zwei CSV Dateien heruntergeladen, eine für die Leistungen des Athleten, eine für den Athleten an sich</p>
-          <p>Die CSV für Leistungen entspricht dem Format Name;Vorname;Geschlecht;Geburtstag;Übung;Kategorie;Datum;Ergebnis;Punkte</p>
-          <p>Die CSV für den Athleten An sich entspricht dem Format Vorname;Nachname;Geburtstag;Geschlecht;Schwimmzertifikat</p>
+          <p>Die CSV für Leistungen entspricht dem Format Name;Vorname;Geschlecht;Geburtsdatum;Übung;Kategorie;Datum;Ergebnis;Punkte</p>
+          <p>Die CSV für den Athleten An sich entspricht dem Format Vorname;Nachname;Geburtsdatum;Geschlecht;Schwimmzertifikat</p>
         </div>
         <div id="export_eines_athleten_pdf" className="mb-8">
           <h2 className="text-xl font-semibold">05. Export eines Athleten und seiner Daten als PDF</h2>

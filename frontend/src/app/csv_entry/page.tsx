@@ -39,10 +39,10 @@ export default function Startpage() {
       await file.text()
         .then(csvString => {
           // csvString is now the full contents of your CSV as a JavaScript string
-          if (csvString.includes("Vorname;Nachname;Geburtstag;Geschlecht;Schwimmzertifikat")) {
+          if (csvString.includes("Vorname;Nachname;Geburtsdatum;Geschlecht;Schwimmzertifikat")) {
             console.log("Person Csv");
             csvType=2;
-          } else if (csvString.includes("Name;Vorname;Geschlecht;Geburtstag;Übung;Kategorie;Datum;Ergebnis;Punkte")) {
+          } else if (csvString.includes("Name;Vorname;Geschlecht;Geburtsdatum;Übung;Kategorie;Datum;Ergebnis;Punkte")) {
             console.log("Leistungs Csv");
             csvType=1;
           }  else {
@@ -111,8 +111,8 @@ export default function Startpage() {
       <h1 className="text-2xl font-bold mb-4">CSV-Eingabe</h1>
       <p className="mb-4">Bitte laden sie hier eine CSV in einem der folgenden Formate hoch</p>
       <ul>
-        <li>Vorname;Nachname;Geburtstag;Geschlecht;Schwimmzertifikat</li>
-        <li>Name;Vorname;Geschlecht;Geburtstag;Übung;Kategorie;Datum;Ergebnis;Punkte</li>
+        <li>Vorname;Nachname;Geburtsdatum;Geschlecht;Schwimmzertifikat</li>
+        <li>Name;Vorname;Geschlecht;Geburtsdatum;Übung;Kategorie;Datum;Ergebnis;Punkte</li>
       </ul>
       <br></br>
 
