@@ -9,7 +9,7 @@ LOG_WHEN = os.getenv('LOG_WHEN', 'midnight')
 LOG_INTERVAL = int(os.getenv('LOG_INTERVAL', '1'))
 LOG_BACKUP = int(os.getenv('LOG_BACKUP', '2'))
 
-formatter= logging.Formatter('%(asctime)s - %(levelname)s - %(name)s - %(message)s')
+formatter= logging.Formatter('%(asctime)s - %(levelname)s - %(funcName)s - %(message)s')
 
 handler = TimedRotatingFileHandler(r'api\logs\system.log', when = LOG_WHEN, backupCount = LOG_BACKUP, interval = LOG_INTERVAL)
 handler.setFormatter(formatter)
