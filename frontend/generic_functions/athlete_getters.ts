@@ -50,6 +50,9 @@ type RawAthlete = {
   gender: "m" | "f" | "d";
   birth_date: string;
   swim_certificate: boolean;
+  total_bronze: number|undefined;
+  total_silver: number|undefined;
+  total_gold: number|undefined;
   created_at: string;
   updated_at: string;
 };
@@ -58,6 +61,44 @@ export async function getAthleteById(id: number): Promise<Athlete | undefined> {
   const all = await getAllAthletes();
   return all.find((a) => a.id === id);
 }
+
+export async function getAthletesMedals(): Promise<Athlete[]> {
+  // 1) load the base list
+  const all = await getAllAthletes();
+
+  // 2) for each athlete kick off a fetch + map to your client‐side type
+  const athletePromises = all.map(async (athlete): Promise<Athlete> => {
+    const res = await fetch(
+      `http://127.0.0.1:5000/athletes/${athlete.id}?show_results=true`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) {
+      throw new Error(`API call failed: ${res.status}`);
+    }
+
+    // 3) JSON is one athlete with medal counts
+    const raw: RawAthlete = await res.json();
+
+    // 4) map to your front‐end Athlete interface
+    return {
+      id: raw.id,
+      firstName: raw.first_name,
+      lastName: raw.last_name,
+      sex: raw.gender,
+      dateOfBirth: raw.birth_date,
+      swimCertificate: raw.swim_certificate,
+      goldMedals: raw.total_gold ?? 0,
+      silverMedals: raw.total_silver ?? 0,
+      bronzeMedals: raw.total_bronze ?? 0,
+      disciplines: [],
+      feats: [],
+    };
+  });
+
+  // 5) wait for all fetch+maps to finish in parallel
+  return await Promise.all(athletePromises);
+}
+
 
 export async function getAllAthletes(): Promise<Athlete[]> {
   const res = await fetch("http://127.0.0.1:5000/athletes", {
@@ -77,9 +118,9 @@ export async function getAllAthletes(): Promise<Athlete[]> {
     sex: raw.gender,
     dateOfBirth: raw.birth_date,
     swimCertificate: raw.swim_certificate,
-    goldMedals: 0,
-    silverMedals: 0,
-    bronzeMedals: 0,
+    goldMedals: raw.total_gold??0,
+    silverMedals: raw.total_silver??0,
+    bronzeMedals: raw.total_bronze??0,
     disciplines: [],
     feats: [],
   }));
