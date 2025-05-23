@@ -1,8 +1,10 @@
 from datetime import datetime
 from pypdf import PdfReader, PdfWriter
 from api.athlet import Athlete
+import os
 
 PDF_TEMPLATE = r"api/data/DSA_Einzelpruefkarte_2025_SCREEN.pdf"
+GROUP_TEMPLATE = r"api\data\DSA_Gruppenpruefkarte_2025_SCREEN.pdf"
 
 def fill_pdf_form(athlete: Athlete) -> str:
     """
@@ -67,7 +69,96 @@ def fill_pdf_form(athlete: Athlete) -> str:
     page = writer.pages[0]
     writer.update_page_form_field_values(page, field_values, auto_regenerate=False)
     # 5) Ausgefüllte PDF speichern
-    destination = rf"api/pdfs/{athlete.last_name}_{athlete.first_name}_DSA_Einzelpruefkarte.pdf"
+    path=rf"/downloadFiles/{athlete.last_name}_{athlete.first_name}_DSA_Einzelpruefkarte.pdf"
+    destination = rf"./frontend/public{path}"
+    
+    # ensure the output directory exists
+    output_dir = os.path.dirname(destination)
+    os.makedirs(output_dir, exist_ok=True)
     with open(destination, "wb") as f:
         writer.write(f)
-    return f"PDF erstellt unter {destination}"
+    return f"{path}"
+
+def fill_out_group(athletenIds: list[Athlete]) -> str:
+    """ 
+    Nimmt eine Liste von athleten und schreibt dessen Daten 
+    in die Felder der PDF "DSA_Gruppenpruefkarte.pdf"
+    Gibt den Pfad zur ausgefüllten PDF zurück.
+    """
+    try:
+        reader = PdfReader(GROUP_TEMPLATE)
+    except FileNotFoundError:
+        return f"Fehler: PDF-Vorlage {GROUP_TEMPLATE} nicht gefunden."
+    writer = PdfWriter()
+    writer.append(reader)
+    
+    performances = {
+        "Ausdauer":{
+            1 : "Laufen",
+            2 : "10km Lauf",
+            3 : "Dauer-/Geländelauf",
+            4 : "7,5km Walking/Nordic Walking",
+            5 : "Schwimmen",
+            6 : "Radfahren",
+            "A" : "Sportartspezifisches Abzeichen",
+        },
+        "Kraft":{
+            1:"Schlagball/Wurfball",
+            2:"Medizinball",
+            3:"Kugelstoßen",
+            4:"Steinstoßen",
+            5:"Standweitsprung",
+            6:"erweiteter Leistungskatalog",
+            7:"Gerätturnen",
+            "A":"Sportartspezifisches Abzeichen",
+        },
+        "Schnelligkeit":{
+            1:"Laufen",
+            2:"Schwimmen",
+            3:"Radfahren",
+            4:"Gerätturnen",
+        },
+        "Koordination":{
+            1:"Hochsprung",
+            2:"Weitsprung",
+            3:"Zonenweitsprung",
+            4:"Drehwurf",
+            5:"Schleuderball",
+            6:"Seilspringen",
+            7:"Gerätturnen",
+            "A":"Sportartspezifisches Abzeichen",
+        }
+    }
+    for athlete, i in zip(athletenIds, range(1,len(athletenIds)+1)):
+        field_values = {
+            f"name{i}": f"{athlete.last_name} {athlete.first_name}",
+            f"sex{i}" : athlete.gender,
+            f"birthdate{i}": athlete.birth_date,
+            #f"age{i}" : (int(datetime.today().year) - int(datetime.date(athlete.birth_date, "%Y-%m-%d").year))
+        }
+        sum = 0
+        for perf in athlete.performances:
+            prefix = perf.disciplin.split()[0]
+            suffix = perf.disciplin.split()[-1]
+            field_values.update({f"Punkte_{suffix}{str(i)}" : str(perf.points)})
+            for key in performances[suffix].keys():
+                if performances[suffix][key] == prefix:
+                    field_values.update({f"ZdÜ_{suffix}{str(i)}" : key})
+            field_values.update({f"{suffix}{str(i)}" : prefix})
+            #sum = sum + perf.points  ##TODO das hier muss iwie über medaillien oder sowas laufen
+            sum=0
+            field_values.update({f"Gesamtpunktzahl{i}" : sum})
+        writer.update_page_form_field_values(writer.pages[0], field_values, auto_regenerate=False)
+
+    path=rf"/downloadFiles/{...}_DSA_Gruppenpruefkarte.pdf"
+    destination = rf"./frontend/public{path}"
+    
+    # ensure the output directory exists
+    output_dir = os.path.dirname(destination)
+    os.makedirs(output_dir, exist_ok=True)
+    with open(destination, "wb") as f:
+        writer.write(f)
+    return f"{path}"
+
+if __name__ == "__main__":
+    fill_out_group(Gruppe1)
