@@ -1,3 +1,4 @@
+'use client';
 import { useParams } from "next/navigation";
 import { Athlete, Feat } from "@/models/athlete";
 import {
@@ -29,6 +30,8 @@ import {
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUtcTimecodeFromGermanDate } from "@/date_format";
+import { useEffect, useState } from "react";
+import { validateAndGetToken } from "@/auth";
 
 
 const getAge = (dateString: string) => {
@@ -102,6 +105,21 @@ export default async function Page({
   let idIndex = 1;
   let temp: number;
   let tabMap: number[] = [];
+
+  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+  
+    useEffect(() => {
+      setTokenValid(validateAndGetToken());
+    }, []);
+  
+    if (tokenValid === null) {
+      // Noch nicht geprüft, z.B. Ladeanzeige oder leer
+      return null;
+    }
+    if (!tokenValid) {
+      // Token ist ungültig, validateAndGetToken leitet bereits weiter
+      return null;
+    }
 
   if (athlete === undefined)
     return (

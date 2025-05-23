@@ -12,6 +12,7 @@ import { Athlete } from "@/models/athlete";
 import { downloadCsv } from "@/exportCsv";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { validateAndGetToken } from "@/auth";
 
 export default function Page() {
   const router = useRouter();
@@ -20,6 +21,21 @@ export default function Page() {
   useEffect(() => {
     getAllAthletes().then((res) => setAthletes(res));
   }, []);
+
+  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+  
+    useEffect(() => {
+      setTokenValid(validateAndGetToken());
+    }, []);
+  
+    if (tokenValid === null) {
+      // Noch nicht geprüft, z.B. Ladeanzeige oder leer
+      return null;
+    }
+    if (!tokenValid) {
+      // Token ist ungültig, validateAndGetToken leitet bereits weiter
+      return null;
+    }
 
   return (
     <div className="p-6">

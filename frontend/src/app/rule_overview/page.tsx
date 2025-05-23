@@ -35,6 +35,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { validateAndGetToken } from "@/auth";
 
 function parseAgegroup(groupString:string):number[]{
   let stringGroup:string[]=groupString.split(',');
@@ -58,6 +59,21 @@ export default function Page() {
       console.log(rules);
       //let validRules=rules.filter(rule=>{return isCurrentDateBetween(rule.valid_start, rule.valid_end)});
       //console.log(validRules)
+
+      const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+      
+        useEffect(() => {
+          setTokenValid(validateAndGetToken());
+        }, []);
+      
+        if (tokenValid === null) {
+          // Noch nicht geprüft, z.B. Ladeanzeige oder leer
+          return null;
+        }
+        if (!tokenValid) {
+          // Token ist ungültig, validateAndGetToken leitet bereits weiter
+          return null;
+        }
       
     return (
       <div className="p-6 gap-4 flex flex-col"> 
