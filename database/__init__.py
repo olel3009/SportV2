@@ -1,3 +1,4 @@
+import os
 from marshmallow import ValidationError
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -10,6 +11,14 @@ migrate = Migrate()
 def create_app():
     # Flask-App erstellen
     app = Flask(__name__)
+
+    # wo die Dateien abgelegt werden
+    app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'uploads')
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+    # erlaubte Extensions
+    app.config['ALLOWED_IMAGE_EXTS'] = {'png', 'jpg', 'jpeg', 'gif'}
+    app.config['ALLOWED_CERT_EXTS']  = {'pdf', 'png', 'jpg', 'jpeg'}
     
     # Konfiguration laden
     app.config.from_object('config.Config')
