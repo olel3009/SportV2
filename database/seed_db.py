@@ -238,167 +238,183 @@ def seed_test_data():
         # Optional: Mehrere Result-Datensätze anlegen
         results = [ 
         Result(athlete_id=athletes[0].id, rule_id=rules[4].id,
-        year=2025, age=2025 - athletes[0].birth_date.year,
-        result=2.45, medal="Gold"
+        year=parse_date("1.05.2025"), age=2025 - athletes[0].birth_date.year,
+        result=5, medal="Gold"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id,
+        year=parse_date("2.05.2025"), age=2025 - athletes[0].birth_date.year,
+        result=4.50, medal="Gold"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id,
+        year=parse_date("6.05.2025"), age=2025 - athletes[0].birth_date.year,
+        result=4.45, medal="Gold"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id,
+        year=parse_date("7.05.2025"), age=2025 - athletes[0].birth_date.year,
+        result=4.35, medal="Gold"
+    ),
+    Result(athlete_id=athletes[0].id, rule_id=rules[4].id,
+        year=parse_date("10.05.2025"), age=2025 - athletes[0].birth_date.year,
+        result=4.34, medal="Gold"
     ),
         Result(athlete_id=athletes[0].id, rule_id=rules[10].id,
-        year=2025, age=2025 - athletes[0].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[0].birth_date.year,
         result=29.00, medal="Gold"
     ),
         Result(athlete_id=athletes[0].id, rule_id=rules[16].id,
-        year=2025, age=2025 - athletes[0].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[0].birth_date.year,
         result=20.00, medal="Gold"
     ),
         Result(athlete_id=athletes[0].id, rule_id=rules[22].id,
-        year=2025, age=2025 - athletes[0].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[0].birth_date.year,
         result=1.40, medal="Gold"
     ),
         Result(athlete_id=athletes[1].id, rule_id=rules[23].id,
-        year=2025, age=2025 - athletes[1].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[1].birth_date.year,
         result=1.45, medal="Silber"
     ),
         Result(athlete_id=athletes[1].id, rule_id=rules[17].id,
-        year=2025, age=2025 - athletes[1].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[1].birth_date.year,
         result=23.00, medal="Silber"
     ),
         Result(athlete_id=athletes[1].id, rule_id=rules[11].id,
-        year=2025, age=2025 - athletes[1].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[1].birth_date.year,
         result=35.50, medal="Bronze"
     ),
         Result(athlete_id=athletes[1].id, rule_id=rules[5].id,
-        year=2025, age=2025 - athletes[1].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[1].birth_date.year,
         result=2.80, medal="Gold"
     ),
         Result(athlete_id=athletes[2].id, rule_id=rules[16].id,
-        year=2025, age=2025 - athletes[2].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[2].birth_date.year,
         result=38.00
     ),
         Result(athlete_id=athletes[2].id, rule_id=rules[22].id,
-        year=2025, age=2025 - athletes[2].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[2].birth_date.year,
         result=1.25, medal="Bronze"
     ),
         Result(athlete_id=athletes[2].id, rule_id=rules[10].id,
-        year=2025, age=2025 - athletes[2].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[2].birth_date.year,
         result=28.00
     ),
         Result(athlete_id=athletes[2].id, rule_id=rules[4].id,
-        year=2025, age=2025 - athletes[2].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[2].birth_date.year,
         result=3.35, medal="Silber"
     ),
         Result(athlete_id=athletes[3].id, rule_id=rules[17].id,
-        year=2025, age=2025 - athletes[3].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[3].birth_date.year,
         result=30.00, medal="Bronze"
     ),
         Result(athlete_id=athletes[3].id, rule_id=rules[11].id,
-        year=2025, age=2025 - athletes[3].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[3].birth_date.year,
         result=28.00, medal="Silber"
     ),
         Result(athlete_id=athletes[3].id, rule_id=rules[5].id,
-        year=2025, age=2025 - athletes[3].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[3].birth_date.year,
         result=2.90, medal="Gold"
     ),
         Result(athlete_id=athletes[4].id, rule_id=rules[10].id,
-        year=2025, age=2025 - athletes[4].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[4].birth_date.year,
         result=38.00, medal="Gold"
     ),
         Result(athlete_id=athletes[4].id, rule_id=rules[16].id,
-        year=2025, age=2025 - athletes[4].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[4].birth_date.year,
         result=23.00, medal="Silber"
     ),
         Result(athlete_id=athletes[4].id, rule_id=rules[22].id,
-        year=2025, age=2025 - athletes[4].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[4].birth_date.year,
         result=1.40, medal="Gold"
     ),
         Result(athlete_id=athletes[5].id, rule_id=rules[3].id,
-        year=2025, age=2025 - athletes[5].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[5].birth_date.year,
         result=3.05, medal="Gold"
     ),
         Result(athlete_id=athletes[5].id, rule_id=rules[9].id,
-        year=2025, age=2025 - athletes[5].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[5].birth_date.year,
         result=16.50, medal="Bronze"
     ),
         Result(athlete_id=athletes[5].id, rule_id=rules[15].id,
-        year=2025, age=2025 - athletes[5].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[5].birth_date.year,
         result=32.00, medal="Bronze"
     ),
         Result(athlete_id=athletes[6].id, rule_id=rules[23].id,
-        year=2025, age=2025 - athletes[6].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[6].birth_date.year,
         result=1.00
     ),
         Result(athlete_id=athletes[6].id, rule_id=rules[17].id,
-        year=2025, age=2025 - athletes[6].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[6].birth_date.year,
         result=32.50
     ),
         Result(athlete_id=athletes[6].id, rule_id=rules[5].id,
-        year=2025, age=2025 - athletes[6].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[6].birth_date.year,
         result=3.90, medal="Bronze"
     ),
         Result(athlete_id=athletes[7].id, rule_id=rules[10].id,
-        year=2025, age=2025 - athletes[7].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[7].birth_date.year,
         result=22.00, medal="Bronze"
     ),    
         Result(athlete_id=athletes[7].id, rule_id=rules[16].id,
-        year=2025, age=2025 - athletes[7].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[7].birth_date.year,
         result=32.00, medal="Bronze"
     ),
         Result(athlete_id=athletes[8].id, rule_id=rules[17].id,
-        year=2025, age=2025 - athletes[8].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[8].birth_date.year,
         result=19.00, medal="Gold"
     ),
         Result(athlete_id=athletes[8].id, rule_id=rules[5].id,
-        year=2025, age=2025 - athletes[8].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[8].birth_date.year,
         result=2.75, medal="Gold"
     ),
         Result(athlete_id=athletes[9].id, rule_id=rules[4].id,
-        year=2025, age=2025 - athletes[9].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[9].birth_date.year,
         result=3.30, medal="Silber"
     ),
         Result(athlete_id=athletes[9].id, rule_id=rules[10].id,
-        year=2025, age=2025 - athletes[9].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[9].birth_date.year,
         result=25.50, medal="Silber"
     ),
         Result(athlete_id=athletes[10].id, rule_id=rules[23].id,
-        year=2025, age=2025 - athletes[10].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[10].birth_date.year,
         result=1.20, medal="Bronze"
     ),
         Result(athlete_id=athletes[11].id, rule_id=rules[4].id,
-        year=2025, age=2025 - athletes[11].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[11].birth_date.year,
         result=2.45, medal="Gold"
     ),
         Result(athlete_id=athletes[12].id, rule_id=rules[11].id,
-        year=2025, age=2025 - athletes[12].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[12].birth_date.year,
         result=29.00, medal="Silber"
     ),
         Result(athlete_id=athletes[13].id, rule_id=rules[16].id,
-        year=2025, age=2025 - athletes[13].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[13].birth_date.year,
         result=2.55, medal="Gold"
     ),
         Result(athlete_id=athletes[14].id, rule_id=rules[16].id,
-        year=2025, age=2025 - athletes[14].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[14].birth_date.year,
         result=32.00, medal="Bronze"
     ),
         Result(athlete_id=athletes[15].id, rule_id=rules[11].id,
-        year=2025, age=2025 - athletes[15].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[15].birth_date.year,
         result=42, medal="Gold"
     ),
         Result(athlete_id=athletes[16].id, rule_id=rules[19].id,
-        year=2025, age=2025 - athletes[16].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[16].birth_date.year,
         result=1.40, medal="Gold"
     ),
         Result(athlete_id=athletes[17].id, rule_id=rules[23].id,
-        year=2025, age=2025 - athletes[17].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[17].birth_date.year,
         result=2.50, medal="Gold"
     ),
         Result(athlete_id=athletes[18].id, rule_id=rules[10].id,
-        year=2025, age=2025 - athletes[18].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[18].birth_date.year,
         result=21.00, medal="Bronze"
     ),
         Result(athlete_id=athletes[19].id, rule_id=rules[17].id,
-        year=2025, age=2025 - athletes[19].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[19].birth_date.year,
         result=16.00, medal="Gold"
     ),
         Result(athlete_id=athletes[20].id, rule_id=rules[10].id,
-        year=2025, age=2025 - athletes[20].birth_date.year,
+        year=parse_date("1.05.2025"), age=2025 - athletes[20].birth_date.year,
         result=25.00, medal="Silber"
     )
     ]

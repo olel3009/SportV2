@@ -1,5 +1,7 @@
+import io, csv
+from datetime import datetime
 from flask import Blueprint, request, jsonify
-from database.models import Rule
+from database.models import Rule, Discipline
 from database.schemas import RuleSchema
 from database import db
 from api.logs.logger import logger
@@ -121,3 +123,134 @@ def delete_rule(id):
     db.session.commit()
     logger.info("Regel erfolgreich gelöscht!")
     return jsonify({"message": "Rule deleted"})
+
+@bp_rule.route('/rules/import', methods=['POST'])
+def import_rules_from_csv():
+    """
+    Importiert Regeln aus einer CSV-Datei mit deutschen Spalten:
+    Disziplin;Regelungsname;Einheit;Beschreibung-Maennlich;Beschreibung-Weiblich;
+    Mindestalter;Hoechstalter;
+    Bronze-Weiblich;Silber-Weiblich;Gold-Weiblich;
+    Bronze-Maennlich;Silber-Maennlich;Gold-Maennlich;
+    Gueltig-Start;Gueltig-Ende
+    """
+    f = request.files.get('file')
+    if not f:
+        return jsonify({"error": "Keine CSV-Datei hochgeladen"}), 400
+
+    rdr = csv.DictReader(io.StringIO(f.stream.read().decode('utf-8')), delimiter=';')
+
+    # Mapping deutsch -> attribut
+    DE_TO_EN = {
+        'Disziplin': 'discipline',
+        'Regelungsname': 'rule_name',
+        'Einheit': 'unit',
+        'Beschreibung-Maennlich': 'description_m',
+        'Beschreibung-Weiblich': 'description_f',
+        'Mindestalter': 'min_age',
+        'Hoechstalter': 'max_age',
+        'Bronze-Maennlich': 'threshold_bronze_m',
+        'Silber-Maennlich': 'threshold_silver_m',
+        'Gold-Maennlich': 'threshold_gold_m',
+        'Bronze-Weiblich': 'threshold_bronze_f',
+        'Silber-Weiblich': 'threshold_silver_f',
+        'Gold-Weiblich': 'threshold_gold_f',
+        'Gueltig-Start': 'valid_start',
+        'Gueltig-Ende': 'valid_end',
+    }
+
+    required = [
+        'discipline','rule_name','unit',
+        'description_m','description_f',
+        'min_age','max_age',
+        'threshold_bronze_m','threshold_silver_m','threshold_gold_m',
+        'threshold_bronze_f','threshold_silver_f','threshold_gold_f',
+        'valid_start'
+    ]
+
+    imported = []
+    for idx, row in enumerate(rdr, start=1):
+        # 1) deutsch->englisch
+        data = { en: row.get(de, '').strip() for de, en in DE_TO_EN.items() }
+
+        # 2) Pflichtfelder prüfen
+        missing = [k for k in required if not data.get(k)]
+        if missing:
+            return jsonify({"error": f"Zeile {idx}: Fehlende Felder: {missing}"}), 400
+
+        # 3) Disziplin auflösen
+        disc = Discipline.query.filter_by(discipline_name=data['discipline']).first()
+        if not disc:
+            return jsonify({"error": f"Zeile {idx}: Unbekannte Disziplin '{data['discipline']}'"}), 400
+
+        # 4) Typumwandlungen
+        try:
+            min_age = int(data['min_age'])
+            max_age = int(data['max_age'])
+        except ValueError:
+            return jsonify({"error": f"Zeile {idx}: Alter muss Integer sein"}), 400
+
+        # unit prüfen gegen DB-Enum
+        if data['unit'] not in Rule.__table__.c.unit.type.enums:
+            allowed = Rule.__table__.c.unit.type.enums
+            return jsonify({"error": f"Zeile {idx}: Einheit '{data['unit']}' muss eine von {allowed} sein"}), 400
+
+        def to_float(val, col):
+            try:
+                return float(val.replace(',', '.'))
+            except:
+                raise ValueError(f"Zeile {idx}: '{col}' muss Float")
+
+        try:
+            tbm = to_float(data['threshold_bronze_m'], 'Bronze-Maennlich')
+            tsm = to_float(data['threshold_silver_m'], 'Silber-Maennlich')
+            tgm = to_float(data['threshold_gold_m'],   'Gold-Maennlich')
+            tbf = to_float(data['threshold_bronze_f'], 'Bronze-Weiblich')
+            tsf = to_float(data['threshold_silver_f'], 'Silber-Weiblich')
+            tgf = to_float(data['threshold_gold_f'],   'Gold-Weiblich')
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 400
+
+        # 5) Datum parsen
+        try:
+            vs = datetime.strptime(data['valid_start'], '%Y-%m-%d').date()
+        except ValueError:
+            return jsonify({"error": f"Zeile {idx}: Gueltig-Start muss YYYY-MM-DD sein"}), 400
+        ve = None
+        if data['valid_end']:
+            try:
+                ve = datetime.strptime(data['valid_end'], '%Y-%m-%d').date()
+            except ValueError:
+                return jsonify({"error": f"Zeile {idx}: Gueltig-Ende muss YYYY-MM-DD sein oder leer"}), 400
+
+        # 6) Version ermitteln
+        last = (Rule.query
+                    .filter_by(rule_name=data['rule_name'])
+                    .order_by(Rule.version.desc())
+                    .first())
+        version = last.version + 1 if last else 1
+
+        # 7) neuen Rule anlegen
+        r = Rule(
+            discipline_id      = disc.id,
+            rule_name          = data['rule_name'],
+            unit               = data['unit'],
+            description_m      = data['description_m'],
+            description_f      = data['description_f'],
+            min_age            = min_age,
+            max_age            = max_age,
+            threshold_bronze_m = tbm,
+            threshold_silver_m = tsm,
+            threshold_gold_m   = tgm,
+            threshold_bronze_f = tbf,
+            threshold_silver_f = tsf,
+            threshold_gold_f   = tgf,
+            valid_start        = vs,
+            valid_end          = ve,
+            version            = version
+        )
+        db.session.add(r)
+        imported.append({"rule_name": data['rule_name'], "version": version})
+
+    db.session.commit()
+    return jsonify({"imported": imported}), 201
