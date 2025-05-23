@@ -7,7 +7,9 @@ import {
   getAthleteWithFeats,
 } from "@/athlete_getters";
 import { downloadCsv } from "@/exportCsv";
-import DownloadCsvButton from "@/components/ui/csvExportButton";
+import DownloadCsvButton, {
+  DownloadCsvLink,
+} from "@/components/ui/csvExportButton";
 import Link from "next/link";
 import { Undo2, CircleUserRound, Medal, CircleSlash } from "lucide-react";
 import {
@@ -30,6 +32,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUtcTimecodeFromGermanDate } from "@/date_format";
 import { findBestMedal } from "@/medal_functions";
+import DeleteResource from "@/components/ui/deleteResource";
 
 const getAge = (dateString: string) => {
   const [day, month, year] = dateString.split(".").map(Number);
@@ -100,6 +103,10 @@ export default async function Page({
   }
   let usedExercises: number[] = [];
 
+  function handleDeleteFeats(ids: number[]) {
+    
+  }
+
   if (athlete === undefined)
     return (
       <div className="p-6 flex flex-col gap-2">
@@ -135,11 +142,18 @@ export default async function Page({
             </div>
           </div>
 
-          <div className="pl-7 grow gap-1 xl:gap-7 flex justify-evenly items-center"></div>
+          <div className="flex flex-wrap ml-auto">
+            <DownloadCsvLink ids={[id]} text="CSV" />
+            <DeleteResource
+              ids={[id]}
+              type="athlete"
+              text="Löschen"
+              warning={`Sind Sie sicher, dass sie den Athleten ${athlete.firstName} ${athlete.lastName} sowie alle Leistungen des Athleten löschen möchten?`}
+              redirect="/athletes"
+            />
+          </div>
         </CardContent>
       </Card>
-
-      <DownloadCsvButton ids={[id]} text="Als Csv exportieren" />
 
       <h2 className="text-xl font-bold">Schwimmnachweis</h2>
       <div>
@@ -151,7 +165,10 @@ export default async function Page({
 
       <h2 className="text-xl font-bold">Leistungen</h2>
       <div>
-        <Tabs defaultValue={(actDiscIds.findIndex(val => val) + 1).toString()} className="w-full">
+        <Tabs
+          defaultValue={(actDiscIds.findIndex((val) => val) + 1).toString()}
+          className="w-full"
+        >
           <TabsList>
             {actDiscIds.map((yes, index) => {
               if (!yes) return null;
@@ -198,10 +215,17 @@ export default async function Page({
                   {bestFeat && (
                     <>
                       <MedalDisplay displayName="" type={bestFeat.medal} />
-                      <span>{bestFeat.medal} in {disc.name} für {new Date().getFullYear()}:</span>
-                      <span className="font-semibold">{bestFeat.result} {bestFeat.ruling?.unit}</span>
+                      <span>
+                        {bestFeat.medal} in {disc.name} für{" "}
+                        {new Date().getFullYear()}:
+                      </span>
+                      <span className="font-semibold">
+                        {bestFeat.result} {bestFeat.ruling?.unit}
+                      </span>
                       in
-                      <span className="font-semibold">{bestFeat.ruling?.rule_name}</span>
+                      <span className="font-semibold">
+                        {bestFeat.ruling?.rule_name}
+                      </span>
                     </>
                   )}
                 </div>
@@ -259,7 +283,7 @@ export default async function Page({
                               <div className="flex flex-col gap-2">
                                 {ruleSpecificResults.map((result, index) => (
                                   <div
-                                    className="grid grid-cols-[max-content_12rem_auto] w-full border rounded-xl p-3 gap-4 items-center"
+                                    className="group grid grid-cols-[max-content_12rem_auto_max-content] w-full border rounded-xl p-3 gap-4 items-center"
                                     key={index}
                                   >
                                     <MedalDisplay
@@ -270,6 +294,13 @@ export default async function Page({
                                       {result.result} {result.ruling?.unit}
                                     </label>
                                     <label>{result.year}</label>
+                                    <div className="invisible group-hover:visible">
+                                      <DeleteResource
+                                        ids={[result.id]}
+                                        type="result"
+                                        warning={`Sind Sie sicher, dass sie diese Leistung löschen möchten?`}
+                                      />
+                                    </div>
                                   </div>
                                 ))}
                               </div>

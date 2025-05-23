@@ -34,6 +34,7 @@ import { FeatEntryCard, FeatEntryDialog } from "./featentry";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useCallback } from "react";
 import { findBestMedal } from "@/medal_functions";
+import DeleteResource from "./ui/deleteResource";
 
 const MedalDisplay = ({ type, text }: { type: string; text: string }) => {
   const colors =
@@ -121,9 +122,9 @@ export const columns: ColumnDef<Athlete>[] = [
     header: "Geschlecht",
     cell: ({ row }) => {
       const sex = row.original.sex;
-      if (sex === "m") return "Männlich"
-      if (sex === "f") return "Weiblich"
-      if (sex === "d") return "Divers"
+      if (sex === "m") return "Männlich";
+      if (sex === "f") return "Weiblich";
+      if (sex === "d") return "Divers";
     },
     enableGlobalFilter: false,
   },
@@ -224,8 +225,12 @@ export const columns: ColumnDef<Athlete>[] = [
                 Editieren
               </DropdownMenuItem>
               <DropdownMenuItem className="text-red-600">
-                <Trash2 />
-                Löschen
+                <DeleteResource
+                  type="athlete"
+                  text="Löschen"
+                  ids={[row.original.id]}
+                  warning={`Sind Sie sicher, dass sie den Athleten ${row.original.firstName} ${row.original.lastName} sowie alle Leistungen des Athleten löschen möchten?`}
+                />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
