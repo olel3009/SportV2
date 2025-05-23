@@ -47,7 +47,7 @@ type RawAthlete = {
   id: number;
   first_name: string;
   last_name: string;
-  gender: "m" | "w" | "d";
+  gender: "m" | "f" | "d";
   birth_date: string;
   swim_certificate: boolean;
   created_at: string;

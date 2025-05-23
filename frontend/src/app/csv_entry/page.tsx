@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, DragEvent } from 'react';
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 export default function Startpage() {
   const [file, setFile] = useState<File | null>(null);
@@ -107,36 +108,67 @@ export default function Startpage() {
 
   return (
     <div className="p-6 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      <p className="mb-4">Dies ist die Dashboardseite</p>
+      <h1 className="text-2xl font-bold mb-4">CSV-Eingabe</h1>
+      <p className="mb-4">Bitte laden sie hier eine CSV in einem der folgenden Formate hoch</p>
+      <ul>
+        <li>Vorname;Nachname;Geburtstag;Geschlecht;Schwimmzertifikat</li>
+        <li>Name;Vorname;Geschlecht;Geburtstag;Übung;Kategorie;Datum;Ergebnis;Punkte</li>
+      </ul>
+      <br></br>
 
-      <div
-        className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center mb-4 hover:border-gray-500"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-      >
-        {file ? (
-          <p className="text-gray-700">Ausgewählte Datei: {file.name}</p>
-        ) : (
-          <p className="text-gray-500">CSV hierher ziehen oder klicken zum Auswählen</p>
-        )}
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleFileChange}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-        />
-      </div>
-
-      <button
-        onClick={handleSubmit}
-        disabled={uploading}
-        className={`${
-          uploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-        } text-white px-4 py-2 rounded`}
-      >
-        {uploading ? 'Lädt...' : 'CSV importieren'}
-      </button>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div
+            className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center mb-4 hover:border-gray-500"
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+          >
+            
+            {file ? (
+              <p className="text-gray-700">Ausgewählte Datei: {file.name}</p>
+            ) : (
+              <p className="text-gray-500">CSV hierher ziehen oder klicken zum Auswählen</p>
+            )}
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleFileChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+          </div>
+        </Tooltip.Trigger>
+        <Tooltip.Content
+          side="left" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Fügen sie hier eine CSV in einem der gültigen Formate ein
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <button
+            onClick={handleSubmit}
+            disabled={uploading}
+            className={`${
+              uploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+            } text-white px-4 py-2 rounded`}
+          >
+            {uploading ? 'Lädt...' : 'CSV importieren'}
+          </button>
+        </Tooltip.Trigger>
+        <Tooltip.Content
+          side="left" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Bestätigen und hochladen
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
     </div>
   );
 }
