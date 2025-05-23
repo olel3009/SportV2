@@ -35,6 +35,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 function parseAgegroup(groupString:string):number[]{
   let stringGroup:string[]=groupString.split(',');
@@ -64,6 +65,8 @@ export default function Page() {
       <h1 className="text-2x1 font bold mb-4">Regel-Übersicht</h1>     
         <DropdownMenu>
       {/* Trigger: here we put a button that shows the current selection */}
+      <Tooltip.Root>
+  <Tooltip.Trigger asChild>
       <DropdownMenuTrigger asChild>
         <button
           className={cn(
@@ -76,6 +79,17 @@ export default function Page() {
           <ChevronDown className="ml-2 h-4 w-4" />
         </button>
       </DropdownMenuTrigger>
+      </Tooltip.Trigger>
+  <Tooltip.Content
+    side="top" // Tooltip wird rechts angezeigt
+    align="center" // Zentriert den Tooltip vertikal zur Maus
+    sideOffset={10} // Abstand zwischen Tooltip und Maus
+    className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+  >
+    Wählen sie die Altersgruppe, für welche Regelungen angezeigt werden sollen
+    <Tooltip.Arrow className="fill-gray-800" />
+  </Tooltip.Content>
+</Tooltip.Root>
 
       {/* Content: your dropdown panel */}
       <DropdownMenuContent sideOffset={4} className="z-50 min-w-[8rem] rounded-md border bg-white p-1 shadow-md">
@@ -129,6 +143,8 @@ export default function Page() {
       </DropdownMenuContent>
     </DropdownMenu>
           <Tabs defaultValue={'1'} className="w-full">
+          <Tooltip.Root>
+          <Tooltip.Trigger asChild>
             <TabsList>
               <TabsTrigger key={'m'} value={'1'}>
                 M
@@ -137,6 +153,17 @@ export default function Page() {
                 F
               </TabsTrigger>
             </TabsList>
+            </Tooltip.Trigger>
+            <Tooltip.Content
+              side="right" // Tooltip wird rechts angezeigt
+              align="center" // Zentriert den Tooltip vertikal zur Maus
+              sideOffset={10} // Abstand zwischen Tooltip und Maus
+              className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+            >
+              Wechsel Regelungen männlich/weiblich
+              <Tooltip.Arrow className="fill-gray-800" />
+            </Tooltip.Content>
+          </Tooltip.Root>
                 <div>
                 <TabsContent key={"m"} value={"1"}>
                 <Card>

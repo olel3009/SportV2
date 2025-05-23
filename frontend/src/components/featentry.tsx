@@ -33,6 +33,7 @@ import {
   DialogTitle
 } from "./ui/dialog";
 import { useEffect, useState } from "react";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 type athAgeMap={
   athId:string;
@@ -199,6 +200,15 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
   const [result, setResult] = useState("");
   const [date, setDate] = useState(String(formatted));
 
+  const handleAthleteChange=(newAth:string)=>{
+    setSelectedAthlete(newAth);
+      // find the one entry whose athId matches newAth
+    const found = ageMapper.find(m => m.athId === newAth);
+
+    // if we found it, setAthleteAge to that age, otherwise 0 (or whatever default makes sense)
+    setAthleteAge(found?.age ?? 0);
+  }
+
   // load rules + disciplines once
   useEffect(() => {
     let cancelled = false;
@@ -277,66 +287,123 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
 
   if (loading) return <div>Loading form…</div>;
   if (error) return <div className="text-red-600">Error: {error}</div>;
-  const handleAthleteChange=(newAth:string)=>{
-    setSelectedAthlete(newAth);
-      // find the one entry whose athId matches newAth
-    const found = ageMapper.find(m => m.athId === newAth);
-
-    // if we found it, setAthleteAge to that age, otherwise 0 (or whatever default makes sense)
-    setAthleteAge(found?.age ?? 0);
-  }
-
+  
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-      <div className="grid gap-2">
-        <Label>Athlet</Label>
-        <AthleteSelect
-          id={id}
-          value={selectedAthlete}
-          onChange={handleAthleteChange}
-        />
-      </div>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className="grid gap-2">
+            <Label>Athlet</Label>
+                <AthleteSelect
+                  id={id}
+                  value={selectedAthlete}
+                  onChange={handleAthleteChange}
+                />
+          </div>
+        </Tooltip.Trigger>
+        <Tooltip.Content
+          side="top" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Wählen sie einen Athleten
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
 
-      <div className="grid gap-2">
-        <Label>Disziplin</Label>
-        <DisciplineSelect
-          value={selectedDiscipline}
-          onChange={handleDisciplineChange}
-        />
-      </div>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className="grid gap-2">
+            <Label>Disziplin</Label>
+            <DisciplineSelect
+              value={selectedDiscipline}
+              onChange={handleDisciplineChange}
+            />
+          </div>
+        </Tooltip.Trigger>
+        <Tooltip.Content
+          side="top" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Wählen sie eine Disziplin
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
 
-      <div className="grid gap-2">
-        <Label>Übung</Label>
-        <ExerciseSelect
-          disciplineId={selectedDiscipline}
-          value={selectedExercise}
-          age={athleteAge}
-          onChange={setSelectedExercise}
-        />
-      </div>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className="grid gap-2">
+            <Label>Übung</Label>
+            <ExerciseSelect
+              disciplineId={selectedDiscipline}
+              value={selectedExercise}
+              age={athleteAge}
+              onChange={setSelectedExercise}
+            />
+          </div>
+        </Tooltip.Trigger>
+        <Tooltip.Content
+          side="top" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Wählen sie eine Übung
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
 
-      <div className="grid gap-2">
-        <Label htmlFor="datum">Datum</Label>
-        <Input
-          id="datum"
-          name="datum"
-          placeholder="Datum des Ergebnis"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-      </div>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className="grid gap-2">
+            <Label htmlFor="datum">Datum</Label>
+            <Input
+              id="datum"
+              name="datum"
+              placeholder="Datum des Ergebnis"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+          </Tooltip.Trigger>
+        <Tooltip.Content
+          side="top" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Geben sie das Datum ein, an dem die Leistung erbracht wurde
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
 
-      <div className="grid gap-2">
-        <Label htmlFor="ergebnis">
-          Ergebnis {currentRule ? `(${currentRule.unit})` : ""}
-        </Label>
-        <Input
-          id="ergebnis"
-          placeholder={`Ergebnis in ${currentRule?.unit ?? ""}`}
-          value={result}
-          onChange={(e) => setResult(e.target.value)}
-        />
-      </div>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className="grid gap-2">
+            <Label htmlFor="ergebnis">
+              Ergebnis {currentRule ? `(${currentRule.unit})` : ""}
+            </Label>
+            <Input
+              id="ergebnis"
+              placeholder={`Ergebnis in ${currentRule?.unit ?? ""}`}
+              value={result}
+              onChange={(e) => setResult(e.target.value)}
+            />
+          </div>
+        </Tooltip.Trigger>
+        <Tooltip.Content
+          side="top" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Geben sie die erbrachte Leistung im angezeigten Format ein
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
 
     </form>
   );
