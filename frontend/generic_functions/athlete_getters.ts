@@ -358,9 +358,9 @@ export async function createAthlete(fName:string, lName:string, mail:string, bda
   });
   if (!res.ok) {
     const errorBody = await res.json();
-    throw new Error(errorBody.error || "Failed to add result");
+    throw new Error(errorBody.error || "Failed to add athlete");
   }else{
-    alert("Ergebnis wurde eingetragen!")
+    alert("Athlet wurde hinzugefügt!")
   }
 
   return res.json();

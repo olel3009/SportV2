@@ -192,6 +192,12 @@ export default function Home() {
           <h2 className="text-xl font-semibold">10. Visuelle Darstellung der Entwicklung eines Athleten</h2>
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
+        <div id="erstellung_athleten" className="mb-8">
+          <h2 className="text-xl font-semibold">11. Erstellung eines Athleten</h2>
+          <p>Unter dem Menüpunkt Athletenerstellung können neue Athleten eingegeben werden.</p>
+          <p>Hierzu müssen die Felder nur wie in den Feldern angegeben befüllt und die Eingabe mit dem unten stehenden Knopf bestätigt werden</p>
+          <p>Eine Hinterlegung des Schwimmnachweises ist an dieser Stelle noch nicht möglich und muss später unter der detailansicht durchgeführt werden.</p>
+        </div>
       </div>
     </div>
   );

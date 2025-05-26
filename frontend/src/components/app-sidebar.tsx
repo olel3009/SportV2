@@ -34,7 +34,7 @@ const items = [
     icon: ClipboardList
   },
   {
-    title: "Athleteneingabe",
+    title: "Athletenerestellung",
     url: "/athlete_entry",
     icon: ClipboardList
   },

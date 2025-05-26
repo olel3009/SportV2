@@ -1,6 +1,7 @@
 // app/athletes/new/page.tsx
 "use client";
 
+import * as Tooltip from "@radix-ui/react-tooltip";
 import { useState } from "react";
 import { createAthlete } from "@/../generic_functions/athlete_getters";
 import { Input } from "@/components/ui/input";
@@ -60,7 +61,7 @@ export default function CreateAthletePage() {
           {error}
         </div>
       )}
-
+      <h1 className="text-2xl font-bold mb-4">Athletenerstellung</h1>
       <div className="space-y-1">
         <Label htmlFor="firstName">Vorname</Label>
         <Input
@@ -82,18 +83,30 @@ export default function CreateAthletePage() {
           required
         />
       </div>
-
-      <div className="space-y-1">
-        <Label htmlFor="email">E-Mail</Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="name@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </div>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className="space-y-1">
+            <Label htmlFor="email">E-Mail</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+        </Tooltip.Trigger>
+      <Tooltip.Content
+        side="left" // Tooltip wird rechts angezeigt
+        align="center" // Zentriert den Tooltip vertikal zur Maus
+        sideOffset={10} // Abstand zwischen Tooltip und Maus
+        className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+      >
+        Geben Sie hier eine gültige E-Mail-Adresse ein.
+        <Tooltip.Arrow className="fill-gray-800" />
+      </Tooltip.Content>
+    </Tooltip.Root>
 
       <div className="space-y-1">
         <Label htmlFor="birthDate">Geburtsdatum</Label>
@@ -119,10 +132,22 @@ export default function CreateAthletePage() {
           </SelectContent>
         </Select>
       </div>
-
-      <Button type="submit" disabled={isSubmitting} className="mt-4">
-        {isSubmitting ? "Erstelle…" : "Athlet erstellen"}
-      </Button>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <Button type="submit" disabled={isSubmitting} className="mt-4">
+            {isSubmitting ? "Erstelle…" : "Athlet erstellen"}
+          </Button>
+        </Tooltip.Trigger>
+      <Tooltip.Content
+        side="left" // Tooltip wird rechts angezeigt
+        align="center" // Zentriert den Tooltip vertikal zur Maus
+        sideOffset={10} // Abstand zwischen Tooltip und Maus
+        className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+      >
+        Eingaben bestätigen und Athlet erstellen
+        <Tooltip.Arrow className="fill-gray-800" />
+      </Tooltip.Content>
+    </Tooltip.Root>
     </form>
   );
 }
