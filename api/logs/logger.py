@@ -9,7 +9,7 @@ LOG_WHEN = os.getenv('LOG_WHEN', 'midnight')
 LOG_INTERVAL = int(os.getenv('LOG_INTERVAL', '1'))
 LOG_BACKUP = int(os.getenv('LOG_BACKUP', '2'))
 
-formatter= logging.Formatter('%(asctime)s - %(levelname)s - %(name)s - %(message)s')
+formatter= logging.Formatter('%(asctime)s - %(levelname)s - %(funcName)s - %(message)s')
 
 handler = TimedRotatingFileHandler(r'api\logs\system.log', when = LOG_WHEN, backupCount = LOG_BACKUP, interval = LOG_INTERVAL)
 handler.setFormatter(formatter)
@@ -17,14 +17,6 @@ handler.setFormatter(formatter)
 logger = logging.getLogger(__name__)
 logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
-
-#@app.before_request
-def log_request_info():
-    #logger.info(f"Request: {request.method} {request.url} - Data: {request.json}")
-    pass
-
-#logging modul erstellen zum import für jede benötigte Datei
-#keine personenbezogene Daten loggen nur die Veränderungen
 
 if __name__ == "__main__":
     while True:

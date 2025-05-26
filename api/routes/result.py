@@ -5,6 +5,7 @@ from database import db
 from database.models import Result, Athlete, Rule, Discipline
 from database.schemas import ResultSchema
 from marshmallow import ValidationError
+from api.logs.logger import logger
 
 bp_result = Blueprint('result', __name__)
 
@@ -89,14 +90,14 @@ def create_result():
     )
     db.session.add(new)
     db.session.commit()
-
-    return jsonify({"message": "Result added", "id": new.id}), 201
-
+    logger.info("Ergebnis erfolgreich kreiert!")
+    return jsonify({"message": "Result added", "id": new_result.id}), 201
 
 @bp_result.route('/results', methods=['GET'])
 def get_results():
     all = Result.query.all()
     schema = ResultSchema(many=True)
+    logger.info("Alle Ergebnisse erfolgreich aufgerufen!")
     return jsonify(schema.dump(all)), 200
 
 
@@ -104,6 +105,7 @@ def get_results():
 def get_result_id(id):
     res = Result.query.get_or_404(id)
     schema = ResultSchema()
+    logger.info("Ergebnis erfolgreich aufgerufen!")
     return jsonify(schema.dump(res)), 200
 
 
@@ -153,6 +155,7 @@ def update_result(id):
     res.medal   = determine_medal(rule, res.result, athlete.gender)
 
     db.session.commit()
+    logger.info("Ergebnis erfolgreich aktualisiert!")
     return jsonify({"message": "Result updated"}), 200
 
 
@@ -163,121 +166,117 @@ def delete_result(id):
     db.session.commit()
     return jsonify({"message": "Result deleted"}), 200
 
+# deutsche → englische Spaltenköpfe
+DE_TO_EN = {
+    'Nachname':       'last_name',
+    'Vorname':        'first_name',
+    'Geburtstag':     'birth_date',
+    'Uebung':         'rule_name',
+    'Kategorie':      'discipline_name',
+    'Leistung':       'result_value',
+    'Datum':          'exam_date',
+}
+
+REQUIRED_FIELDS = set(DE_TO_EN.keys())
+
+def parse_date_field(value: str, field: str, idx: int) -> datetime.date:
+    """
+    Parst ein deutsches Datum DD.MM.YYYY und wirft bei Fehlern eine ValueError mit
+    einer menschenlesbaren Nachricht.
+    """
+    s = value.strip()
+    if not s:
+        raise ValueError(f"Zeile {idx}: Feld '{field}' ist leer")
+    try:
+        return datetime.strptime(s, "%d.%m.%Y").date()
+    except ValueError:
+        raise ValueError(f"Zeile {idx}: Ungültiges Datum im Feld '{field}' (`{s}`), muss DD.MM.YYYY sein")
+
 @bp_result.route('/results/import', methods=['POST'])
 def import_results_from_csv():
-    """
-    Importiert Results aus einer deutschen CSV mit Spalten:
-    Name;Vorname;Geburtstag;Uebung;Kategorie;Leistung;Datum
-    """
     f = request.files.get('file')
     if not f:
         return jsonify({"error": "Keine CSV-Datei hochgeladen"}), 400
 
-    # CSV öffnen
-    data = f.stream.read().decode('utf-8-sig')
-    reader = csv.DictReader(io.StringIO(data), delimiter=';')
+    text = f.stream.read().decode('utf-8-sig')
+    reader = csv.DictReader(text.splitlines(), delimiter=';')
 
-    # Mapping deutsch -> englisch
-    DE_TO_EN = {
-        'Name': 'last_name',
-        'Vorname': 'first_name',
-        'Geburtstag': 'birth_date',
-        'Übung': 'rule_name',
-        'Kategorie': 'discipline_name',
-        'Ergebnis': 'result_value',
-        'Datum': 'date',
-        'Geschlecht': 'sex',
-        'Punkte': 'points'
-    }
-
-    required = set(DE_TO_EN.keys())
-    missing_athletes = []
-    duplicate_athletes = []
     created = []
     updated = []
+    missing_athletes   = []
+    duplicate_athletes = []
+    missing_rules      = []
+    age_mismatch       = []
 
-    rows = list(reader)
-    if not rows:
-        return jsonify({"error": "Leere CSV"}), 400
+    for idx, raw in enumerate(reader, start=1):
+        # --- 1) Trim keys+values ---
+        rec = {k.strip(): (v or "").strip() for k, v in raw.items()}
 
-    for idx, row in enumerate(rows, start=1):
-        # 1) Pflichtspalten prüfen
-        if not required.issubset(row.keys()):
-            return jsonify({"error": f"Zeile {idx}: Fehlende Spalten, will {required}, hat {row.keys()}"}), 400
-
-        # 2) Übersetze Feldnamen
-        rec = {DE_TO_EN[k]: v.strip() for k, v in row.items()}
-
-        # 3) Geburtstag parsen (DD.MM.YYYY)
+        # --- 2) Parse Geburtstag ---
         try:
-            print(rec['birth_date'])
-            bd = datetime.strptime(rec['birth_date'], '%d.%m.%Y').date()
+            bd = datetime.strptime(rec['Geburtstag'], "%d.%m.%Y").date()
+        except Exception as e:
+            return jsonify({"error": f"Zeile {idx}: Ungültiges Datum im Feld 'Geburtstag' ({rec.get('Geburtstag')})"}), 400
 
-        except ValueError as e:
-            print("Parsing birth_date failed:", e)
-            return jsonify({"error": f"Zeile {idx}: Ungültiges Datum im Feld Geburtstag {e}"}), 400
-
-        # 4) Athlet suchen
+        # --- 3) Athlet suchen ---
         matches = Athlete.query.filter_by(
-            first_name=rec['first_name'],
-            last_name=rec['last_name'],
+            first_name=rec['Vorname'],
+            last_name =rec['Nachname'],
             birth_date=bd
         ).all()
 
-        if len(matches) == 0:
-            missing_athletes.append({
-                "first_name": rec['first_name'],
-                "last_name": rec['last_name'],
-                "birth_date": rec['birth_date']
-            })
+        if not matches:
+            missing_athletes.append(f"{rec['Vorname']} {rec['Nachname']} ({bd})")
             continue
         if len(matches) > 1:
-            duplicate_athletes.append({
-                "first_name": rec['first_name'],
-                "last_name": rec['last_name'],
-                "birth_date": rec['birth_date']
-            })
+            duplicate_athletes.append(f"{rec['Vorname']} {rec['Nachname']} ({bd})")
             continue
 
         athlete = matches[0]
 
-        # 5) Datum der Leistung parsen (DD.MM.YYYY)
+        # --- 4) Leistungs-Datum parsen ---
         try:
-            dt = datetime.fromisoformat(rec['date'])
+            perf_date = datetime.strptime(rec['Datum'], "%d.%m.%Y").date()
+        except:
+            return jsonify({"error": f"Zeile {idx}: Ungültiges Datum im Feld 'Datum' ({rec['Datum']})"}), 400
 
-            # 2) Format as DD.MM.YYYY
-            german_date = dt.strftime('%d.%m.%Y')
-            perf_date = datetime.strptime(german_date, '%d.%m.%Y').date()
-        except ValueError as e:
-            print("Parsing birth_date failed:", e)
-            return jsonify({"error": f"Zeile {idx}: Ungültiges Datum im Feld Datum"}), 400
-
-        # 6) Disziplin und Rule suchen
-        disc = Discipline.query.filter_by(discipline_name=rec['discipline_name']).first()
-        if not disc:
-            return jsonify({"error": f"Zeile {idx}: Unbekannte Disziplin '{rec['discipline_name']}'"}), 400
-
-        rule = (Rule.query
-                .filter_by(rule_name=rec['rule_name'], discipline_id=disc.id)
-                .order_by(Rule.version.desc())
-                .first())
-        if not rule:
-            return jsonify({"error": f"Zeile {idx}: Keine Regel '{rec['rule_name']}' für Disziplin '{disc.discipline_name}' gefunden"}), 400
-
-        # 7) Ergebniswert als Float
-        try:
-            value = float(rec['points'].replace(',', '.'))
-        except ValueError:
-            return jsonify({"error": f"Zeile {idx}: Ungültiger Leistungswert '{rec['points']}'"}), 400
-
-        # 8) Alter im Prüfungsjahr
         year = perf_date.year
-        age = year - athlete.birth_date.year
+        age  = year - athlete.birth_date.year
 
-        # 9) Medal bestimmen
+        # --- 5) Discipline + Rule ermitteln ---
+        disc = Discipline.query.filter_by(discipline_name=rec['Kategorie']).first()
+        if not disc:
+            missing_rules.append(f"Zeile {idx}: Unbekannte Disziplin '{rec['Kategorie']}'")
+            continue
+
+        # erst Übungsstring matchen, dann Altersbereich
+        base = rec['Uebung']
+        candidates = (Rule.query
+            .filter(Rule.discipline_id == disc.id)
+            .filter(Rule.rule_name.ilike(f"{base}%"))
+            .order_by(Rule.version.desc())
+            .all()
+        )
+        if not candidates:
+            missing_rules.append(f"Zeile {idx}: Keine Regel für Übung '{base}' gefunden")
+            continue
+
+        # nun unter den Kandidaten den passenden Altersbereich suchen
+        rule = next((r for r in candidates if r.min_age <= age <= r.max_age), None)
+        if not rule:
+            age_mismatch.append(f"Zeile {idx}: Keine Regel für Übung '{base}' und Alter {age}")
+            continue
+
+        # --- 6) Leistungswert parsen ---
+        try:
+            value = float(rec['Leistung'].replace(',', '.'))
+        except:
+            return jsonify({"error": f"Zeile {idx}: Ungültiger Leistungswert '{rec['Leistung']}'"}), 400
+
+        # --- 7) Medaille bestimmen ---
         medal = determine_medal(rule, value, athlete.gender)
 
-        # 10) Existierendes Result suchen (gleiche Athlete, Rule und Datum)
+        # --- 8) Result updaten oder neu anlegen ---
         existing = Result.query.filter_by(
             athlete_id=athlete.id,
             rule_id=rule.id,
@@ -285,39 +284,41 @@ def import_results_from_csv():
         ).first()
 
         if existing:
-            # update
             existing.result = value
-            existing.age = age
-            existing.medal = medal
+            existing.age    = age
+            existing.medal  = medal
             updated.append({
                 "athlete_id": athlete.id,
                 "first_name": athlete.first_name,
-                "last_name": athlete.last_name
+                "last_name":  athlete.last_name
             })
         else:
-            # neu anlegen
-            new_res = Result(
-                athlete_id = athlete.id,
-                rule_id    = rule.id,
-                year       = perf_date,
-                age        = age,
-                result     = value,
-                medal      = medal
+            new_r = Result(
+                athlete_id=athlete.id,
+                rule_id=rule.id,
+                year=perf_date,
+                age=age,
+                result=value,
+                medal=medal
             )
-            db.session.add(new_res)
+            db.session.add(new_r)
             created.append({
                 "athlete_id": athlete.id,
                 "first_name": athlete.first_name,
-                "last_name": athlete.last_name
+                "last_name":  athlete.last_name
             })
 
-    # 11) abschließend speichern
+    # 9) Commit einmal am Ende
     db.session.commit()
+    logger.info("Regel erfolgreich gelöscht!")
 
-    resp = {"created": created, "updated": updated}
-    if missing_athletes:
-        resp["missing_athletes"] = missing_athletes
-    if duplicate_athletes:
-        resp["duplicate_athletes"] = duplicate_athletes
-
+    # 10) Response zusammenbauen
+    resp = {
+        "created":            created,
+        "updated":            updated,
+        "missing_athletes":   missing_athletes,
+        "duplicate_athletes": duplicate_athletes,
+        "missing_rules":      missing_rules,
+        "age_mismatch":       age_mismatch
+    }
     return jsonify(resp), 200
