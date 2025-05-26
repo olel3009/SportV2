@@ -1,5 +1,7 @@
+"use client";
+
 import { useParams } from "next/navigation";
-import { Athlete, Feat } from "@/models/athlete";
+import { Athlete, Discipline, Feat } from "@/models/athlete";
 import {
   getAllDisciplines,
   getAthleteById,
@@ -33,6 +35,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUtcTimecodeFromGermanDate } from "@/date_format";
 import { findBestMedal } from "@/medal_functions";
 import DeleteResource from "@/components/ui/deleteResource";
+import { useEffect, useState } from "react";
 
 const getAge = (dateString: string) => {
   const [day, month, year] = dateString.split(".").map(Number);
@@ -76,16 +79,65 @@ function MedalDisplay({
   );
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const id = parseInt((await params).id);
-  const athlete = await getAthleteById(id);
-  const feats = await getFeatsById(id);
-  const disciplines = await getAllDisciplines();
-  let actDiscIds: boolean[] = [false, false, false, false];
+export default function Page() {
+  const params = useParams<{ id: string }>();
+  const id = parseInt(params.id);
+
+  const [athlete, setAthlete] = useState<Athlete>();
+  const [feats, setFeats] = useState<Feat[]>();
+  const [disciplines, setDisciplines] = useState<Discipline[]>([]);
+  const [actDiscIds, setActDiscIds] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+  ]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  function mapSex(sex: string) {
+    sex = sex.toLocaleLowerCase();
+    if (sex === "m") return "Männlich";
+    if (sex === "f") return "Weiblich";
+    if (sex === "d") return "Divers";
+  }
+
+  function handleDeleteFeats(ids: number[]) {
+    setFeats(feats?.filter((feat) => !ids.includes(feat.id)));
+  }
+
+  useEffect(() => {
+    if (!id) return;
+
+    if (isNaN(id)) {
+      setError("Fehler bei der ID");
+      setLoading(false);
+      return;
+    }
+
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const athleteData = await getAthleteById(id);
+        if (!athleteData) setError(`Athlet mit ID: ${id} existiert nicht`);
+        const featsData = await getFeatsById(id);
+        const disciplinesData = await getAllDisciplines();
+
+        setAthlete(athleteData);
+        setFeats(featsData);
+        setDisciplines(disciplinesData);
+      } catch (err) {
+        console.log("Failed to fetch data:", err);
+        setError("Athletendaten konnten nicht geladen werden");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
   feats?.forEach((feat) => {
     // first, safely pull out discipline_id
     const id = feat?.ruling?.discipline_id;
@@ -95,28 +147,30 @@ export default async function Page({
       actDiscIds[id - 1] = true;
     }
   });
-  function mapSex(sex: string) {
-    sex = sex.toLocaleLowerCase();
-    if (sex === "m") return "Männlich";
-    if (sex === "f") return "Weiblich";
-    if (sex === "d") return "Divers";
-  }
   let usedExercises: number[] = [];
 
-  function handleDeleteFeats(ids: number[]) {
-    
-  }
-
-  if (athlete === undefined)
+  if (loading) {
     return (
       <div className="p-6 flex flex-col gap-2">
         <Link href="/athletes/" className="flex items-center gap-2">
           <Undo2 />
           <span className="underline">Übersicht</span>
         </Link>
-        <ErrorDisplay message={`Athlet mit ID: ${id} existiert nicht.`} />
       </div>
     );
+  }
+
+  if (error || athlete === undefined) {
+    return (
+      <div className="p-6 flex flex-col gap-2">
+        <Link href="/athletes/" className="flex items-center gap-2">
+          <Undo2 />
+          <span className="underline">Übersicht</span>
+        </Link>
+        <ErrorDisplay message={error || ""} />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 gap-4 flex flex-col">
@@ -299,6 +353,9 @@ export default async function Page({
                                         ids={[result.id]}
                                         type="result"
                                         warning={`Sind Sie sicher, dass sie diese Leistung löschen möchten?`}
+                                        onDelete={() =>
+                                          handleDeleteFeats([result.id])
+                                        }
                                       />
                                     </div>
                                   </div>
