@@ -28,6 +28,16 @@ const items = [
     url: "/feat_entry_page",
     icon: ChartNoAxesCombined
   },
+    {
+    title: "Regelübersicht",
+    url: "/rule_overview",
+    icon: ClipboardList
+  },
+  {
+    title: "CSV-Eingabe",
+    url: "/csv_entry",
+    icon: Import
+  },
   {
     title: "Wiki",
     url: "/wiki_page",
