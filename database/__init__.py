@@ -3,6 +3,7 @@ from marshmallow import ValidationError
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from api.logs.logger import logger
 
 # Initialisiere Extensions
 db = SQLAlchemy()
@@ -44,4 +45,5 @@ def create_app():
             "messages": err.messages
         }), 400
     
+    logger.info("App mittels Blueprints erforlgreich erstellt!")
     return app

@@ -5,6 +5,7 @@ from database import db
 from database.models import Result, Athlete, Rule, Discipline
 from database.schemas import ResultSchema
 from marshmallow import ValidationError
+from api.logs.logger import logger
 
 bp_result = Blueprint('result', __name__)
 
@@ -89,14 +90,14 @@ def create_result():
     )
     db.session.add(new)
     db.session.commit()
-
-    return jsonify({"message": "Result added", "id": new.id}), 201
-
+    logger.info("Ergebnis erfolgreich kreiert!")
+    return jsonify({"message": "Result added", "id": new_result.id}), 201
 
 @bp_result.route('/results', methods=['GET'])
 def get_results():
     all = Result.query.all()
     schema = ResultSchema(many=True)
+    logger.info("Alle Ergebnisse erfolgreich aufgerufen!")
     return jsonify(schema.dump(all)), 200
 
 
@@ -104,6 +105,7 @@ def get_results():
 def get_result_id(id):
     res = Result.query.get_or_404(id)
     schema = ResultSchema()
+    logger.info("Ergebnis erfolgreich aufgerufen!")
     return jsonify(schema.dump(res)), 200
 
 
@@ -153,6 +155,7 @@ def update_result(id):
     res.medal   = determine_medal(rule, res.result, athlete.gender)
 
     db.session.commit()
+    logger.info("Ergebnis erfolgreich aktualisiert!")
     return jsonify({"message": "Result updated"}), 200
 
 
@@ -307,6 +310,7 @@ def import_results_from_csv():
 
     # 9) Commit einmal am Ende
     db.session.commit()
+    logger.info("Regel erfolgreich gelöscht!")
 
     # 10) Response zusammenbauen
     resp = {

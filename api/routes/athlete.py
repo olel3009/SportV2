@@ -8,6 +8,7 @@ from database.schemas import AthleteSchema, DisciplineSchema, ResultSchema, Rule
 from api.export_pdf import fill_pdf_form
 from api.utils import allowed_file
 from sqlalchemy.orm import joinedload
+from api.logs.logger import logger
 
 bp_athlete = Blueprint('athlete', __name__)
 
@@ -26,6 +27,7 @@ def create_athlete():
     )
     db.session.add(new_athlete)
     db.session.commit()
+    logger.info("Athlet erfolgreich kreiert!")
     return jsonify({"message": "Athlet hinzugefügt", "id": new_athlete.id}), 201
 
 @bp_athlete.route('/athletes', methods=['GET'])
@@ -44,6 +46,7 @@ def get_athletes():
             "created_at": ath.created_at,
             "updated_at": ath.updated_at
         })
+    logger.info("Alle Athleten erfolgreich aufgerufen!")
     return jsonify(result)
 
 @bp_athlete.route('/athletes/<int:id>', methods=['GET'])
@@ -63,7 +66,7 @@ def get_athlete_id(id):
             "total_silver": DBResult.query.filter_by(athlete_id=id, medal='Silber').count(),
             "total_gold":   DBResult.query.filter_by(athlete_id=id, medal='Gold').count(),
         })
-
+    logger.info("Athlet erfolgreich aufgerufen!")
     return jsonify(data), 200
 
 @bp_athlete.route('/athletes/<int:id>', methods=['PUT'])
@@ -83,6 +86,7 @@ def update_athlete(id):
         athlete.gender = data["gender"]
 
     db.session.commit()
+    logger.info("Athlet erfolgreich aktualisiert!")
     return jsonify({"message": "Athlet aktualisiert"})
 
 @bp_athlete.route('/athletes/<int:id>', methods=['DELETE'])
@@ -90,6 +94,7 @@ def delete_athlete(id):
     athlete = DBAthlete.query.get_or_404(id)
     db.session.delete(athlete)
     db.session.commit()
+    logger.info("Athlet erfolgreich gelöscht!")
     return jsonify({"message": "Athlet gelöscht"})
 
 @bp_athlete.route('/athletes/<int:athlete_id>/export/pdf', methods=['GET'])
@@ -129,7 +134,9 @@ def export_athlete_pdf(athlete_id):
 
     # 4) PDF generieren
     pdf_feedback = fill_pdf_form(py_athlete)
-
+    
+    logger.info("Athlet erfolgreich in einert PDF exportiert!")
+    
     return jsonify({
         "message": "Export erfolgreich",
         "pdf_feedback": pdf_feedback
@@ -189,7 +196,7 @@ def get_athletes_results(athlete_id):
         "athlete": serialized_athlete_details,
         "results": processed_results
     }
-    
+    logger.info("Ergebnisse des Athleten erfolgreich aufgerufen!")
     return jsonify(response_payload), 200
 
 @bp_athlete.post('/athletes/csv')
@@ -316,6 +323,7 @@ def create_athletes_from_csv():
     elif committed_athlete_ids and not errors_list:
         response_status_code = 201
     
+    logger.info("Athleten erfolgreich aus einer CSV kreiert!")
     return jsonify({
         "message": "Batch-Verarbeitung abgeschlossen.",
         "created_athlete_ids": committed_athlete_ids,
