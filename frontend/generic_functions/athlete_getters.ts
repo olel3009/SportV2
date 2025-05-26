@@ -81,11 +81,23 @@ export async function getAthletesMedals(): Promise<Athlete[]> {
   // 1) load the base list
   const all = await getAllAthletes();
 
+
+  const token = validateAndGetToken();
+  if (token === null || token === false) {
+    // Token ist ungültig, validateAndGetToken leitet bereits weiter
+    return [];
+
+  } else {
   // 2) for each athlete kick off a fetch + map to your client‐side type
   const athletePromises = all.map(async (athlete): Promise<Athlete> => {
     const res = await fetch(
       `http://127.0.0.1:5000/athletes/${athlete.id}?show_results=true`,
-      { cache: "no-store" }
+      { cache: "no-store", 
+        headers: {
+        "Authorization": "Bearer " + localStorage.getItem("access_token")
+      },
+      },
+      
     );
     if (!res.ok) {
       throw new Error(`API call failed: ${res.status}`);
@@ -93,6 +105,8 @@ export async function getAthletesMedals(): Promise<Athlete[]> {
 
     // 3) JSON is one athlete with medal counts
     const raw: RawAthlete = await res.json();
+
+  
 
     // 4) map to your front‐end Athlete interface
     return {
@@ -108,10 +122,12 @@ export async function getAthletesMedals(): Promise<Athlete[]> {
       disciplines: [],
       feats: [],
     };
+  
   });
 
   // 5) wait for all fetch+maps to finish in parallel
   return await Promise.all(athletePromises);
+}
 }
 
 
