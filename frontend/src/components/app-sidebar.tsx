@@ -1,5 +1,5 @@
 'use client'
-import { LayoutPanelTop, Users, Settings, ChartNoAxesCombined, BookOpenText, LogOut, ClipboardList } from "lucide-react"
+import { LayoutPanelTop, Users, Settings, ChartNoAxesCombined, BookOpenText, LogOut, ClipboardList, Import } from "lucide-react"
 
 import { 
     Sidebar, 
@@ -37,7 +37,7 @@ const items = [
   {
     title: "CSV-Eingabe",
     url: "/csv_entry",
-    icon: ClipboardList
+    icon: Import
   },
   {
     title: "Wiki",

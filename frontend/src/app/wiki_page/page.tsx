@@ -131,19 +131,27 @@ export default function Home() {
         </div>
         <div id="eintragsmodus_leistungen" className="mb-8">
           <h2 className="text-xl font-semibold">03. Eintragsmodus für Leistungswerte</h2>
-          <p>Hier könnte die Beschreibung stehen</p>
+          <p>Diese Seite kann sowohl über das Seitenmenü als auch über die Athletenübersicht erreicht werden</p>
+          <p>Auf dieser Seite können einzelne Leistungen, anhand der zugehörigen Regelungen, für Athleten erstellt werden</p>
+          <p>Für die eingabe einer CSV Datei für leistungen muss die Seite CSV-Eingabe im Seitenmenü genutzt werden</p>
         </div>
         <div id="export_eines_athleten" className="mb-8">
           <h2 className="text-xl font-semibold">04. Export eines Athleten</h2>
-          <p>Hier könnte die Beschreibung stehen</p>
+          <p>Sowohl unter der Athleten-Detailansicht als auch der Athletenübersicht können einzelne Athleten als CSV exportiert werden</p>
+          <p>Hierbei werden zwei CSV Dateien heruntergeladen, eine für die Leistungen des Athleten, eine für den Athleten an sich</p>
+          <p>Die CSV für Leistungen entspricht dem Format Name;Vorname;Geschlecht;Geburtsdatum;Übung;Kategorie;Datum;Ergebnis;Punkte</p>
+          <p>Die CSV für den Athleten An sich entspricht dem Format Vorname;Nachname;Geburtsdatum;Geschlecht;Schwimmzertifikat</p>
         </div>
         <div id="export_eines_athleten_pdf" className="mb-8">
           <h2 className="text-xl font-semibold">05. Export eines Athleten und seiner Daten als PDF</h2>
-          <p>Hier könnte die Beschreibung stehen</p>
+          <p>Sowohl unter der Athleten-Detailansicht als auch der Athletenübersicht können einzelne Athleten als PDF exportiert werden</p>
+          <p>Diese PDF entspricht dem Format einer Einzelprüfkarte</p>
         </div>
         <div id="export_mehrer_athlethen" className="mb-8">
           <h2 className="text-xl font-semibold">06. Export mehrerer Athleten als CSV</h2>
-          <p>Hier könnte die Beschreibung stehen</p>
+          <p>Unter der Athletenübersicht können mehrere Athleten gleichzeitig als CSV oder PDF heruntergeladen werden</p>
+          <p>Für den CSV Download entspricht das Format den Formaten des Einzel Downloads</p>
+          <p>Für den PDF download entspricht das Format dem einer Gruppenprüfkarte</p>
         </div>
         <div id="liste_athlethen" className="mb-8">
           <h2 className="text-xl font-semibold">07. Liste aller Athleten</h2>

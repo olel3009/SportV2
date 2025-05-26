@@ -1,8 +1,8 @@
 import { getAthleteWithFeats, csvCombo, getAthleteById } from "./athlete_getters"
 import { Athlete } from "@/models/athlete";
 
-export async function getCsvString(ids: number[]): Promise<string> {
-    let csvTxt = 'Name;Vorname;Geschlecht;Geburtstag;Übung;Kategorie;Datum;Ergebnis;Punkte\n'
+export async function getCsvString(ids:number[]):Promise<string>{
+    let csvTxt='Name;Vorname;Geschlecht;Geburtsdatum;Übung;Kategorie;Datum;Ergebnis;Punkte\n'
     for (const id of ids) {
         const currAthArr: csvCombo[] = await getAthleteWithFeats(id);
         currAthArr.forEach(currAth => {
@@ -13,8 +13,8 @@ export async function getCsvString(ids: number[]): Promise<string> {
 
 }
 
-export async function getPersCsvString(ids: number[]): Promise<string> {
-    let csvTxt = 'Vorname;Nachname;Geburtstag;Geschlecht;Schwimmzertifikat\n'
+export async function getPersCsvString(ids:number[]):Promise<string>{
+    let csvTxt='Vorname;Nachname;Geburtsdatum;Geschlecht;Schwimmzertifikat\n'
     for (const id of ids) {
         const currAth: Athlete | undefined = await getAthleteById(id);
         if (currAth != undefined) {

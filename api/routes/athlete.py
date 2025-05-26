@@ -121,12 +121,13 @@ def export_athlete_pdf(athlete_id):
 
     # b) PerformanceData
     for res in db_results:
+        res_rule=DBRule.query.get_or_404(res.rule_id)
         py_athlete.performances.append(
             PerformanceData(
-                disciplin=res.disciplin, 
+                disciplin=res_rule.discipline.discipline_name, 
                 year=res.year,
                 result=res.result, 
-                points=res.points
+                points=res.medal
             )
         )
 
