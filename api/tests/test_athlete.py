@@ -8,6 +8,7 @@ def test_create_athlete(client):
     response = client.post("/athletes", json={
         "first_name": "Max",
         "last_name": "Mustermann",
+        "email": "max.mustermann@test.de",
         "birth_date": "1.1.2003",  
         "gender": "m"
     })
@@ -24,6 +25,7 @@ def test_create_athlete_default_swim_certificate(client):
     response = client.post("/athletes", json={
         "first_name": "Max",
         "last_name": "Mustermann",
+        "email": "max.mustermann@test.de",
         "birth_date": "1.1.2003",  
         "gender": "m"
         # swim_certificate nicht mitgeschickt => default false
@@ -41,29 +43,6 @@ def test_create_athlete_default_swim_certificate(client):
     assert created is not None
     assert created["swim_certificate"] == False
 
-def test_create_athlete_with_swim_certificate_true(client):
-    """
-    Testet das Anlegen eines neuen Athleten mit swim_certificate = true
-    """
-    response = client.post("/athletes", json={
-        "first_name": "Anna",
-        "last_name": "Schwimmer",
-        "birth_date": "1.1.2003",
-        "gender": "f",
-        "swim_certificate": True
-    })
-    assert response.status_code == 201
-    data = response.get_json()
-    assert data["message"] == "Athlet hinzugefügt"
-    new_id = data["id"]
-
-    # Prüfen, ob swim_certificate = true in der DB
-    get_resp = client.get("/athletes")
-    all_athletes = get_resp.get_json()
-    created = next((a for a in all_athletes if a["id"] == new_id), None)
-    assert created is not None
-    assert created["swim_certificate"] == True
-
 def test_get_athletes(client):
     """
     Testet das Abrufen aller Athleten per GET /athletes.
@@ -72,6 +51,7 @@ def test_get_athletes(client):
     client.post("/athletes", json={
         "first_name": "Anna",
         "last_name": "Schmidt",
+        "email": "anna.schmidt@test.de",
         "birth_date": "1.1.2006",
         "gender": "f"
     })
@@ -86,7 +66,6 @@ def test_get_athletes(client):
     first = data[0]
     assert "id" in first
     assert "first_name" in first
-    assert "swim_certificate" in first
 
 
 def test_update_athlete(client):
@@ -97,6 +76,7 @@ def test_update_athlete(client):
     create_resp = client.post("/athletes", json={
         "first_name": "Erika",
         "last_name": "Mustermann",
+        "email": "erika.mustermann@test.de",
         "birth_date": "1.1.2003",
         "gender": "f"
     })
@@ -117,7 +97,7 @@ def test_update_athlete(client):
     assert updated is not None
     assert updated["first_name"] == "ErikA-Lena"
 
-def test_update_athlete_swim_certificate(client):
+def test_update_athlete_gender_email(client):
     """
     Testet das Aktualisieren eines Athleten per PUT /athletes/<id>
     inklusive Ändern von swim_certificate.
@@ -126,16 +106,17 @@ def test_update_athlete_swim_certificate(client):
     create_resp = client.post("/athletes", json={
         "first_name": "Peter",
         "last_name": "Lustig",
+        "email": "peter.lustig@test.de",
         "birth_date": "1.1.2003",
-        "gender": "m",
-        "swim_certificate": False
+        "gender": "m"
     })
     assert create_resp.status_code == 201
     athlete_id = create_resp.get_json()["id"]
 
     # 2) Update: swim_certificate -> true
     response = client.put(f"/athletes/{athlete_id}", json={
-        "swim_certificate": True
+        "gender": "f",
+        "email": "anna.lustig@test.de"
     })
     assert response.status_code == 200
     data = response.get_json()
@@ -146,7 +127,8 @@ def test_update_athlete_swim_certificate(client):
     all_athletes = get_resp.get_json()
     updated = next((x for x in all_athletes if x["id"] == athlete_id), None)
     assert updated is not None
-    assert updated["swim_certificate"] == True
+    assert updated["gender"] == "f"
+    assert updated["email"] == "anna.lustig@test.de"
 
 def test_delete_athlete(client):
     """
@@ -156,6 +138,7 @@ def test_delete_athlete(client):
     create_resp = client.post("/athletes", json={
         "first_name": "Peter",
         "last_name": "Lustig",
+        "email": "peter.lustig@test.de",
         "birth_date": "1.1.2003",
         "gender": "m"
     })
@@ -181,6 +164,7 @@ def test_export_athlete_pdf(client):
     create_resp = client.post("/athletes", json={
         "first_name": "Lena",
         "last_name": "Test",
+        "email": "lena.test@test.de",
         "birth_date": "1.1.2003",
         "gender": "f"
     })

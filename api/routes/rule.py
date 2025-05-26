@@ -1,12 +1,20 @@
-import io, csv
-from datetime import datetime
 from flask import Blueprint, request, jsonify
+from datetime import datetime, date
+import csv
+from io import StringIO
+
+from database import db
 from database.models import Rule, Discipline
 from database.schemas import RuleSchema
 from database import db
 from api.logs.logger import logger
+from marshmallow import ValidationError
 
 bp_rule = Blueprint('rule', __name__)
+
+def parse_date_ddmmyyyy(s: str) -> date:
+    """Parst ein Datum im Format DD.MM.YYYY."""
+    return datetime.strptime(s, "%d.%m.%Y").date()
 
 # CREATE Rule
 @bp_rule.route('/rules', methods=['POST'])
@@ -127,130 +135,112 @@ def delete_rule(id):
 @bp_rule.route('/rules/import', methods=['POST'])
 def import_rules_from_csv():
     """
-    Importiert Regeln aus einer CSV-Datei mit deutschen Spalten:
-    Disziplin;Regelungsname;Einheit;Beschreibung-Maennlich;Beschreibung-Weiblich;
-    Mindestalter;Hoechstalter;
-    Bronze-Weiblich;Silber-Weiblich;Gold-Weiblich;
-    Bronze-Maennlich;Silber-Maennlich;Gold-Maennlich;
-    Gueltig-Start;Gueltig-Ende
+    Importiert Regeln aus einer hochgeladenen CSV.
+    Erwartet im JSON:
+      { "csv": "...Inhalt der CSV als String..." }
+    Spalten (deutsch):
+      Disziplin;Regelungsname;Einheit;Beschreibung-Maennlich;
+      Beschreibung-Weiblich;Mindestalter;Hoechstalter;
+      Bronze-Weiblich;Silber-Weiblich;Gold-Weiblich;
+      Bronze-Maennlich;Silber-Maennlich;Gold-Maennlich;
+      Gueltig-Start;Gueltig-Ende;Gueltigkeitsjahr
     """
-    f = request.files.get('file')
-    if not f:
-        return jsonify({"error": "Keine CSV-Datei hochgeladen"}), 400
+    # Datei aus dem Multipart-Form-Data holen:
+    if 'csv' not in request.files:
+        return jsonify(error="No file part"), 400
+    file = request.files['csv']
+    # optional: auf CSV-MIME oder Extension prüfen
+    if not file.filename.lower().endswith('.csv'):
+        return jsonify(error="Invalid file type"), 400
 
-    rdr = csv.DictReader(io.StringIO(f.stream.read().decode('utf-8')), delimiter=';')
+    # den Text parsen
+    content = file.stream.read().decode('utf-8').splitlines()
+    reader = csv.DictReader(content, delimiter=';')
+    #content = request.json.get("csv", "")
+    #reader = csv.DictReader(StringIO(content), delimiter=';')
+    created = []
+    errors = []
 
-    # Mapping deutsch -> attribut
-    DE_TO_EN = {
-        'Disziplin': 'discipline',
-        'Regelungsname': 'rule_name',
-        'Einheit': 'unit',
-        'Beschreibung-Maennlich': 'description_m',
-        'Beschreibung-Weiblich': 'description_f',
-        'Mindestalter': 'min_age',
-        'Hoechstalter': 'max_age',
-        'Bronze-Maennlich': 'threshold_bronze_m',
-        'Silber-Maennlich': 'threshold_silver_m',
-        'Gold-Maennlich': 'threshold_gold_m',
-        'Bronze-Weiblich': 'threshold_bronze_f',
-        'Silber-Weiblich': 'threshold_silver_f',
-        'Gold-Weiblich': 'threshold_gold_f',
-        'Gueltig-Start': 'valid_start',
-        'Gueltig-Ende': 'valid_end',
-    }
-
-    required = [
-        'discipline','rule_name','unit',
-        'description_m','description_f',
-        'min_age','max_age',
-        'threshold_bronze_m','threshold_silver_m','threshold_gold_m',
-        'threshold_bronze_f','threshold_silver_f','threshold_gold_f',
-        'valid_start'
-    ]
-
-    imported = []
-    for idx, row in enumerate(rdr, start=1):
-        # 1) deutsch->englisch
-        data = { en: row.get(de, '').strip() for de, en in DE_TO_EN.items() }
-
-        # 2) Pflichtfelder prüfen
-        missing = [k for k in required if not data.get(k)]
-        if missing:
-            return jsonify({"error": f"Zeile {idx}: Fehlende Felder: {missing}"}), 400
-
-        # 3) Disziplin auflösen
-        disc = Discipline.query.filter_by(discipline_name=data['discipline']).first()
+    for i,row in enumerate(reader, start=1):
+        # 1) Discipline-ID ermitteln
+        disc = Discipline.query.filter_by(discipline_name=row["Disziplin"]).first()
         if not disc:
-            return jsonify({"error": f"Zeile {idx}: Unbekannte Disziplin '{data['discipline']}'"}), 400
+            errors.append(f"Zeile {i}: Disziplin „{row['Disziplin']}“ nicht gefunden")
+            continue
 
-        # 4) Typumwandlungen
-        try:
-            min_age = int(data['min_age'])
-            max_age = int(data['max_age'])
-        except ValueError:
-            return jsonify({"error": f"Zeile {idx}: Alter muss Integer sein"}), 400
+        # 2) Basis-Daten map
+        data = {
+            "discipline_id": disc.id,
+            "rule_name":     row["Regelungsname"],
+            "unit":          row["Einheit"],
+            "description_m": row["Beschreibung-Maennlich"],
+            "description_f": row["Beschreibung-Weiblich"],
+            "min_age":       int(row["Mindestalter"]),
+            "max_age":       int(row["Hoechstalter"]),
+            "threshold_bronze_m": float(row["Bronze-Maennlich"]),
+            "threshold_silver_m": float(row["Silber-Maennlich"]),
+            "threshold_gold_m":   float(row["Gold-Maennlich"]),
+            "threshold_bronze_f": float(row["Bronze-Weiblich"]),
+            "threshold_silver_f": float(row["Silber-Weiblich"]),
+            "threshold_gold_f":   float(row["Gold-Weiblich"]),
+        }
 
-        # unit prüfen gegen DB-Enum
-        if data['unit'] not in Rule.__table__.c.unit.type.enums:
-            allowed = Rule.__table__.c.unit.type.enums
-            return jsonify({"error": f"Zeile {idx}: Einheit '{data['unit']}' muss eine von {allowed} sein"}), 400
-
-        def to_float(val, col):
+        # 3) Gültigkeitsjahr oder explizite Start/Ende?
+        guelt_year = row.get("Gueltigkeitsjahr","").strip()
+        if guelt_year:
             try:
-                return float(val.replace(',', '.'))
-            except:
-                raise ValueError(f"Zeile {idx}: '{col}' muss Float")
-
-        try:
-            tbm = to_float(data['threshold_bronze_m'], 'Bronze-Maennlich')
-            tsm = to_float(data['threshold_silver_m'], 'Silber-Maennlich')
-            tgm = to_float(data['threshold_gold_m'],   'Gold-Maennlich')
-            tbf = to_float(data['threshold_bronze_f'], 'Bronze-Weiblich')
-            tsf = to_float(data['threshold_silver_f'], 'Silber-Weiblich')
-            tgf = to_float(data['threshold_gold_f'],   'Gold-Weiblich')
-        except ValueError as e:
-            return jsonify({"error": str(e)}), 400
-
-        # 5) Datum parsen
-        try:
-            vs = datetime.strptime(data['valid_start'], '%Y-%m-%d').date()
-        except ValueError:
-            return jsonify({"error": f"Zeile {idx}: Gueltig-Start muss YYYY-MM-DD sein"}), 400
-        ve = None
-        if data['valid_end']:
-            try:
-                ve = datetime.strptime(data['valid_end'], '%Y-%m-%d').date()
+                y = int(guelt_year)
+                data["valid_start"] = date(y,1,1).strftime("%d.%m.%Y")
+                data["valid_end"]   = date(y,12,31).strftime("%d.%m.%Y")
             except ValueError:
-                return jsonify({"error": f"Zeile {idx}: Gueltig-Ende muss YYYY-MM-DD sein oder leer"}), 400
+                errors.append(f"Zeile {i}: Ungültiges Gueltigkeitsjahr „{guelt_year}“")
+                continue
+        else:
+            # parse explicit dates
+            try:
+                data["valid_start"] = parse_date_ddmmyyyy(row["Gueltig-Start"])
+            except Exception:
+                errors.append(f"Zeile {i}: Ungültiges Datum in Gueltig-Start")
+                continue
 
-        # 6) Version ermitteln
+            ende = row.get("Gueltig-Ende","").strip()
+            if ende:
+                try:
+                    data["valid_end"] = parse_date_ddmmyyyy(ende)
+                except Exception:
+                    errors.append(f"Zeile {i}: Ungültiges Datum in Gueltig-Ende")
+                    continue
+            else:
+                data["valid_end"] = None
+
+        # 4) Version ermitteln (erste Version = 1, bei gleichem Name +1)
         last = (Rule.query
-                    .filter_by(rule_name=data['rule_name'])
-                    .order_by(Rule.version.desc())
-                    .first())
-        version = last.version + 1 if last else 1
+                   .filter_by(rule_name=data["rule_name"])
+                   .order_by(Rule.version.desc())
+                   .first())
+        data["version"] = last.version + 1 if last else 1
 
-        # 7) neuen Rule anlegen
-        r = Rule(
-            discipline_id      = disc.id,
-            rule_name          = data['rule_name'],
-            unit               = data['unit'],
-            description_m      = data['description_m'],
-            description_f      = data['description_f'],
-            min_age            = min_age,
-            max_age            = max_age,
-            threshold_bronze_m = tbm,
-            threshold_silver_m = tsm,
-            threshold_gold_m   = tgm,
-            threshold_bronze_f = tbf,
-            threshold_silver_f = tsf,
-            threshold_gold_f   = tgf,
-            valid_start        = vs,
-            valid_end          = ve,
-            version            = version
-        )
-        db.session.add(r)
-        imported.append({"rule_name": data['rule_name'], "version": version})
+        # 5) Schema-Validierung
+        schema = RuleSchema()
+        try:
+            valid = schema.load(data)
+        except ValidationError as ve:
+            errors.append(f"Zeile {i}: {ve.messages}")
+            continue
 
+        # 6) Anlegen
+        new_rule = Rule(**valid)
+        db.session.add(new_rule)
+        created.append({"row": i, "id": None, "name": new_rule.rule_name, "version": new_rule.version})
+
+    # 7) Commit & IDs ergänzen
     db.session.commit()
-    return jsonify({"imported": imported}), 201
+    for cr in created:
+        # wir finden sie anhand name+version
+        r = Rule.query.filter_by(rule_name=cr["name"], version=cr["version"]).first()
+        cr["id"] = r.id
+
+    return jsonify({
+        "created": created,
+        "errors":   errors
+    }), (400 if errors else 201)
