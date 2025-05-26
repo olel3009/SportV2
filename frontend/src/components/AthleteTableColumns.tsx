@@ -34,6 +34,7 @@ import { FeatEntryCard, FeatEntryDialog } from "./featentry";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useCallback } from "react";
 import { findBestMedal } from "@/medal_functions";
+import DeleteResource from "./ui/deleteResource";
 
 const MedalDisplay = ({ type, text }: { type: string; text: string }) => {
   const colors =
@@ -121,9 +122,9 @@ export const columns: ColumnDef<Athlete>[] = [
     header: "Geschlecht",
     cell: ({ row }) => {
       const sex = row.original.sex;
-      if (sex === "m") return "Männlich"
-      if (sex === "f") return "Weiblich"
-      if (sex === "d") return "Divers"
+      if (sex === "m") return "Männlich";
+      if (sex === "f") return "Weiblich";
+      if (sex === "d") return "Divers";
     },
     enableGlobalFilter: false,
   },
@@ -217,15 +218,6 @@ export const columns: ColumnDef<Athlete>[] = [
               >
                 <Download />
                 Als CSV exportieren
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Pen />
-                Editieren
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-red-600">
-                <Trash2 />
-                Löschen
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

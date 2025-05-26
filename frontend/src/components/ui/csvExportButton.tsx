@@ -1,33 +1,45 @@
-"use client"
+"use client";
 
-import { downloadCsv } from "@/exportCsv"
-import { Button } from "@/components/ui/button"
-import React from "react"
+import { downloadCsv } from "@/exportCsv";
+import { Button } from "@/components/ui/button";
+import React from "react";
+import Link from "next/link";
+import { Download } from "lucide-react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
-
 interface Props {
-  ids: number[]|(() => number[])
-  text: string
+  ids: number[] | (() => number[]);
+  text: string;
 }
 
-export default function DownloadCsvButton({ ids, text }: Props) {
-  const handleClick = async () => {
-    const resolvedIds = Array.isArray(ids) ? ids : ids()
-    try {
-
-      const ok = await downloadCsv(resolvedIds)
-      if (!ok) console.warn("Download failed")
-    } catch (e) {
-      console.error("downloadCsv threw:", e)
-    }
+const handleClick = async (ids: number[] | (() => number[])) => {
+  const resolvedIds = Array.isArray(ids) ? ids : ids();
+  try {
+    const ok = await downloadCsv(resolvedIds);
+    if (!ok) console.warn("Download failed");
+  } catch (e) {
+    console.error("downloadCsv threw:", e);
   }
+};
 
+export default function DownloadCsvButton({ ids, text }: Props) {
+  return (
+    <Button onClick={() => handleClick(ids)} className="w-full flex gap-1">
+      <Download /> {text}
+    </Button>
+  );
+}
+
+export function DownloadCsvLink({ ids, text }: Props) {
   return (
     <Tooltip.Root>
       <Tooltip.Trigger asChild>
-        <Button onClick={handleClick} className="w-full">
-          {text}
+        <Button
+          onClick={() => handleClick(ids)}
+          className="flex gap-1"
+          variant="link"
+        >
+          <Download className="" /> <span className="">{text}</span>
         </Button>
       </Tooltip.Trigger>
       <Tooltip.Content
@@ -40,5 +52,5 @@ export default function DownloadCsvButton({ ids, text }: Props) {
         <Tooltip.Arrow className="fill-gray-800" />
       </Tooltip.Content>
     </Tooltip.Root>
-  )
+  );
 }

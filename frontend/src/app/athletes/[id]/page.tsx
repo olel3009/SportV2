@@ -1,5 +1,7 @@
+"use client";
+
 import { useParams } from "next/navigation";
-import { Athlete, Feat } from "@/models/athlete";
+import { Athlete, Discipline, Feat } from "@/models/athlete";
 import {
   getAllDisciplines,
   getAthleteById,
@@ -7,7 +9,9 @@ import {
   getAthleteWithFeats,
 } from "@/athlete_getters";
 import { downloadCsv } from "@/exportCsv";
-import DownloadCsvButton from "@/components/ui/csvExportButton";
+import DownloadCsvButton, {
+  DownloadCsvLink,
+} from "@/components/ui/csvExportButton";
 import Link from "next/link";
 import { Undo2, CircleUserRound, Medal, CircleSlash } from "lucide-react";
 import {
@@ -30,6 +34,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUtcTimecodeFromGermanDate } from "@/date_format";
 import { findBestMedal } from "@/medal_functions";
+import DeleteResource from "@/components/ui/deleteResource";
+import { useEffect, useState } from "react";
 
 const getAge = (dateString: string) => {
   const [day, month, year] = dateString.split(".").map(Number);
@@ -73,16 +79,65 @@ function MedalDisplay({
   );
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const id = parseInt((await params).id);
-  const athlete = await getAthleteById(id);
-  const feats = await getFeatsById(id);
-  const disciplines = await getAllDisciplines();
-  let actDiscIds: boolean[] = [false, false, false, false];
+export default function Page() {
+  const params = useParams<{ id: string }>();
+  const id = parseInt(params.id);
+
+  const [athlete, setAthlete] = useState<Athlete>();
+  const [feats, setFeats] = useState<Feat[]>();
+  const [disciplines, setDisciplines] = useState<Discipline[]>([]);
+  const [actDiscIds, setActDiscIds] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+  ]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  function mapSex(sex: string) {
+    sex = sex.toLocaleLowerCase();
+    if (sex === "m") return "Männlich";
+    if (sex === "f") return "Weiblich";
+    if (sex === "d") return "Divers";
+  }
+
+  function handleDeleteFeats(ids: number[]) {
+    setFeats(feats?.filter((feat) => !ids.includes(feat.id)));
+  }
+
+  useEffect(() => {
+    if (!id) return;
+
+    if (isNaN(id)) {
+      setError("Fehler bei der ID");
+      setLoading(false);
+      return;
+    }
+
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const athleteData = await getAthleteById(id);
+        if (!athleteData) setError(`Athlet mit ID: ${id} existiert nicht`);
+        const featsData = await getFeatsById(id);
+        const disciplinesData = await getAllDisciplines();
+
+        setAthlete(athleteData);
+        setFeats(featsData);
+        setDisciplines(disciplinesData);
+      } catch (err) {
+        console.log("Failed to fetch data:", err);
+        setError("Athletendaten konnten nicht geladen werden");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
   feats?.forEach((feat) => {
     // first, safely pull out discipline_id
     const id = feat?.ruling?.discipline_id;
@@ -92,24 +147,30 @@ export default async function Page({
       actDiscIds[id - 1] = true;
     }
   });
-  function mapSex(sex: string) {
-    sex = sex.toLocaleLowerCase();
-    if (sex === "m") return "Männlich";
-    if (sex === "f") return "Weiblich";
-    if (sex === "d") return "Divers";
-  }
   let usedExercises: number[] = [];
 
-  if (athlete === undefined)
+  if (loading) {
     return (
       <div className="p-6 flex flex-col gap-2">
         <Link href="/athletes/" className="flex items-center gap-2">
           <Undo2 />
           <span className="underline">Übersicht</span>
         </Link>
-        <ErrorDisplay message={`Athlet mit ID: ${id} existiert nicht.`} />
       </div>
     );
+  }
+
+  if (error || athlete === undefined) {
+    return (
+      <div className="p-6 flex flex-col gap-2">
+        <Link href="/athletes/" className="flex items-center gap-2">
+          <Undo2 />
+          <span className="underline">Übersicht</span>
+        </Link>
+        <ErrorDisplay message={error || ""} />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 gap-4 flex flex-col">
@@ -135,11 +196,18 @@ export default async function Page({
             </div>
           </div>
 
-          <div className="pl-7 grow gap-1 xl:gap-7 flex justify-evenly items-center"></div>
+          <div className="flex flex-wrap ml-auto">
+            <DownloadCsvLink ids={[id]} text="CSV" />
+            <DeleteResource
+              ids={[id]}
+              type="athlete"
+              text="Löschen"
+              warning={`Sind Sie sicher, dass sie den Athleten ${athlete.firstName} ${athlete.lastName} sowie alle Leistungen des Athleten löschen möchten?`}
+              redirect="/athletes"
+            />
+          </div>
         </CardContent>
       </Card>
-
-      <DownloadCsvButton ids={[id]} text="Als Csv exportieren" />
 
       <h2 className="text-xl font-bold">Schwimmnachweis</h2>
       <div>
@@ -151,7 +219,10 @@ export default async function Page({
 
       <h2 className="text-xl font-bold">Leistungen</h2>
       <div>
-        <Tabs defaultValue={(actDiscIds.findIndex(val => val) + 1).toString()} className="w-full">
+        <Tabs
+          defaultValue={(actDiscIds.findIndex((val) => val) + 1).toString()}
+          className="w-full"
+        >
           <TabsList>
             {actDiscIds.map((yes, index) => {
               if (!yes) return null;
@@ -198,10 +269,17 @@ export default async function Page({
                   {bestFeat && (
                     <>
                       <MedalDisplay displayName="" type={bestFeat.medal} />
-                      <span>{bestFeat.medal} in {disc.name} für {new Date().getFullYear()}:</span>
-                      <span className="font-semibold">{bestFeat.result} {bestFeat.ruling?.unit}</span>
+                      <span>
+                        {bestFeat.medal} in {disc.name} für{" "}
+                        {new Date().getFullYear()}:
+                      </span>
+                      <span className="font-semibold">
+                        {bestFeat.result} {bestFeat.ruling?.unit}
+                      </span>
                       in
-                      <span className="font-semibold">{bestFeat.ruling?.rule_name}</span>
+                      <span className="font-semibold">
+                        {bestFeat.ruling?.rule_name}
+                      </span>
                     </>
                   )}
                 </div>
@@ -259,7 +337,7 @@ export default async function Page({
                               <div className="flex flex-col gap-2">
                                 {ruleSpecificResults.map((result, index) => (
                                   <div
-                                    className="grid grid-cols-[max-content_12rem_auto] w-full border rounded-xl p-3 gap-4 items-center"
+                                    className="group grid grid-cols-[max-content_12rem_auto_max-content] w-full border rounded-xl p-3 gap-4 items-center"
                                     key={index}
                                   >
                                     <MedalDisplay
@@ -270,6 +348,16 @@ export default async function Page({
                                       {result.result} {result.ruling?.unit}
                                     </label>
                                     <label>{result.year}</label>
+                                    <div className="invisible group-hover:visible">
+                                      <DeleteResource
+                                        ids={[result.id]}
+                                        type="result"
+                                        warning={`Sind Sie sicher, dass sie diese Leistung löschen möchten?`}
+                                        onDelete={() =>
+                                          handleDeleteFeats([result.id])
+                                        }
+                                      />
+                                    </div>
                                   </div>
                                 ))}
                               </div>

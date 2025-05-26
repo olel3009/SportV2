@@ -128,6 +128,23 @@ export async function getAllAthletes(): Promise<Athlete[]> {
   return mapped;
 }
 
+export async function deleteAthlete(ids: number[]) {
+  for (const id of ids) {
+    const allFeats = await (await getAllFeats(true, id)).map(feat => feat.id)
+    await deleteFeat(allFeats)
+
+    const responseAthlete = await fetch(`http://127.0.0.1:5000/athletes/${id}`, {
+      method: 'DELETE',
+      cache: 'no-store',
+    });
+    if (!responseAthlete.ok) {
+      throw new Error(`Error: ${responseAthlete.statusText}`);
+    }
+    console.log('Athlete deleted successfully')
+  }
+  return true;
+}
+
 type RawFeat = {
   id: number;
   athlete_id: number;
@@ -185,6 +202,21 @@ export async function getAllFeats(
   });
 
   return preppedFeats;
+}
+
+export async function deleteFeat(ids: number[]) {
+  for (const id of ids) {
+    const response = await fetch(`http://127.0.0.1:5000/results/${id}`, {
+      method: 'DELETE',
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+    console.log('Feat deleted successfully')
+  }
+  return true;
 }
 
 type RawRule = {
