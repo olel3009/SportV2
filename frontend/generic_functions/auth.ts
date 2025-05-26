@@ -4,7 +4,6 @@ export function validateAndGetToken(): boolean | null {
         // Nicht im Browser, Token kann nicht geprüft werden
         return null;
     }
-
     const token = localStorage.getItem("access_token");
     if (!token) {
         window.location.href = "/?error=notoken";

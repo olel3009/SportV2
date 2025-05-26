@@ -82,6 +82,7 @@ export default async function Page({
 }) {
   const id = parseInt((await params).id);
   const athlete = await getAthleteById(id);
+  console.log("Athlete:", athlete);
   const feats = await getFeatsById(id);
   const disciplines = await getAllDisciplines();
   let actDiscIds: boolean[] = [false, false, false, false];

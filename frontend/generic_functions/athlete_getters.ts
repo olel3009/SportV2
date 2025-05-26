@@ -73,8 +73,15 @@ type RawAthlete = {
 };
 
 export async function getAthleteById(id: number): Promise<Athlete | undefined> {
+  const token = validateAndGetToken();
+  if (token === null || token === false) {
+    // Token ist ungültig, validateAndGetToken leitet bereits weiter
+    console.log("Token ist ungültig");
+    return undefined;
+  }
   const all = await getAllAthletes();
   console.log("Test getAthleteById");
+  console.log(all);
   return all.find((a) => a.id === id);
 }
 
@@ -152,6 +159,7 @@ export async function getAllAthletes(): Promise<Athlete[]> {
     }
 
     const data: RawAthlete[] = await res.json();
+    console.log("Raw data fetched:", data);
 
   //Mapping
   const mapped: Athlete[] = data.map((raw) => ({
