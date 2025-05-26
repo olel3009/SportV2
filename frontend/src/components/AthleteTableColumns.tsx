@@ -219,19 +219,6 @@ export const columns: ColumnDef<Athlete>[] = [
                 <Download />
                 Als CSV exportieren
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Pen />
-                Editieren
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-red-600">
-                <DeleteResource
-                  type="athlete"
-                  text="Löschen"
-                  ids={[row.original.id]}
-                  warning={`Sind Sie sicher, dass sie den Athleten ${row.original.firstName} ${row.original.lastName} sowie alle Leistungen des Athleten löschen möchten?`}
-                />
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 

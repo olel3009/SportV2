@@ -12,10 +12,16 @@ import { Athlete } from "@/models/athlete";
 import { downloadCsv } from "@/exportCsv";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import DeleteResource from "@/components/ui/deleteResource";
 
 export default function Page() {
   const router = useRouter();
   const [athletes, setAthletes] = useState<Athlete[]>([]);
+
+  const deletedAthletes = () => {
+    const deletedIds = getSelectedAthleteIds();
+    setAthletes(athletes.filter((athlete) => !deletedIds.includes(athlete.id)));
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,11 +31,9 @@ export default function Page() {
           getAllFeats(),
         ]);
 
-        const athletesWithFeats = athletesResponse.map(athlete => ({
+        const athletesWithFeats = athletesResponse.map((athlete) => ({
           ...athlete,
-          feats: featsResponse.filter(
-            feat => feat.athlete_id === athlete.id
-          )
+          feats: featsResponse.filter((feat) => feat.athlete_id === athlete.id),
         }));
         setAthletes(athletesWithFeats);
       } catch (error) {
@@ -45,6 +49,13 @@ export default function Page() {
       <DownloadCsvButton
         ids={getSelectedAthleteIds}
         text={"Ausgewählte als Csv exportieren"}
+      />
+      <DeleteResource
+        type="athlete"
+        text="Ausgewählte Löschen"
+        ids={getSelectedAthleteIds}
+        warning={`Sind Sie sicher, dass sie ${getSelectedAthleteIds.length} Athleten sowie alle Leistungen der Athleten löschen möchten?`}
+        onDelete={deletedAthletes}
       />
       <DataTable
         columns={columns}

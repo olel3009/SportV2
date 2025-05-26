@@ -12,7 +12,7 @@ export default function DeleteResource({
   ids,
   text = "",
   warning = "",
-  onClick,
+  onDelete,
   redirect = "",
 }: {
   type: "athlete" | "result";
@@ -20,7 +20,7 @@ export default function DeleteResource({
   text?: string;
   warning?: string;
   redirect?: string;
-  onClick?: () => void;
+  onDelete?: () => void;
 }) {
   const router = useRouter();
 
@@ -34,7 +34,7 @@ export default function DeleteResource({
     } catch (e) {
       console.error("Resource deletion threw:", e);
     }
-    if (onClick) onClick();
+    if (onDelete) onDelete();
     if (redirect !== "") router.push(redirect);
   };
 
