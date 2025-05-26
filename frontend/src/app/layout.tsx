@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react'
+import * as Tooltip from "@radix-ui/react-tooltip";
 import Link from "next/link";
 import '@/app/globals.css'
 import { usePathname, useSearchParams } from 'next/navigation'
@@ -13,15 +14,20 @@ export default function RootLayout({
   return (
     <html>
       <body>
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
-            <main className='flex flex-col w-full h-full'>
-              <SidebarTrigger />
-              {children}
-            </main>
-          </SidebarInset>
-        </SidebarProvider>
+        <Tooltip.Provider>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+              {/* Header mit sticky Position für SidebarTrigger */}
+              <header className="sticky top-0 z-10 ">
+                <SidebarTrigger />
+              </header>
+              <main className="flex flex-col w-full h-full">
+                {children}
+              </main>
+            </SidebarInset>
+          </SidebarProvider>
+        </Tooltip.Provider>
       </body>
     </html>
   )

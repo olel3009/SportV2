@@ -16,6 +16,7 @@ class nav_menu_test(unittest.TestCase):
         chrome_options.add_argument("--headless")  # Run in headless mode
         chrome_options.add_argument("--disable-gpu")
         
+
         # Initialize the WebDriver with the options
         self.driver = webdriver.Chrome(options=chrome_options)
         self.driver = webdriver.Chrome()
@@ -23,7 +24,8 @@ class nav_menu_test(unittest.TestCase):
         # Navigate to your target URL but fail the test if it takes too long
         self.driver.set_page_load_timeout(10)
         self.driver.get("http://localhost:3000/")
-        self.sites =[["Startseite", "/startpage"], ["Testseite", "/test_page"]]
+        self.sites =[["Dashboard", "/dashboard"], ["Athleten", "/athletes"], 
+                     ["Leistungseintrag", "/feat_entry_page"],["Wiki","/wiki_page"]]
     
     def test_nav_menu(self):
 

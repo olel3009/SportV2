@@ -1,9 +1,10 @@
 "use client";
-import { Athlete } from "@/models/athlete";
-import { getAllAthletes, addFeatToAthlete } from "@/../generic_functions/athlete_getters";
-import { getExercises } from "@/../generic_functions/calculation_functions";
+import { Athlete, Rule } from "@/models/athlete";
+import { getAllAthletes, addFeatToAthlete, getAllDisciplines, getAllRules, getRulesByDisciplineId, getAthleteById } from "@/../generic_functions/athlete_getters";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useMemo } from "react";
+import { calculateAge } from "@/generalHelpers";
 import {
   Select,
   SelectContent,
@@ -32,7 +33,14 @@ import {
   DialogTitle
 } from "./ui/dialog";
 import { useEffect, useState } from "react";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
+type athAgeMap={
+  athId:string;
+  age:number;
+}
+
+let ageMapper: athAgeMap[]=[];
 
 function AthleteSelect({
   value,
@@ -43,9 +51,20 @@ function AthleteSelect({
   onChange: (val: string) => void;
   id?: number;
 }) {
-  const athletes: Athlete[] = getAllAthletes();
+  const [athletes, setAthletes] = useState<Athlete[]>([])
   const athleteSet = id !== -1;
 
+  useEffect(() => {
+    getAllAthletes().then(setAthletes)
+  }, [])
+  athletes.forEach(ath=>{
+    const athId = String(ath.id);
+    const age   = calculateAge(ath.dateOfBirth);
+    
+    const map: athAgeMap = { athId, age }; 
+
+    ageMapper.push(map);
+  });
   return (
     <Select value={value} onValueChange={onChange} disabled={athleteSet}>
       <SelectTrigger id="athlete">
@@ -62,15 +81,24 @@ function AthleteSelect({
   )
 }
 
-function DisciplineSelect({
+export function DisciplineSelect({
   value,
   onChange
 }: {
   value: string;
   onChange: (val: string) => void;
 }) {
-  const exercises = getExercises();
-  const options = Object.keys(exercises);
+  const [options, setOptions] = useState<{ id: number; name: string }[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    getAllDisciplines()
+      .then((data) => setOptions(data))
+      .catch((err) => setError(err.message));
+  }, []);
+
+  if (error) return <div className="text-red-600">Failed to load: {error}</div>;
+  if (!options) return <div>Loading disciplines…</div>;
 
   return (
     <Select value={value} onValueChange={onChange}>
@@ -78,27 +106,41 @@ function DisciplineSelect({
         <SelectValue placeholder="Disziplin wählen" />
       </SelectTrigger>
       <SelectContent>
-        {options.map((option, index) => (
-          <SelectItem value={option} key={index}>
-            {option}
+        {options.map((opt) => (
+          <SelectItem value={String(opt.id)} key={opt.id}>
+            {opt.name}
           </SelectItem>
         ))}
       </SelectContent>
     </Select>
-  )
+  );
 }
 
-function ExerciseSelect({
-  discipline,
+
+
+export function ExerciseSelect({
+  disciplineId,
   value,
+  age,
   onChange
 }: {
-  discipline: string;
+  disciplineId: string;
   value: string;
+  age:number;
   onChange: (val: string) => void;
 }) {
-  const exercises = getExercises();
-  const currentExercise = exercises[discipline] || [];
+  const [exercises, setExercises] = useState<{ id: number; rule_name: string; min_age: number; max_age: number; }[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!disciplineId) return;
+    getRulesByDisciplineId(Number(disciplineId))
+      .then((data) => setExercises(data ?? []))
+      .catch((err) => setError(err.message));
+  }, [disciplineId]);
+
+  if (error) return <div className="text-red-600">Fehler: {error}</div>;
+  if (!exercises) return <div>Loading exercises…</div>;
 
   return (
     <Select value={value} onValueChange={onChange}>
@@ -106,102 +148,265 @@ function ExerciseSelect({
         <SelectValue placeholder="Übung wählen" />
       </SelectTrigger>
       <SelectContent>
-        {currentExercise.map((exer, i) => (
-          <SelectItem value={exer} key={i}>
-            {exer}
-          </SelectItem>
-        ))}
+        {exercises.map((exer) => {
+          if(age>=exer.min_age&&age<=exer.max_age){
+            return(<SelectItem value={String(exer.id)} key={exer.id}>
+                    {exer.rule_name}
+                  </SelectItem>)
+          }
+          else{
+            return null;
+          }
+      })}
       </SelectContent>
     </Select>
-  )
-
+  );
 }
 
-function formatDate(date: Date): string {
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // months are zero-based
-  const year = String(date.getFullYear());
+
+let uebID=0
+let dat=""
+let erg = "";
+let ath = 0;
+const submit = () => {
+
+  console.log("Uebung:", uebID, "Athlet:", ath, "Datum:", dat, "Ergebnis:", erg);
+  addFeatToAthlete(ath, uebID, dat, erg);
+}
+
+
+function formatGermanDate(d: Date): string {
+  const day   = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0'); // months are 0–11
+  const year  = d.getFullYear();
   return `${day}.${month}.${year}`;
 }
 
-let [ueb, dat, erg] = "";
-let ath = 0;
-const submit = () => {
-  console.log("Uebung:", ueb, "Athlet:", ath, "Datum:", dat, "Ergebnis:", erg);
-  addFeatToAthlete(ath, ueb, dat, erg);
-}
-
-function FeatEntryContent({ id = -1 }: { id?: number }) {
+export function FeatEntryContent({ id = -1 }: { id?: number }) {
   const today = new Date();
-  const formatted = formatDate(today);
-  const exercises = getExercises();
-  const allDisciplines = Object.keys(exercises)
+  const formatted = formatGermanDate(today);
+  let resDesc="erg in whatever";
 
+  // fetched data
+  const [exercises, setExercises] = useState<Rule[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // form state
   const [selectedAthlete, setSelectedAthlete] = useState("");
+  const [athleteAge, setAthleteAge] = useState<number>(0);
   const [selectedDiscipline, setSelectedDiscipline] = useState("");
   const [selectedExercise, setSelectedExercise] = useState("");
   const [result, setResult] = useState("");
-  const [date, setDate] = useState(formatted);
+  const [date, setDate] = useState(String(formatted));
 
+  const handleAthleteChange=(newAth:string)=>{
+    setSelectedAthlete(newAth);
+      // find the one entry whose athId matches newAth
+    const found = ageMapper.find(m => m.athId === newAth);
+
+    // if we found it, setAthleteAge to that age, otherwise 0 (or whatever default makes sense)
+    setAthleteAge(found?.age ?? 0);
+  }
+
+  // load rules + disciplines once
   useEffect(() => {
-    if (allDisciplines.length > 0) {
-      setSelectedDiscipline(allDisciplines[0]);
-      const firstExercise = exercises[allDisciplines[0]]?.[0] ?? "";
-      setSelectedExercise(firstExercise);
-    }
+    let cancelled = false;
+    ;(async () => {
+      try {
+        const [allRules, allDisc] = await Promise.all([
+          getAllRules(),
+          getAllDisciplines(),
+        ]);
+        if (cancelled) return;
 
-    if (id !== -1) setSelectedAthlete(id.toString())
-  }, []);
+        setExercises(allRules);
 
+        // default discipline → first discipline
+        if (allDisc.length > 0) {
+          const firstDis = allDisc[0].id;
+          setSelectedDiscipline(String(firstDis));
+
+          // default exercise → first matching that discipline
+          const firstEx = allRules.find((r) => r.discipline_id === firstDis);
+          setSelectedExercise(firstEx ? String(firstEx.id) : "");
+        }
+
+        // default athlete if passed in
+        if (id !== -1) {
+          handleAthleteChange(String(id));
+        }
+      } catch (err: any) {
+        if (!cancelled) setError(err.message);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
+  
+
+  // sync out to your module-scope vars
   useEffect(() => {
-    ueb = selectedExercise;
+    uebID = Number(selectedExercise);
     dat = date;
     erg = result;
-    ath = Number(selectedAthlete)
-  }, [selectedAthlete, result, date, selectedExercise])
+    ath = Number(selectedAthlete);
+  }, [selectedAthlete, selectedDiscipline, selectedExercise, result, date]);
 
   const handleDisciplineChange = (newDiscipline: string) => {
     setSelectedDiscipline(newDiscipline);
-    const firstExercise = exercises[newDiscipline]?.[0] ?? "";
-    setSelectedExercise(firstExercise);
+    // pick first exercise in that discipline
+    const firstEx:Rule|undefined = exercises.find(
+      (ex) => ex.discipline_id === Number(newDiscipline)
+    );
+    setSelectedExercise(firstEx ? String(firstEx.id) : "");
   };
 
+  const currentRule = exercises.find(
+    (r) => r.id === Number(selectedExercise)
+  );
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(
+      "Uebung:",
+      uebID,
+      "Athlet:",
+      ath,
+      "Datum:",
+      dat,
+      "Ergebnis:",
+      erg
+    );
+    addFeatToAthlete(ath, uebID, dat, erg);
+  };
+  
+
+  if (loading) return <div>Loading form…</div>;
+  if (error) return <div className="text-red-600">Error: {error}</div>;
+  
   return (
-    <div className="flex flex-col gap-4">
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className="grid gap-2">
+            <Label>Athlet</Label>
+                <AthleteSelect
+                  id={id}
+                  value={selectedAthlete}
+                  onChange={handleAthleteChange}
+                />
+          </div>
+        </Tooltip.Trigger>
+        <Tooltip.Content
+          side="top" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Wählen sie einen Athleten
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
 
-      <div className="grid gap-2">
-        <Label>Athlet</Label>
-        <AthleteSelect id={id} value={selectedAthlete} onChange={setSelectedAthlete} />
-      </div>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className="grid gap-2">
+            <Label>Disziplin</Label>
+            <DisciplineSelect
+              value={selectedDiscipline}
+              onChange={handleDisciplineChange}
+            />
+          </div>
+        </Tooltip.Trigger>
+        <Tooltip.Content
+          side="top" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Wählen sie eine Disziplin
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
 
-      <div className="grid gap-2">
-        <Label>Disziplin</Label>
-        <DisciplineSelect value={selectedDiscipline} onChange={handleDisciplineChange} />
-      </div>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className="grid gap-2">
+            <Label>Übung</Label>
+            <ExerciseSelect
+              disciplineId={selectedDiscipline}
+              value={selectedExercise}
+              age={athleteAge}
+              onChange={setSelectedExercise}
+            />
+          </div>
+        </Tooltip.Trigger>
+        <Tooltip.Content
+          side="top" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Wählen sie eine Übung
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
 
-      <div className="grid gap-2">
-        <Label>Übung</Label>
-        <ExerciseSelect discipline={selectedDiscipline} value={selectedExercise} onChange={setSelectedExercise} />
-      </div>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className="grid gap-2">
+            <Label htmlFor="datum">Datum</Label>
+            <Input
+              id="datum"
+              name="datum"
+              placeholder="Datum des Ergebnis"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+          </Tooltip.Trigger>
+        <Tooltip.Content
+          side="top" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Geben sie das Datum ein, an dem die Leistung erbracht wurde
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
 
-      <div className="grid gap-2">
-        <Label htmlFor="datum">Datum</Label>
-        <Input
-          name="datum"
-          id="datum"
-          placeholder="Datum des Ergebnis"
-          defaultValue={formatted}
-          onChange={e => setDate(e.target.value)}
-        />
-      </div>
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className="grid gap-2">
+            <Label htmlFor="ergebnis">
+              Ergebnis {currentRule ? `(${currentRule.unit})` : ""}
+            </Label>
+            <Input
+              id="ergebnis"
+              placeholder={`Ergebnis in ${currentRule?.unit ?? ""}`}
+              value={result}
+              onChange={(e) => setResult(e.target.value)}
+            />
+          </div>
+        </Tooltip.Trigger>
+        <Tooltip.Content
+          side="top" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Geben sie die erbrachte Leistung im angezeigten Format ein
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
 
-      <div className="grid gap-2">
-        <Label htmlFor="ergebnis">Ergebnis</Label>
-        <Input id="ergebnis" placeholder="Ergebnis" onChange={e => setResult(e.target.value)}/>
-      </div>
-
-    </div>
-  )
+    </form>
+  );
 }
 
 

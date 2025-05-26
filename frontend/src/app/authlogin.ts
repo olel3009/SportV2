@@ -10,6 +10,7 @@ import { redirect } from 'next/navigation'
 
 
 export async function login(state: FormState, formData: FormData) {
+    console.log("Login");
     // If any form fields are invalid, return early
     const validatedFields = LoginFormSchema.safeParse({
         email: formData.get('email'),
@@ -22,34 +23,19 @@ export async function login(state: FormState, formData: FormData) {
     }
 
     //Test Login Data and test return
-    
+
     const mail = formData.get('email') as string;
     const password = formData.get('password') as string;
-    if (LoginKontrolle(mail, password) == 2) {
+    if (await LoginKontrolle(mail, password) == 2) {
         console.log("login successful")
         redirect('/dashboard')
-        return {
-            message: 'Login successful',
-            email: ['Anmeldung erfolgreich.'],
-            password: ['Anmeldung erfolgreich.'],
-            errors: {
-                email: ['Anmeldung erfolgreich.'],
-                password: ['Anmeldung erfolgreich.'],
-            }
-        }
     } else {
         console.log("login failed")
 
-        if (LoginKontrolle(mail, password) == 0) {
+        if (await LoginKontrolle(mail, password) == 0) {
             return {
                 errors: {
                     email: ['Es existiert kein Account mit dieser E-Mail Adresse'],
-                }
-            }
-        }
-        if (LoginKontrolle(mail, password) == 1) {
-            return {
-                errors: {
                     password: ['Das Passwort ist falsch'],
                 }
             }
@@ -63,31 +49,38 @@ export async function signup(state: FormState, formData: FormData) {
     const validatedFields = SignupFormSchema.safeParse({
         email: formData.get('email'),
         password: formData.get('password'),
+        password2: formData.get('password2'),
     })
     const mail = formData.get('email') as string;
     const password = formData.get('password') as string;
+    const password2 = formData.get('password2') as string;
+    
     // If any form fields are invalid, return early
     if (!validatedFields.success) {
         return {
-            errors: validatedFields.error.flatten().fieldErrors,
-        }
-    }
-    if (userExists(mail) == false) {
-
-        if (createUser(mail, password) == true) {
-            console.log("Signup Erfolgreich")
-            return {
-                message: 'Signup Erfolgreich',
+            errors: { passwordlänge: ['Das Passwort muss mindestens 8 Zeichen lang sein.'],
             }
         }
-    } else {
-        console.log("login failed")
-        if (userExists(mail) == true) {
+    }
+
+        if (password != password2) {
             return {
                 errors: {
-                    email: ['Ein Account mit dieser E-Mail Adresse existiert bereits'],
+                    password: ['Die Passwörter sind nicht gleich'],
                 }
             }
+        } else {
+            if (await createUser(mail, password) == true) {
+                console.log("Signup Erfolgreich")
+                redirect('/dashboard')
+            }
+            else {
+                console.log("SignUp Fehlgeschlagen")
+                    return {
+                        errors: {
+                            email: ['SignUp Fehlgeschlagen'],
+                        }
+                    }
+            }
         }
-    }
 }

@@ -1,4 +1,4 @@
-import { LayoutPanelTop, Users, Settings, ChartNoAxesCombined } from "lucide-react"
+import { LayoutPanelTop, Users, Settings, ChartNoAxesCombined, BookOpenText, ClipboardList, Import } from "lucide-react"
 
 import { 
     Sidebar, 
@@ -14,7 +14,7 @@ import Link from "next/link"
 
 const items = [
   {
-    title: "Dasboard",
+    title: "Dashboard",
     url: "/dashboard",
     icon: LayoutPanelTop
   },
@@ -27,6 +27,21 @@ const items = [
     title: "Leistungseintrag",
     url: "/feat_entry_page",
     icon: ChartNoAxesCombined
+  },
+  {
+    title: "Regelübersicht",
+    url: "/rule_overview",
+    icon: ClipboardList
+  },
+  {
+    title: "CSV-Eingabe",
+    url: "/csv_entry",
+    icon: Import
+  },
+  {
+    title: "Wiki",
+    url: "/wiki_page",
+    icon: BookOpenText
   },
   {
     title: "Einstellungen",
