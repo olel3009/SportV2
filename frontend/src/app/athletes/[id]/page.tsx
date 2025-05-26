@@ -1,4 +1,3 @@
-'use client';
 import { useParams } from "next/navigation";
 import { Athlete, Feat } from "@/models/athlete";
 import {
@@ -30,7 +29,7 @@ import {
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUtcTimecodeFromGermanDate } from "@/date_format";
-import { findBestMedal } from "@/medal_functions"; import { useEffect, useState } from "react";
+import { findBestMedal } from "@/medal_functions"; 
 import { validateAndGetToken } from "@/auth";
 
 
@@ -103,20 +102,7 @@ export default async function Page({
   }
   let usedExercises: number[] = [];
 
-  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    setTokenValid(validateAndGetToken());
-  }, []);
-
-  if (tokenValid === null) {
-    // Noch nicht geprüft, z.B. Ladeanzeige oder leer
-    return null;
-  }
-  if (!tokenValid) {
-    // Token ist ungültig, validateAndGetToken leitet bereits weiter
-    return null;
-  }
+  
 
   if (athlete === undefined)
     return (
