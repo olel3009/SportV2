@@ -74,20 +74,23 @@ type RawAthlete = {
 
 export async function getAthleteById(id: number): Promise<Athlete | undefined> {
   const all = await getAllAthletes();
+  console.log("Test getAthleteById");
   return all.find((a) => a.id === id);
 }
 
 export async function getAthletesMedals(): Promise<Athlete[]> {
-  // 1) load the base list
-  const all = await getAllAthletes();
 
 
   const token = validateAndGetToken();
   if (token === null || token === false) {
     // Token ist ungültig, validateAndGetToken leitet bereits weiter
+    console.log("Token ist ungültig");
     return [];
 
   } else {
+      // 1) load the base list
+    const all = await getAllAthletes();
+    console.log("Token ist gültig");
   // 2) for each athlete kick off a fetch + map to your client‐side type
   const athletePromises = all.map(async (athlete): Promise<Athlete> => {
     const res = await fetch(
@@ -137,7 +140,7 @@ export async function getAllAthletes(): Promise<Athlete[]> {
     // Token ist ungültig, validateAndGetToken leitet bereits weiter
     return [];
   } else {
-
+    console.log("getAllAthletes called");
     const res = await fetch("http://127.0.0.1:5000/athletes", {
       cache: "no-store",
       headers: {
@@ -382,6 +385,7 @@ export async function addFeatToAthlete(
   const token = validateAndGetToken();
   if (token === null || token === false) {
     // Token ist ungültig, validateAndGetToken leitet bereits weiter
+    console.error("Token ist ungültig");
     return false;
   } else {
     let athlete = await getAthleteById(athleteId);

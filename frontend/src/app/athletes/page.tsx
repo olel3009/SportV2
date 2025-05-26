@@ -17,6 +17,11 @@ import { validateAndGetToken } from "@/auth";
 export default function Page() {
   const router = useRouter();
   const [athletes, setAthletes] = useState<Athlete[]>([]);
+  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+
+    useEffect(() => {
+      setTokenValid(validateAndGetToken());
+    }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,13 +45,8 @@ export default function Page() {
     fetchData();
   }, []);
 
-  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
-  
-    useEffect(() => {
-      setTokenValid(validateAndGetToken());
-    }, []);
-  
-    if (tokenValid === null) {
+
+  if (tokenValid === null) {
       // Noch nicht geprüft, z.B. Ladeanzeige oder leer
       return null;
     }
@@ -54,6 +54,7 @@ export default function Page() {
       // Token ist ungültig, validateAndGetToken leitet bereits weiter
       return null;
     }
+
 
   return (
     <div className="p-6">
