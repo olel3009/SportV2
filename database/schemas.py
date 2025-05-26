@@ -16,8 +16,11 @@ class TrainerSchema(Schema):
 class AthleteSchema(Schema):
     first_name = fields.Str(required=True, validate=Length(min=1, max=100))
     last_name = fields.Str(required=True, validate=Length(min=1, max=100))
+    email = fields.Email(required=True)
     birth_date = fields.Date(required=True, format="%d.%m.%Y")
     gender = fields.Str(required=True, validate=OneOf(["m", "f", "d"]))
+    picture = fields.Str(dump_only=True)
+    swim_cert_file = fields.Str(dump_only=True)
     swim_certificate = fields.Bool(missing=False)
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
