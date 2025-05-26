@@ -34,6 +34,11 @@ const items = [
     icon: ClipboardList
   },
   {
+    title: "Athleteneingabe",
+    url: "/athlete_entry",
+    icon: ClipboardList
+  },
+  {
     title: "CSV-Eingabe",
     url: "/csv_entry",
     icon: Import
