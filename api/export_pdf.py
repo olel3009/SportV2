@@ -1,16 +1,16 @@
 from datetime import datetime
 from pypdf import PdfReader, PdfWriter
-from api.athlet import Athlete, PerformanceData
+from athlet import Athlete, PerformanceData
 
 perf1 = PerformanceData("Laufen Ausdauer", "2025", "06:30", 3)
 perf2 = PerformanceData("Laufen Schnelligkeit", "2025", "00:40", 2)
-athlet1 = Athlete("Max","Mustermann","m","2001-01-13", [perf1, perf2])
-athlet2 = Athlete("Mix","Mastermann","m","2005-01-23", [perf1, perf2])
-athlet3 = Athlete("Mux","Mistermann","m","2011-01-30", [perf1, perf2])
+athlet1 = Athlete("Max","Mustermann","m","2001-01-13", performances=[perf1, perf2], swim_certificate=None)
+athlet2 = Athlete("Mix","Mastermann","m","2005-01-23", performances=[perf1, perf2], swim_certificate=None)
+athlet3 = Athlete("Mux","Mistermann","m","2011-01-30", performances=[perf1, perf2], swim_certificate=None)
 Gruppe1 = [athlet1, athlet2, athlet3]
 
 PDF_TEMPLATE = r"api/data/DSA_Einzelpruefkarte_2025_SCREEN.pdf"
-GROUP_TEMPLATE = r"api\data\DSA_Gruppenpruefkarte_2025_SCREEN.pdf"
+GROUP_TEMPLATE = r"api/data/DSA_Gruppenpruefkarte_2025_SCREEN.pdf"
 
 def fill_pdf_form(athlete: Athlete) -> str:
     """
@@ -135,24 +135,33 @@ def fill_out_group(athletenIds: list[Athlete]) -> str:
             f"name{i}": f"{athlete.last_name} {athlete.first_name}",
             f"sex{i}" : athlete.gender,
             f"birthdate{i}": athlete.birth_date,
+            "pruefer": "",
             #f"age{i}" : (int(datetime.today().year) - int(datetime.date(athlete.birth_date, "%Y-%m-%d").year))
         }
         sum = 0
         for perf in athlete.performances:
             prefix = perf.disciplin.split()[0]
             suffix = perf.disciplin.split()[-1]
+            #Update der Punktefelder der jeweiligen Kategorie
             field_values.update({f"Punkte_{suffix}{str(i)}" : str(perf.points)})
+            
+            #Update der Felder Ziffer der Übung
             for key in performances[suffix].keys():
                 if performances[suffix][key] == prefix:
                     field_values.update({f"ZdÜ_{suffix}{str(i)}" : key})
+                    
+            #Update der Felder mit der Leistung
             field_values.update({f"{suffix}{str(i)}" : prefix})
+            
+            #Update der Felder mit den Gesamtpunktzahlena
             sum = sum + perf.points
-            field_values.update({f"Gesamtpunktzahl{i}" : sum})
+            field_values.update({f"Gesamtpunktzahl{i}" : sum})    
         writer.update_page_form_field_values(writer.pages[0], field_values, auto_regenerate=False)
-    destination = rf"api/pdfs/{...}_DSA_Gruppenpruefkarte.pdf"
+    destination = rf"api/pdfs/DSA_Gruppenpruefkarte.pdf"
     with open(destination, "wb") as f:
         writer.write(f)
     return f"PDF für eine Gruppenkarte erstellt unter {destination}"
 
 if __name__ == "__main__":
     fill_out_group(Gruppe1)
+    #print(athlet1.performances)

@@ -3,6 +3,7 @@ from database import db
 from database.models import Athlete as DBAthlete, Result as DBResult
 from api.export_pdf import fill_out_group
 from api.athlet import Athlete, PerformanceData
+from api.logs.logger import logger
 
 bp_group = Blueprint("group", __name__)
 
@@ -44,6 +45,7 @@ def export_group_pdf():
     #Ausfüllen und Export des PDF-Template
     pdf_feedback = fill_out_group(db_group)
 
+    logger.info("Gruppe von Athleten wurde erfolgreich in einer PDF exportiert!")
     return jsonify({
         "message": "Export erfolgreich",
         "pdf_feedback": pdf_feedback
