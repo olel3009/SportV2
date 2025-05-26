@@ -28,7 +28,7 @@ const items = [
     url: "/feat_entry_page",
     icon: ChartNoAxesCombined
   },
-    {
+  {
     title: "Regelübersicht",
     url: "/rule_overview",
     icon: ClipboardList
