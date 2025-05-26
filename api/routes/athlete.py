@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify
 from database import db
 from database.models import Athlete as DBAthlete, Result as DBResult, Rule as DBRule
 from database.schemas import AthleteSchema, DisciplineSchema, ResultSchema, RuleSchema
-from api.export_pdf import fill_pdf_form
+from api.export_pdf import fill_pdf_form as fill_pdf
 from sqlalchemy.orm import joinedload
 
 bp_athlete = Blueprint('athlete', __name__)
@@ -96,7 +96,6 @@ def export_athlete_pdf(athlete_id):
 
     # 2) Sample: hole bis zu 4 Results
     db_results = DBResult.query.filter_by(athlete_id=athlete_id).limit(4).all()
-
     # 3) Baue Python-Objekte
     from api.athlet import Athlete, PerformanceData
 
@@ -125,7 +124,7 @@ def export_athlete_pdf(athlete_id):
         )
 
     # 4) PDF generieren
-    pdf_feedback = fill_pdf_form(py_athlete)
+    pdf_feedback = fill_pdf(py_athlete)
 
     return jsonify({
         "message": "Export erfolgreich",

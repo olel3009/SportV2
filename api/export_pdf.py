@@ -1,15 +1,16 @@
 from datetime import datetime
 from pypdf import PdfReader, PdfWriter
-from api.athlet import Athlete
+from api.athlet import Athlete, PerformanceData
 
 PDF_TEMPLATE = r"api/data/DSA_Einzelpruefkarte_2025_SCREEN.pdf"
 
 def fill_pdf_form(athlete: Athlete) -> str:
     """
-    Nimmt ein Athlete-Objekt und schreibt dessen Daten
-    in die Felder der PDF "DSA_Einzelpruefkarte_2025_SCREEN.pdf".
-    Gibt den Pfad zur ausgefüllten PDF zurück.
+    Füllt die PDF "DSA_Einzelpruefkarte_2025_SCREEN.pdf" mit den Daten
+    aus dem Athlete-Objekt und speichert sie ab.
+    Gibt den Pfad zur erzeugten PDF oder eine Fehlermeldung zurück.
     """
+    # 1) PDF-Vorlage einlesen
     try:
         reader = PdfReader(PDF_TEMPLATE)
     except FileNotFoundError:
@@ -17,57 +18,80 @@ def fill_pdf_form(athlete: Athlete) -> str:
     writer = PdfWriter()
     writer.append(reader)
 
-    # 1) Geburtsdatum in T1, T2, M1, M2, J1, J2, J3, J4 splitten
-    birth_str = ""
+    # 2) Geburtsdatum aufsplitten in T1/T2, M1/M2, J1–J4
     if isinstance(athlete.birth_date, datetime):
-        birth_str = athlete.birth_date.strftime("%d-%m-%Y") 
+        birth_str = athlete.birth_date.strftime("%d-%m-%Y")
     elif isinstance(athlete.birth_date, str):
-        # Falls es schon ein String im Format "YYYY-MM-DD" ist, passend umwandeln
+        # erwartet "YYYY-MM-DD"
         dt = datetime.strptime(athlete.birth_date, "%Y-%m-%d")
         birth_str = dt.strftime("%d-%m-%Y")
     else:
-        # Notlösung
         birth_str = "01-01-2000"
-    # "DD-MM-YYYY"
-    day, month, year = birth_str.split("-")  # z.B. day="12", month="06", year="2023"
+    day, month, year = birth_str.split("-")
     T1, T2 = day[0], day[1]
     M1, M2 = month[0], month[1]
     J1, J2, J3, J4 = year[0], year[1], year[2], year[3]
 
-    # 2) Athlete-Name, Geschlecht etc.
+    # 3) Basis-Felder (Geburt, Name, Geschlecht)
     field_values = {
-        # Geburtsdatum
-        "T1": T1,
-        "T2": T2,
-        "M1": M1,
-        "M2": M2,
-        "J1": J1,
-        "J2": J2,
-        "J3": J3,
-        "J4": J4,
-        # Name, Geschlecht ...
+        "T1": T1, "T2": T2,
+        "M1": M1, "M2": M2,
+        "J1": J1, "J2": J2, "J3": J3, "J4": J4,
         "name": athlete.first_name,
         "surname": athlete.last_name,
-        "sex": athlete.gender,  # z.B. "m"
+        "sex": athlete.gender,
     }
 
-    # 3) PerformanceData eintragen
-    # bis zu 4 Einträge 
-    for i, perf in enumerate(athlete.performances[:4]):
-       
-        index = i + 1
-        prefix = perf.disciplin  # z.B. "Ausdauer", "Kraft", ...
-        suffix = prefix.split()[-1]
-        points = perf.points
-        # Bilde daraus z.B. "Ausdauer1Result"
-        field_values[f"date {prefix}"]      = str(perf.year)
-        field_values[f"{prefix}"]    = str(perf.result)
-        field_values[f"P{points} {suffix}"]    = str("x")
-    # 4) Felder wirklich ins PDF schreiben
+    # 4) Bestleistungen pro Disziplin ermitteln
+    is_time_discipline = {
+        "Ausdauer": True,
+        "Schnelligkeit": True,
+        "Kraft": False,
+        "Koordination": False,
+    }
+
+    best_per_discipline: dict[str, PerformanceData] = {}
+
+    for perf in athlete.performances:
+        disc = perf.disciplin  # z. B. "Ausdauer"
+        pts = {"Bronze": 1, "Silber": 2, "Silver": 2, "Gold": 3}.get(perf.points, 0)
+
+        if disc not in best_per_discipline:
+            perf._pts = pts
+            best_per_discipline[disc] = perf
+            continue
+
+        other = best_per_discipline[disc]
+        other_pts = getattr(other, "_pts", 0)
+
+        if pts > other_pts:
+            perf._pts = pts
+            best_per_discipline[disc] = perf
+        elif pts == other_pts:
+            better_is_smaller = is_time_discipline.get(disc, True)
+            if (better_is_smaller and perf.result < other.result) or \
+               (not better_is_smaller and perf.result > other.result):
+                perf._pts = pts
+                best_per_discipline[disc] = perf
+
+    # 5) PDF-Felder für jede Disziplin befüllen
+    for discipline, perf in best_per_discipline.items():
+       # short_rule = perf.rule_description_f.split(",")[0].strip()
+        #exercise_field = f"{short_rule} {discipline}"
+        date_field     = f"date {discipline}"
+        point_field    = f"P{perf._pts} {discipline}"
+
+       # field_values[exercise_field] = str(perf.result)
+        field_values[date_field]     = perf.year
+        field_values[point_field]    = "x"
+
+    # 6) Felder in die PDF schreiben
     page = writer.pages[0]
     writer.update_page_form_field_values(page, field_values, auto_regenerate=False)
-    # 5) Ausgefüllte PDF speichern
+
+    # 7) PDF speichern
     destination = rf"api/pdfs/{athlete.last_name}_{athlete.first_name}_DSA_Einzelpruefkarte.pdf"
     with open(destination, "wb") as f:
         writer.write(f)
+
     return f"PDF erstellt unter {destination}"
