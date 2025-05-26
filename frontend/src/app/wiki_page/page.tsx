@@ -99,6 +99,15 @@ export default function Home() {
               10. Visuelle Darstellung der Entwicklung eines Athleten
             </a>
           </li>
+          <li>
+            <a
+              id="link_erstellung_athleten"
+              href="#erstellung_athleten"
+              className="text-black hover:text-gray-600"
+            >
+              11. Erstellung eines Athleten
+            </a>
+          </li>
         </ul>
       </div>
 
