@@ -138,8 +138,19 @@ def import_rules_from_csv():
       Bronze-Maennlich;Silber-Maennlich;Gold-Maennlich;
       Gueltig-Start;Gueltig-Ende;Gueltigkeitsjahr
     """
-    content = request.json.get("csv", "")
-    reader = csv.DictReader(StringIO(content), delimiter=';')
+    # Datei aus dem Multipart-Form-Data holen:
+    if 'csv' not in request.files:
+        return jsonify(error="No file part"), 400
+    file = request.files['csv']
+    # optional: auf CSV-MIME oder Extension prüfen
+    if not file.filename.lower().endswith('.csv'):
+        return jsonify(error="Invalid file type"), 400
+
+    # den Text parsen
+    content = file.stream.read().decode('utf-8').splitlines()
+    reader = csv.DictReader(content, delimiter=';')
+    #content = request.json.get("csv", "")
+    #reader = csv.DictReader(StringIO(content), delimiter=';')
     created = []
     errors = []
 
@@ -172,8 +183,8 @@ def import_rules_from_csv():
         if guelt_year:
             try:
                 y = int(guelt_year)
-                data["valid_start"] = date(y,1,1)
-                data["valid_end"]   = date(y,12,31)
+                data["valid_start"] = date(y,1,1).strftime("%d.%m.%Y")
+                data["valid_end"]   = date(y,12,31).strftime("%d.%m.%Y")
             except ValueError:
                 errors.append(f"Zeile {i}: Ungültiges Gueltigkeitsjahr „{guelt_year}“")
                 continue
