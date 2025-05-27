@@ -1,13 +1,7 @@
 from datetime import datetime
 from pypdf import PdfReader, PdfWriter
-from athlet import Athlete, PerformanceData
-
-perf1 = PerformanceData("Laufen Ausdauer", "2025", "06:30", 3)
-perf2 = PerformanceData("Laufen Schnelligkeit", "2025", "00:40", 2)
-athlet1 = Athlete("Max","Mustermann","m","2001-01-13", performances=[perf1, perf2], swim_certificate=None)
-athlet2 = Athlete("Mix","Mastermann","m","2005-01-23", performances=[perf1, perf2], swim_certificate=None)
-athlet3 = Athlete("Mux","Mistermann","m","2011-01-30", performances=[perf1, perf2], swim_certificate=None)
-Gruppe1 = [athlet1, athlet2, athlet3]
+from api.athlet import Athlete
+import os
 
 PDF_TEMPLATE = r"api/data/DSA_Einzelpruefkarte_2025_SCREEN.pdf"
 GROUP_TEMPLATE = r"api/data/DSA_Gruppenpruefkarte_2025_SCREEN.pdf"
@@ -75,10 +69,15 @@ def fill_pdf_form(athlete: Athlete) -> str:
     page = writer.pages[0]
     writer.update_page_form_field_values(page, field_values, auto_regenerate=False)
     # 5) Ausgefüllte PDF speichern
-    destination = rf"api/pdfs/{athlete.last_name}_{athlete.first_name}_DSA_Einzelpruefkarte.pdf"
+    path=rf"/downloadFiles/{athlete.last_name}_{athlete.first_name}_DSA_Einzelpruefkarte.pdf"
+    destination = rf"./frontend/public{path}"
+    
+    # ensure the output directory exists
+    output_dir = os.path.dirname(destination)
+    os.makedirs(output_dir, exist_ok=True)
     with open(destination, "wb") as f:
         writer.write(f)
-    return f"PDF für eine einzelkarte erstellt unter {destination}"
+    return f"{path}"
 
 def fill_out_group(athletenIds: list[Athlete]) -> str:
     """ 
@@ -152,15 +151,20 @@ def fill_out_group(athletenIds: list[Athlete]) -> str:
                     
             #Update der Felder mit der Leistung
             field_values.update({f"{suffix}{str(i)}" : prefix})
-            
-            #Update der Felder mit den Gesamtpunktzahlena
-            sum = sum + perf.points
-            field_values.update({f"Gesamtpunktzahl{i}" : sum})    
+            #sum = sum + perf.points  ##TODO das hier muss iwie über medaillien oder sowas laufen
+            sum=0
+            field_values.update({f"Gesamtpunktzahl{i}" : sum})
         writer.update_page_form_field_values(writer.pages[0], field_values, auto_regenerate=False)
-    destination = rf"api/pdfs/DSA_Gruppenpruefkarte.pdf"
+
+    path=rf"/downloadFiles/{...}_DSA_Gruppenpruefkarte.pdf"
+    destination = rf"./frontend/public{path}"
+    
+    # ensure the output directory exists
+    output_dir = os.path.dirname(destination)
+    os.makedirs(output_dir, exist_ok=True)
     with open(destination, "wb") as f:
         writer.write(f)
-    return f"PDF für eine Gruppenkarte erstellt unter {destination}"
+    return f"{path}"
 
 if __name__ == "__main__":
     fill_out_group(Gruppe1)
