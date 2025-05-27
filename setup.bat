@@ -31,6 +31,11 @@ if errorlevel 1 (
 echo Virtual environment activated.
 echo.
 
+echo Setting PYTHONPATH...
+set "PYTHONPATH=%CD%"
+echo PYTHONPATH set to: %PYTHONPATH%
+echo.
+
 echo Installing Python requirements...
 if exist requirements.txt (
     pip install -r requirements.txt
@@ -70,6 +75,15 @@ if exist .\frontend\package.json (
     echo Frontend npm packages installed.
 ) else (
     echo WARNING: .\frontend\package.json not found. Skipping npm install.
+)
+echo.
+
+echo Running database migration...
+if exist database\migrate.py (
+    start cmd /k python database\migrate.py
+    echo Database migration script launched in a new window.
+) else (
+    echo WARNING: database\migrate.py not found. Skipping database migration.
 )
 echo.
 
