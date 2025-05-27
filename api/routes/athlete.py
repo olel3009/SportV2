@@ -6,7 +6,6 @@ from flask_jwt_extended import jwt_required
 from database import db
 from database.models import Athlete as DBAthlete, Result as DBResult, Rule as DBRule
 from database.schemas import AthleteSchema, DisciplineSchema, ResultSchema, RuleSchema
-from api.export_pdf import fill_pdf_form
 from api.utils import allowed_file
 from sqlalchemy.orm import joinedload
 from api.logs.logger import logger
@@ -102,52 +101,6 @@ def delete_athlete(id):
     db.session.commit()
     logger.info("Athlet erfolgreich gelöscht!")
     return jsonify({"message": "Athlet gelöscht"})
-
-@bp_athlete.route('/athletes/<int:athlete_id>/export/pdf', methods=['GET'])
-@jwt_required()
-def export_athlete_pdf(athlete_id):
-    # 1) DB-Abfrage
-    db_athlete = DBAthlete.query.get_or_404(athlete_id)
-
-    # 2) Sample: hole bis zu 4 Results
-    db_results = DBResult.query.filter_by(athlete_id=athlete_id).limit(4).all()
-
-    # 3) Baue Python-Objekte
-    from api.athlet import Athlete, PerformanceData
-
-    # a) Athlete
-    #    Falls birth_date in DB ein datetime ist, direct übernehmen
-    #    Falls es ein date ist, auch ok
-    py_athlete = Athlete(
-        first_name=db_athlete.first_name,
-        last_name=db_athlete.last_name,
-        gender=db_athlete.gender,
-        birth_date=db_athlete.birth_date,
-        swim_certificate=db_athlete.swim_certificate,
-        performances=[]
-    )
-
-    # b) PerformanceData
-    for res in db_results:
-        res_rule=DBRule.query.get_or_404(res.rule_id)
-        py_athlete.performances.append(
-            PerformanceData(
-                disciplin=res_rule.discipline.discipline_name, 
-                year=res.year,
-                result=res.result, 
-                points=res.medal
-            )
-        )
-
-    # 4) PDF generieren
-    pdf_feedback = fill_pdf_form(py_athlete)
-    
-    logger.info("Athlet erfolgreich in einert PDF exportiert!")
-    
-    return jsonify({
-        "message": "Export erfolgreich",
-        "pdf_feedback": pdf_feedback
-    })
 
 @bp_athlete.route('/athletes/<int:athlete_id>/results', methods=['GET'])
 @jwt_required()

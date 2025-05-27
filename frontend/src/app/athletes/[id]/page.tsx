@@ -38,6 +38,9 @@ import { validateAndGetToken } from "@/auth";
 
 import DeleteResource from "@/components/ui/deleteResource";
 import { useEffect, useState } from "react";
+import DownloadPdfButton from "@/components/ui/groupDownloadButton";
+
+
 
 const getAge = (dateString: string) => {
   const [day, month, year] = dateString.split(".").map(Number);
@@ -229,7 +232,10 @@ export default function Page() {
           </div>
         </CardContent>
       </Card>
-
+      <div className="grid grid-cols-2 gap-2">
+        <DownloadCsvButton ids={[id]} text="Als Csv exportieren" />
+        <DownloadPdfButton ids={[id]} text="Als PDF exportieren" />
+      </div>
       <h2 className="text-xl font-bold">Schwimmnachweis</h2>
       <div>
         {!athlete.swimCertificate && (
