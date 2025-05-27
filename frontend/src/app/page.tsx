@@ -1,6 +1,6 @@
 "use client"
 import { login, signup } from "./authlogin";
-import { useActionState } from 'react'
+import { Suspense, useActionState } from 'react'
 import ErrorDisplay from "@/components/ErrorDisplay";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -150,7 +150,9 @@ export default function Login() {
   return (
     <div className="flex items-center h-full justify-center md:px-10">
       <div className="w-full max-w-sm">
-        <LoginForm />
+        <Suspense>
+          <LoginForm />
+        </Suspense>
       </div>
     </div>
   )
