@@ -24,9 +24,12 @@ class Athlete(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
     birth_date = db.Column(db.Date, nullable=False)
     gender = db.Column(db.Enum('m', 'f', 'd', name='gender_enum'), nullable=False)
     swim_certificate = db.Column(db.Boolean, nullable=False, default=False)
+    picture = db.Column(db.String(255), nullable=True)  # Bilddatei-Pfad
+    swim_cert_file  = db.Column(db.String(255), nullable=True)  # PDF/PNG/JPEG
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

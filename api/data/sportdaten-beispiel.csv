@@ -1,0 +1,20 @@
+﻿Nachname;Vorname;Geburtstag;Uebung;Kategorie;Leistung;Datum
+Müller;Lena;01.01.2010;Schwimmen;Ausdauer;45.00;15.06.2025
+Müller;Lena;01.01.2010;Medizinball/Kugelstoßen;Kraft;3.50;15.06.2025
+Müller;Lena;01.01.2010;Laufen;Schnelligkeit;9.20;15.06.2025
+Müller;Lena;01.01.2010;Weitsprung;Koordination;18.00;15.06.2025
+Schmidt;Tom;01.01.2009;Schwimmen;Ausdauer;38.50;16.06.2025
+Schmidt;Tom;01.01.2009;Medizinball/Kugelstoßen;Kraft;6.00;16.06.2025
+Schmidt;Tom;01.01.2009;Laufen;Schnelligkeit;7.80;16.06.2025
+Schmidt;Tom;01.01.2009;Weitsprung;Koordination;1.80;16.06.2025
+Klein;Alex;01.01.2011;Radfahren;Ausdauer;900.0;17.06.2025
+Klein;Alex;01.01.2011;Standweitsprung;Kraft;1.20;17.06.2025
+Klein;Alex;01.01.2011;Laufen;Schnelligkeit;12.50;17.06.2025
+Klein;Alex;01.01.2011;Seilspringen;Koordination;30.00;17.06.2025
+Bauer;Sophie;01.01.2008;Radfahren;Ausdauer;1500.0;18.06.2025
+Bauer;Sophie;01.01.2008;Steinstoßen;Kraft;4.00;18.06.2025
+Bauer;Sophie;01.01.2008;Laufen;Schnelligkeit;14.00;18.06.2025
+Bauer;Sophie;01.01.2008;Hochsprung;Koordination;1.50;18.06.2025
+Meier;Jonas;01.01.2010;800m Lauf;Ausdauer;3.6;19.06.2025
+Meier;Jonas;01.01.2010;Schlagballwurf;Kraft;25.00;19.06.2025
+Meier;Jonas;01.01.2010;Laufen;Schnelligkeit;5.00;19.06.2025

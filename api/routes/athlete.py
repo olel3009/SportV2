@@ -1,11 +1,15 @@
 from datetime import datetime
-from flask import Blueprint, request, jsonify
+import os
+from flask import Blueprint, request, jsonify, current_app, url_for
+from werkzeug.utils import secure_filename
 from flask_jwt_extended import jwt_required
 from database import db
 from database.models import Athlete as DBAthlete, Result as DBResult, Rule as DBRule
 from database.schemas import AthleteSchema, DisciplineSchema, ResultSchema, RuleSchema
 from api.export_pdf import fill_pdf_form
+from api.utils import allowed_file
 from sqlalchemy.orm import joinedload
+from api.logs.logger import logger
 
 bp_athlete = Blueprint('athlete', __name__)
 
@@ -19,12 +23,13 @@ def create_athlete():
     new_athlete = DBAthlete(
         first_name=valid_data["first_name"],
         last_name=valid_data["last_name"],
+        email=valid_data["email"],
         birth_date=valid_data["birth_date"],
-        gender=valid_data["gender"],
-        swim_certificate=valid_data["swim_certificate"]
+        gender=valid_data["gender"]
     )
     db.session.add(new_athlete)
     db.session.commit()
+    logger.info("Athlet erfolgreich kreiert!")
     return jsonify({"message": "Athlet hinzugefügt", "id": new_athlete.id}), 201
 
 @bp_athlete.route('/athletes', methods=['GET'])
@@ -37,12 +42,14 @@ def get_athletes():
             "id": ath.id,
             "first_name": ath.first_name,
             "last_name": ath.last_name,
+            "email": ath.email,
             "birth_date": ath.birth_date.strftime("%d.%m.%Y"),
             "gender": ath.gender,
             "swim_certificate": ath.swim_certificate,
             "created_at": ath.created_at,
             "updated_at": ath.updated_at
         })
+    logger.info("Alle Athleten erfolgreich aufgerufen!")
     return jsonify(result)
 
 @bp_athlete.route('/athletes/<int:id>', methods=['GET'])
@@ -63,7 +70,7 @@ def get_athlete_id(id):
             "total_silver": DBResult.query.filter_by(athlete_id=id, medal='Silber').count(),
             "total_gold":   DBResult.query.filter_by(athlete_id=id, medal='Gold').count(),
         })
-
+    logger.info("Athlet erfolgreich aufgerufen!")
     return jsonify(data), 200
 
 @bp_athlete.route('/athletes/<int:id>', methods=['PUT'])
@@ -76,15 +83,15 @@ def update_athlete(id):
         athlete.first_name = data["first_name"]
     if "last_name" in data:
         athlete.last_name = data["last_name"]
+    if "email" in data:
+        athlete.email = data["email"]
     if "birth_date" in data:
         athlete.birth_date = datetime.strptime(data["birth_date"], "%d.%m.%Y").date()
     if "gender" in data:
         athlete.gender = data["gender"]
-    # NEUES FELD
-    if "swim_certificate" in data:
-        athlete.swim_certificate = data["swim_certificate"]
 
     db.session.commit()
+    logger.info("Athlet erfolgreich aktualisiert!")
     return jsonify({"message": "Athlet aktualisiert"})
 
 @bp_athlete.route('/athletes/<int:id>', methods=['DELETE'])
@@ -93,6 +100,7 @@ def delete_athlete(id):
     athlete = DBAthlete.query.get_or_404(id)
     db.session.delete(athlete)
     db.session.commit()
+    logger.info("Athlet erfolgreich gelöscht!")
     return jsonify({"message": "Athlet gelöscht"})
 
 @bp_athlete.route('/athletes/<int:athlete_id>/export/pdf', methods=['GET'])
@@ -133,7 +141,9 @@ def export_athlete_pdf(athlete_id):
 
     # 4) PDF generieren
     pdf_feedback = fill_pdf_form(py_athlete)
-
+    
+    logger.info("Athlet erfolgreich in einert PDF exportiert!")
+    
     return jsonify({
         "message": "Export erfolgreich",
         "pdf_feedback": pdf_feedback
@@ -194,7 +204,7 @@ def get_athletes_results(athlete_id):
         "athlete": serialized_athlete_details,
         "results": processed_results
     }
-    
+    logger.info("Ergebnisse des Athleten erfolgreich aufgerufen!")
     return jsonify(response_payload), 200
 
 @bp_athlete.post('/athletes/csv')
@@ -322,8 +332,56 @@ def create_athletes_from_csv():
     elif committed_athlete_ids and not errors_list:
         response_status_code = 201
     
+    logger.info("Athleten erfolgreich aus einer CSV kreiert!")
     return jsonify({
         "message": "Batch-Verarbeitung abgeschlossen.",
         "created_athlete_ids": committed_athlete_ids,
         "errors": errors_list
     }), response_status_code
+
+@bp_athlete.route('/athletes/<int:id>/upload_picture', methods=['POST'])
+def upload_athlete_picture(id):
+    ath = DBAthlete.query.get_or_404(id)
+    if 'picture' not in request.files:
+        return jsonify(error="Keine Datei 'picture'"), 400
+
+    file = request.files['picture']
+    if file.filename == '':
+        return jsonify(error="Keine Datei ausgewählt"), 400
+
+    if not allowed_file(file.filename, current_app.config['ALLOWED_IMAGE_EXTS']):
+        return jsonify(error="Invalider Bildtyp"), 400
+
+    filename = secure_filename(f"athlete_{id}_pic.{file.filename.rsplit('.',1)[1].lower()}")
+    save_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+    file.save(save_path)
+
+    ath.picture = filename
+    db.session.commit()
+
+    return jsonify(message="Picture uploaded", url=url_for('static', filename=f'uploads/{filename}', _external=True)), 200
+
+
+@bp_athlete.route('/athletes/<int:id>/upload_swim_cert', methods=['POST'])
+def upload_swim_certificate(id):
+    ath = DBAthlete.query.get_or_404(id)
+    if 'swim_cert_file' not in request.files:
+        return jsonify(error="Keine Datei 'swim_cert_file'"), 400
+
+    file = request.files['swim_cert_file']
+    if file.filename == '':
+        return jsonify(error="Keine Datei ausgewählt"), 400
+
+    if not allowed_file(file.filename, current_app.config['ALLOWED_CERT_EXTS']):
+        return jsonify(error="Invalider Zertifikatsdateityp"), 400
+
+    filename = secure_filename(f"athlete_{id}_cert.{file.filename.rsplit('.',1)[1].lower()}")
+    save_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+    file.save(save_path)
+
+    ath.swim_cert_file = filename
+    ath.swim_certificate = True
+    db.session.commit()
+
+    return jsonify(message="Schwimmzertifikat hochgeladen",
+                   url=url_for('static', filename=f'uploads/{filename}', _external=True)), 200
