@@ -80,7 +80,13 @@ def export_group_pdf():
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, f"group_{datetime.now():%d%m%Y_%H%M%S}.pdf")
 
-    updates = {}
+    y2 = f"{year % 100:02d}"
+    jdp1, jdp2 = y2[0], y2[1]
+
+    updates = {
+        "jdp1": jdp1,
+        "jdp2": jdp2,
+    }
 
     # Für jeden Athleten eine Zeile (idx=1…len(athlete_ids))
     athletes = Athlete.query.filter(Athlete.id.in_(athlete_ids)).all()
@@ -134,7 +140,8 @@ def export_group_pdf():
             # Ergebnis-Wert
             fld_val = f"{grp}{idx}"
             if fld_val in existing:
-                updates[fld_val] = str(r.result)
+                val = f"{r.result:.2f}".replace(".", ",")
+                updates[fld_val] = f"{val} ({r.rule.unit})"
             # Punkte
             pts = MEDAL_POINTS.get(r.medal)
             if pts:

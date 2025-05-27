@@ -13,6 +13,7 @@ frontend/package-lock.json
 
 # testing
 /coverage
+list_pdf_field.py
 
 # next.js
 frontend/.next/
