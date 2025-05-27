@@ -21,6 +21,7 @@ def create_app():
     app.config['ALLOWED_IMAGE_EXTS'] = {'png', 'jpg', 'jpeg', 'gif'}
     app.config['ALLOWED_CERT_EXTS']  = {'pdf', 'png', 'jpg', 'jpeg'}
     app.config['PDF_TEMPLATE_PATH']  = r'api/data/DSA_Einzelpruefkarte_2025_SCREEN.pdf'
+    app.config['GROUP_PDF_TEMPLATE_PATH'] = r'api/data/DSA_Gruppenpruefkarte_2025_SCREEN.pdf'
     app.config['PDF_OUTPUT_FOLDER'] = rf"frontend/public/downloadFiles/"
     os.makedirs(app.config['PDF_OUTPUT_FOLDER'], exist_ok=True)
 

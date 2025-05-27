@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from flask import Blueprint, request, jsonify, current_app
 from sqlalchemy import extract
-from pypdf import PdfReader, PdfWriter
+from PyPDF2 import PdfReader, PdfWriter
 
 from database.models import Athlete, Result
 
@@ -50,9 +50,14 @@ MEDAL_POINTS = {'Bronze': 1, 'Silber': 2, 'Gold': 3}
 
 @bp_group.route('/export/pdf', methods=['POST'])
 def export_group_pdf():
-    data = request.get_json() or {}
-    athlete_ids = data.get('athlete_ids') or []
-    year = data.get('year')
+    data = request.get_json(silent=True) or {}
+    year = data.get('year') or request.args.get('year', type=int)
+    ids  = data.get('athlete_ids') or request.args.get('athlete_ids', '')
+    if isinstance(ids, str):
+        # aus "1,2,3,4" eine Liste von ints machen
+        athlete_ids = [int(x) for x in ids.split(',') if x.strip()]
+    else:
+        athlete_ids = ids
 
     # Validierung
     if not isinstance(athlete_ids, list) or not 1 <= len(athlete_ids) <= 10:
