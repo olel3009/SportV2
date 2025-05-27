@@ -250,6 +250,11 @@ export async function getAllFeats(
 }
 
 export async function deleteFeat(ids: number[]) {
+  const token = validateAndGetToken();
+  if (token === null || token === false) {
+    // Token ist ungültig, validateAndGetToken leitet bereits weiter
+    return [];
+  } else {
   for (const id of ids) {
     const response = await fetch(`http://127.0.0.1:5000/results/${id}`, {
       method: 'DELETE',
@@ -262,6 +267,7 @@ export async function deleteFeat(ids: number[]) {
     console.log('Feat deleted successfully')
   }
   return true;
+}
 }
 
 type RawRule = {
