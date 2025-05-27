@@ -94,7 +94,7 @@ export default function Home() {
               href="#knopf_reglungsaktualisierung"
               className="text-black hover:text-gray-600"
             >
-              08. Manuelle Aktualisierung der Reglungen durch Knopfdruck
+              08. Manuelle Aktualisierung der Regelungen durch Knopfdruck
             </a>
           </li>
           <li>
@@ -167,7 +167,7 @@ export default function Home() {
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
         <div id="knopf_reglungsaktualisierung" className="mb-8">
-          <h2 className="text-xl font-semibold">08. Manuelle Aktualisierung der Reglungen durch Knopfdruck</h2>
+          <h2 className="text-xl font-semibold">08. Manuelle Aktualisierung der Regelungen durch Knopfdruck</h2>
           <p>Der Knopf zur Aktualisierung der Regelungen befindet sich unten auf der Startseite und trägt die Aufschrift "Regelungen aktualisieren".<br />
             Dieser Knopf sorgt dafür, dass nach einer Bestätigung die aktuellen Regelungen geladen werden.<br /><br />
           </p>
