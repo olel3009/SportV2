@@ -2,7 +2,6 @@ from flask import Blueprint, request, jsonify
 from database import db
 from database.models import User
 from database.schemas import UserSchema
-from sqlalchemy import inspect
 from api.logs.logger import logger
 from flask_jwt_extended import create_access_token, jwt_required
 from datetime import timedelta
