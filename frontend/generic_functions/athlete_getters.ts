@@ -66,6 +66,7 @@ type RawAthlete = {
   gender: "m" | "f" | "d";
   birth_date: string;
   swim_certificate: boolean;
+  email:string;
   total_bronze: number | undefined;
   total_silver: number | undefined;
   total_gold: number | undefined;
@@ -126,7 +127,8 @@ export async function getAthletesMedals(): Promise<Athlete[]> {
         silverMedals: raw.total_silver ?? 0,
         bronzeMedals: raw.total_bronze ?? 0,
         disciplines: [],
-        feats: [],
+        email:raw.email,
+        feats: []
       };
     });
 
@@ -151,7 +153,6 @@ export async function getAllAthletes(): Promise<Athlete[]> {
     if (!res.ok) {
       throw new Error(`API call failed: ${res.status}`);
     }
-
     const data: RawAthlete[] = await res.json();
     console.log("Raw data fetched:", data);
 
@@ -168,6 +169,7 @@ export async function getAllAthletes(): Promise<Athlete[]> {
       bronzeMedals: raw.total_bronze ?? 0,
       disciplines: [],
       feats: [],
+      email:raw.email,
     }));
 
     return mapped;
