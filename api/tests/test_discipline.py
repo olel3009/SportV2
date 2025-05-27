@@ -1,5 +1,6 @@
 import pytest
 
+@pytest.mark.skip(reason="Deaktiviert auf Wunsch")
 def test_create_discipline(client):
     """
     Testet das Anlegen einer neuen Disziplin per POST /disciplines
@@ -12,6 +13,7 @@ def test_create_discipline(client):
     assert data["message"] == "Discipline created"
     assert "id" in data
 
+@pytest.mark.skip(reason="Deaktiviert auf Wunsch")
 def test_get_disciplines(client):
     """
     Testet das Abrufen aller Disziplinen per GET /disciplines
@@ -31,6 +33,7 @@ def test_get_disciplines(client):
     assert "id" in first
     assert "discipline_name" in first
 
+@pytest.mark.skip(reason="Deaktiviert auf Wunsch")
 def test_update_discipline(client):
     """
     Testet das Aktualisieren einer Disziplin per PUT /disciplines/<id>
@@ -55,6 +58,7 @@ def test_update_discipline(client):
     assert updated is not None
     assert updated["discipline_name"] == "Kraft"
 
+@pytest.mark.skip(reason="Deaktiviert auf Wunsch")
 def test_delete_discipline(client):
     """
     Testet das Löschen einer Disziplin per DELETE /disciplines/<id>

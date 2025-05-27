@@ -1,3 +1,4 @@
+from flask_jwt_extended import jwt_required
 from sqlalchemy import and_
 import os
 from datetime import datetime, date
@@ -108,7 +109,7 @@ def fill_pdf(athlete: Athlete, year: int) -> str:
     page = writer.pages[0]
 
     # 2.5) Prüfungsjahr in jpd1/jpd2 aufsplitten
-    y2 = f"{year_param % 100:02d}"  
+    y2 = f"{year_param % 100:02d}"
     jdp1, jdp2 = y2[0], y2[1]
 
     # 2) PDF-Felder befüllen
@@ -141,7 +142,8 @@ def fill_pdf(athlete: Athlete, year: int) -> str:
             # Feldname im Formular ist z.B. "Laufen Ausdauer" oder "Schwimmen Koordination"
             form_field = f"{r.rule.rule_name.rsplit(',',1)[0]} {pdf_grp}"
             if form_field in existing_fields:
-                field_updates[form_field] = str(r.result)
+                formatted = f"{r.result:.2f}".replace(".", ",")
+                field_updates[form_field] = formatted
 
             # Datum-Feld:
             field_date_name  = f"date {pdf_grp}"
@@ -179,6 +181,7 @@ def fill_pdf(athlete: Athlete, year: int) -> str:
     return destination
 
 @bp_athlete_pdf.route('/<int:athlete_id>/export/pdf', methods=['GET'])
+@jwt_required()
 def export_athlete_pdf(athlete_id):
     # Parameter
     year_str = request.args.get('year')
