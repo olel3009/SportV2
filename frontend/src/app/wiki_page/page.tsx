@@ -1,8 +1,24 @@
 "use client";
 
-import React from "react";
+import { validateAndGetToken } from "@/auth";
+import React, { useEffect, useState } from "react";
 
 export default function Home() {
+
+  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setTokenValid(validateAndGetToken());
+  }, []);
+
+  if (tokenValid === null) {
+    // Noch nicht geprüft, z.B. Ladeanzeige oder leer
+    return null;
+  }
+  if (!tokenValid) {
+    // Token ist ungültig, validateAndGetToken leitet bereits weiter
+    return null;
+  }
   return (
     <div className="flex h-screen">
       {/* Inhaltsverzeichnis Sidebar */}
@@ -78,7 +94,7 @@ export default function Home() {
               href="#knopf_reglungsaktualisierung"
               className="text-black hover:text-gray-600"
             >
-              08. Manuelle Aktualisierung der Reglungen durch Knopfdruck
+              08. Manuelle Aktualisierung der Regelungen durch Knopfdruck
             </a>
           </li>
           <li>
@@ -151,47 +167,47 @@ export default function Home() {
           <p>Hier könnte die Beschreibung stehen</p>
         </div>
         <div id="knopf_reglungsaktualisierung" className="mb-8">
-          <h2 className="text-xl font-semibold">08. Manuelle Aktualisierung der Reglungen durch Knopfdruck</h2>
+          <h2 className="text-xl font-semibold">08. Manuelle Aktualisierung der Regelungen durch Knopfdruck</h2>
           <p>Der Knopf zur Aktualisierung der Regelungen befindet sich unten auf der Startseite und trägt die Aufschrift "Regelungen aktualisieren".<br />
-              Dieser Knopf sorgt dafür, dass nach einer Bestätigung die aktuellen Regelungen geladen werden.<br /><br />
-            </p>
+            Dieser Knopf sorgt dafür, dass nach einer Bestätigung die aktuellen Regelungen geladen werden.<br /><br />
+          </p>
 
-            <h4 className="text-lg font-semibold">Farbliche Bedeutung des Knopfes:</h4>
-            <p>
-              - Rot: Die Regelungen wurden in diesem Jahr noch nicht aktualisiert und die ersten vier Wochen des Jahres sind noch nicht vorbei.<br />
-              - Grün: Die Regelungen wurden bereits aktualisiert oder die ersten vier Wochen des Jahres sind vorbei.<br /><br />
-            </p>
-            <h4 className="text-lg font-semibold">Schritt-für-Schritt-Anleitung:</h4>
-            <p>
-              1. Um die Regelungen zu aktualisieren, klicken Sie auf den Knopf "Regelungen aktualisieren".<br />
-              2. Warten Sie, bis sich ein Popup öffnet.<br />
-              3. Laden Sie anschließend die CSV mit den Regelungen im Standart-Design hoch.<br />
-                (Sie können eine Beispiel CSV durch das drücken auf den Knopf mit der Aufschrift "Beispiel CSV" herunterladen.)<br />
-              4. Bestätigen Sie den Vorgang mit "Bestätigen" (grün hinterlegter Knopf) oder brechen Sie den Vorgang mit "Abbrechen" (rot hinterlegter Knopf) ab.<br />
-              5. Warten Sie, bis der Vorgang abgeschlossen ist. Den Status des Vorgangs können Sie am Text unter dem "Regelungen aktualisieren"-Knopf erkennen.<br />
-              6. Überprüfen Sie, ob der Vorgang erfolgreich war oder nicht. Dies können Sie ebenfalls am Text unter dem "Regelungen aktualisieren"-Knopf erkennen.<br />
-              7. Falls der Vorgang nicht erfolgreich war und keine zusätzliche Fehlermeldung kommt,  versuchen Sie es zu einem späteren Zeitpunkt erneut. <br />
-              8. Falls eine Fehlermeldung kommt ist ein Fahler in ihrer Datei dort angegeben, die Sie beheben müssen und können danach erneut Versuchen<br />
-            </p>
+          <h4 className="text-lg font-semibold">Farbliche Bedeutung des Knopfes:</h4>
+          <p>
+            - Rot: Die Regelungen wurden in diesem Jahr noch nicht aktualisiert und die ersten vier Wochen des Jahres sind noch nicht vorbei.<br />
+            - Grün: Die Regelungen wurden bereits aktualisiert oder die ersten vier Wochen des Jahres sind vorbei.<br /><br />
+          </p>
+          <h4 className="text-lg font-semibold">Schritt-für-Schritt-Anleitung:</h4>
+          <p>
+            1. Um die Regelungen zu aktualisieren, klicken Sie auf den Knopf "Regelungen aktualisieren".<br />
+            2. Warten Sie, bis sich ein Popup öffnet.<br />
+            3. Laden Sie anschließend die CSV mit den Regelungen im Standart-Design hoch.<br />
+            (Sie können eine Beispiel CSV durch das drücken auf den Knopf mit der Aufschrift "Beispiel CSV" herunterladen.)<br />
+            4. Bestätigen Sie den Vorgang mit "Bestätigen" (grün hinterlegter Knopf) oder brechen Sie den Vorgang mit "Abbrechen" (rot hinterlegter Knopf) ab.<br />
+            5. Warten Sie, bis der Vorgang abgeschlossen ist. Den Status des Vorgangs können Sie am Text unter dem "Regelungen aktualisieren"-Knopf erkennen.<br />
+            6. Überprüfen Sie, ob der Vorgang erfolgreich war oder nicht. Dies können Sie ebenfalls am Text unter dem "Regelungen aktualisieren"-Knopf erkennen.<br />
+            7. Falls der Vorgang nicht erfolgreich war und keine zusätzliche Fehlermeldung kommt,  versuchen Sie es zu einem späteren Zeitpunkt erneut. <br />
+            8. Falls eine Fehlermeldung kommt ist ein Fahler in ihrer Datei dort angegeben, die Sie beheben müssen und können danach erneut Versuchen<br />
+          </p>
 
-            <h4 className="text-lg font-semibold">Rückmeldungen vom Aktualisierungsprozess:</h4>
-            <p>
-              - Falsches Dateiformat/keine Datei hochgeladen: Bitte laden Sie eine CSV-Datei hoch.<br />
-              - Das Aktualisieren der Regelungen war erfolgreich: Die Regelungen wurden erfolgreich aktualisiert.<br />
-              - Das Aktualisieren der Regelungen war nicht erfolgreich: Die Regelungen konnten nicht aktualisiert werden.<br />
-              - Das Aktualisieren der Regelungen wird durchgeführt: Die Regelungen werden gerade aktualisiert.<br />
-              - Das Aktualisieren der Regelungen wurde abgebrochen: Die Regelungen wurden nicht aktualisiert, da Sie den Prozess abgebrochen haben.<br/><br />
-            </p>
+          <h4 className="text-lg font-semibold">Rückmeldungen vom Aktualisierungsprozess:</h4>
+          <p>
+            - Falsches Dateiformat/keine Datei hochgeladen: Bitte laden Sie eine CSV-Datei hoch.<br />
+            - Das Aktualisieren der Regelungen war erfolgreich: Die Regelungen wurden erfolgreich aktualisiert.<br />
+            - Das Aktualisieren der Regelungen war nicht erfolgreich: Die Regelungen konnten nicht aktualisiert werden.<br />
+            - Das Aktualisieren der Regelungen wird durchgeführt: Die Regelungen werden gerade aktualisiert.<br />
+            - Das Aktualisieren der Regelungen wurde abgebrochen: Die Regelungen wurden nicht aktualisiert, da Sie den Prozess abgebrochen haben.<br /><br />
+          </p>
 
-            <h4 className="text-lg font-semibold">Wichtige Hinweise:</h4>
-            <p>
-              - Es können nur Regelungen aus der CSV gelesen werden, wenn diese dem Standard-Design entsprechen. Dies kann über Knopfdruck heruntergeladen werden.<br />
-              - Der Prozess kann nach der Bestätigung nicht abgebrochen werden.<br />
-              - Sollte das Aktualisieren der Regelungen nicht erfolgreich sein, versuchen Sie es nicht direkt erneut, sondern warten Sie ein paar Minuten.<br />
-              Dies kann dem Server helfen, falls das Fehlschlagen des Vorgangs an einer zu hohen Auslastung liegt oder die Daten aus einer anderen Ursache nicht abrufbar sind.<br />
-              - Sollte der Prozess öfter fehlschlagen, wenden Sie sich an den Administrator.<br />
-              - Wenn sich das Popup nicht öffnet, kontrollieren Sie Ihre Internetverbindung und versuchen Sie es nach kurzem Warten erneut.<br />
-            </p>
+          <h4 className="text-lg font-semibold">Wichtige Hinweise:</h4>
+          <p>
+            - Es können nur Regelungen aus der CSV gelesen werden, wenn diese dem Standard-Design entsprechen. Dies kann über Knopfdruck heruntergeladen werden.<br />
+            - Der Prozess kann nach der Bestätigung nicht abgebrochen werden.<br />
+            - Sollte das Aktualisieren der Regelungen nicht erfolgreich sein, versuchen Sie es nicht direkt erneut, sondern warten Sie ein paar Minuten.<br />
+            Dies kann dem Server helfen, falls das Fehlschlagen des Vorgangs an einer zu hohen Auslastung liegt oder die Daten aus einer anderen Ursache nicht abrufbar sind.<br />
+            - Sollte der Prozess öfter fehlschlagen, wenden Sie sich an den Administrator.<br />
+            - Wenn sich das Popup nicht öffnet, kontrollieren Sie Ihre Internetverbindung und versuchen Sie es nach kurzem Warten erneut.<br />
+          </p>
         </div>
         <div id="medaillen_ansicht" className="mb-8">
           <h2 className="text-xl font-semibold">09. Medaillen Ansicht</h2>

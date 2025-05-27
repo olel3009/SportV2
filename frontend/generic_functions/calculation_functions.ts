@@ -1,4 +1,4 @@
-import {Exercise, Expectation} from "../src/models/athlete"
+import { Exercise, Expectation } from "../src/models/athlete"
 //note: in the following data 2:40 minutes is written as 2.4 
 let basedata = `[
     {
@@ -729,66 +729,66 @@ let basedata = `[
 
 ]`;
 type DiscDict = { [key: string]: string[] };
-export function getExercises():DiscDict{
+export function getExercises(): DiscDict {
     let exercises = JSON.parse(basedata);
-    let exercisesDict:DiscDict={};
-    for(let i=0; i<exercises.length; i++){
+    let exercisesDict: DiscDict = {};
+    for (let i = 0; i < exercises.length; i++) {
         let discipline = exercises[i].discipline;
-        if(exercisesDict[discipline]==undefined){
-            exercisesDict[discipline]=[];
+        if (exercisesDict[discipline] == undefined) {
+            exercisesDict[discipline] = [];
         }
         exercisesDict[discipline].push(exercises[i].name);
     }
     return exercisesDict;
-    
-    
+
+
 }
 
-export function calculateMedal(discipline:string, age:number, result:number, sex:string):string{
-//it is important to note that if the numbers in the expectation rise they must be attributed differently than if they were to fall
+export function calculateMedal(discipline: string, age: number, result: number, sex: string): string {
+    //it is important to note that if the numbers in the expectation rise they must be attributed differently than if they were to fall
     let exerciseRegulations = JSON.parse(basedata);
-    let exercise:Exercise|null=null;
-    for(let i=0; i<exerciseRegulations.length; i++){
-        if(exerciseRegulations[i].name==discipline){
-            exercise=exerciseRegulations[i];
+    let exercise: Exercise | null = null;
+    for (let i = 0; i < exerciseRegulations.length; i++) {
+        if (exerciseRegulations[i].name == discipline) {
+            exercise = exerciseRegulations[i];
             break;
         }
     }
-    if(exercise==null){
+    if (exercise == null) {
         return "keine passende disziplin";
     }
-    let bracket:Expectation|null=null;
-    for(let i=0; i<exercise.expectations.length; i++){
-        if(exercise.expectations[i].ageFromTo.indexOf(age)>-1){
-            bracket=exercise.expectations[i];
+    let bracket: Expectation | null = null;
+    for (let i = 0; i < exercise.expectations.length; i++) {
+        if (exercise.expectations[i].ageFromTo.indexOf(age) > -1) {
+            bracket = exercise.expectations[i];
             break;
         }
     }
-    if(bracket==null){
+    if (bracket == null) {
         return "keine passende alterskategorie!";
     }
-    let expectationRising:boolean=false;
-    if(bracket.medalThresholdsM[0]<bracket.medalThresholdsM[2]){
-        expectationRising=true;
+    let expectationRising: boolean = false;
+    if (bracket.medalThresholdsM[0] < bracket.medalThresholdsM[2]) {
+        expectationRising = true;
     }
-    if(sex=="f"){
-        if((result>bracket.medalThresholdsW[2]==expectationRising)){
-            return"gold";
-        }else if((result>bracket.medalThresholdsW[1]==expectationRising)){
-            return"silver";
-        }else if((result>bracket.medalThresholdsW[0]==expectationRising)){
-            return"bronze";
-        }else{
+    if (sex == "f") {
+        if ((result > bracket.medalThresholdsW[2] == expectationRising)) {
+            return "gold";
+        } else if ((result > bracket.medalThresholdsW[1] == expectationRising)) {
+            return "silver";
+        } else if ((result > bracket.medalThresholdsW[0] == expectationRising)) {
+            return "bronze";
+        } else {
             return "Keine medaille";
         }
     } else {
-        if((result>bracket.medalThresholdsM[2]==expectationRising)){
-            return"gold";
-        }else if((result>bracket.medalThresholdsM[1]==expectationRising)){
-            return"silver";
-        }else if((result>bracket.medalThresholdsM[0]==expectationRising)){
-            return"bronze";
-        }else{
+        if ((result > bracket.medalThresholdsM[2] == expectationRising)) {
+            return "gold";
+        } else if ((result > bracket.medalThresholdsM[1] == expectationRising)) {
+            return "silver";
+        } else if ((result > bracket.medalThresholdsM[0] == expectationRising)) {
+            return "bronze";
+        } else {
             return "Keine medaille";
         }
     }

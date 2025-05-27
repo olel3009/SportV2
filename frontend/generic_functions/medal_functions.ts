@@ -5,7 +5,7 @@ export function findBestMedal(feats: Feat[] | undefined): Feat | undefined {
     return undefined;
   }
 
-  const medalRanks: {[medalName: string]: number} = {
+  const medalRanks: { [medalName: string]: number } = {
     Gold: 3,
     Silber: 2,
     Bronze: 1
