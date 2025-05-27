@@ -54,7 +54,7 @@ export default function Page() {
         type="athlete"
         text="Ausgewählte Löschen"
         ids={getSelectedAthleteIds}
-        warning={`Sind Sie sicher, dass sie ${getSelectedAthleteIds.length} Athleten sowie alle Leistungen der Athleten löschen möchten?`}
+        warning={`Sind Sie sicher, dass sie die ausgewählten Athleten sowie alle Leistungen der Athleten löschen möchten?`}
         onDelete={deletedAthletes}
       />
       <DataTable
