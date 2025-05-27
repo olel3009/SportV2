@@ -38,8 +38,26 @@ export async function createPdf(ids:number[]): Promise<string> {
     return location;
 }
 
+function getWebPath(filePath: string): string {
+  const prefixToRemove = "frontend/public/";
+  if (filePath.startsWith(prefixToRemove)) {
+    return "/" + filePath.substring(prefixToRemove.length);
+  }
+  // If the prefix isn't there, but "public/" is, handle that too
+  const publicPrefix = "public/";
+  if (filePath.startsWith(publicPrefix)) {
+    return "/" + filePath.substring(publicPrefix.length);
+  }
+  // If it already starts with a slash, assume it's a web path
+  if (filePath.startsWith("/")) {
+    return filePath;
+  }
+  // Otherwise, prepend a slash assuming it's relative to public root
+  return "/" + filePath;
+}
+
 export async function downloadPdf(ids:number[]): Promise <boolean>{
-    let filePath = await createPdf(ids);
+    let filePath = getWebPath(await createPdf(ids));
     const link = document.createElement('a');
     link.href = filePath;  // matches your express.static mount
     console.log(link.href)
