@@ -2,7 +2,7 @@
 import { login, signup } from "./authlogin";
 import { useActionState } from 'react'
 import ErrorDisplay from "@/components/ErrorDisplay";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,17 @@ import { AlertCircle } from "lucide-react";
 function LoginForm() {
   const [state, action, pending] = useActionState(login, undefined)
   const router = useRouter(); // Router-Hook initialisieren
+  const searchParams = useSearchParams();
+  const errorParam = searchParams.get("error");
+
+  let tokenErrorMessage = "";
+  if (errorParam === "tokenexpired") {
+    tokenErrorMessage = "Ihr Login-Token ist abgelaufen. Bitte melden Sie sich erneut an.";
+  } else if (errorParam === "invalidtoken") {
+    tokenErrorMessage = "Ihr Login-Token ist ungültig. Bitte melden Sie sich erneut an.";
+  } else if (errorParam === "notoken") {
+    tokenErrorMessage = "Sie sind nicht eingeloggt. Bitte melden Sie sich an.";
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -27,6 +38,9 @@ function LoginForm() {
       {(state?.errors?.email || state?.errors?.password) &&
         <ErrorDisplay message="Die angegebene E-Mail oder das Passwort sind falsch."></ErrorDisplay>
       }
+      {tokenErrorMessage && (
+        <ErrorDisplay message={tokenErrorMessage} />
+      )}
 
       <Card>
         <CardHeader>

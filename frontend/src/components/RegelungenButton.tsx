@@ -113,9 +113,15 @@ export default function RegelungenButton() {
     setErrorMessage("");
     setSuccessMessage(buttonresulterfolg);
   } else {
+    if (errorMsg === "Token invalid or not found") {
+      setWaitingMessage("");
+    setSuccessMessage("");
+    setErrorMessage("");
+    }else {
     setWaitingMessage("");
     setSuccessMessage("");
     setErrorMessage(fehlerhaftedatei+ "<br />" + errorMsg); // Fehler im UI anzeigen
+    }
   }
     setUploadedFile(null);
     //setErrorMessage("");

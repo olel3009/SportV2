@@ -4,6 +4,8 @@ from database.models import User
 from database.schemas import UserSchema
 from sqlalchemy import inspect
 from api.logs.logger import logger
+from flask_jwt_extended import create_access_token, jwt_required
+from datetime import timedelta
 
 bp_user = Blueprint('user', __name__)
 
@@ -21,19 +23,20 @@ def create_user():
         email=valid_data["email"],
         password=valid_data["password"]
     )
-
     db.session.add(new_user)
     db.session.commit()
     logger.info("Neuer Benutzer erfolgreich erstellt!")
-    return jsonify({"id": new_user.id, "message": "User erstellt"}), 201
+    access_token = create_access_token(identity=new_user.email, expires_delta=timedelta(hours=1))
+
+    return jsonify({"email": new_user.email, "message": "User erstellt", "access_token": access_token}), 201
 
 # READ Users
 @bp_user.route('/users', methods=['GET'])
+@jwt_required()
 def get_users():
     users = User.query.all()
     logger.info("Alle Users erforlgreich aufgerufen!")
     return jsonify([{
-        "id": user.id,
         "email": user.email,
         "created_at": user.created_at,
         "updated_at": user.updated_at
@@ -41,6 +44,7 @@ def get_users():
     
 
 @bp_user.route('/users/<string:email>', methods=['GET'])
+@jwt_required()
 def get_user_email(email):
     user = User.query.get_or_404(email)
     schema = UserSchema()
@@ -67,16 +71,22 @@ def login_user():
         logger.error("Ungültige Anmeldedaten!")
         return jsonify({"error": "Ungültige Anmeldedaten"}), 401
 
+    # JWT-Token erzeugen
+    access_token = create_access_token(identity=user.email, expires_delta=timedelta(hours=1))
+    #access_token = create_access_token(identity=user.email, expires_delta=timedelta(minutes=1))
+
     # Login erfolgreich
     logger.info("Login erfolgreich!")
     return jsonify({
         "message": "Login erfolgreich",
-        "email": user.email
+        "email": user.email,
+        "access_token": access_token
     }), 200
 
 
 # UPDATE User
 @bp_user.route('/users/<string:email>', methods=['PUT'])
+@jwt_required()
 def update_user(email):
     user = User.query.get_or_404(email)
     data = request.json
@@ -92,6 +102,7 @@ def update_user(email):
 
 # DELETE User
 @bp_user.route('/users/<string:email>', methods=['DELETE'])
+@jwt_required()
 def delete_user(email):
     user = User.query.get_or_404(email)
     db.session.delete(user)

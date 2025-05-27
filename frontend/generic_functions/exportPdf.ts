@@ -1,9 +1,18 @@
 import path from 'path';
+import { validateAndGetToken } from './auth';
 type pdfReturn ={
     message:string,
     path:string
 }
 export async function createPdf(ids:number[]): Promise<string> {
+
+    
+    const token = validateAndGetToken();
+      if (token === null || token === false) {
+        // Token ist ungültig, validateAndGetToken leitet bereits weiter
+        return "ungültiger Token";
+    
+      } else {
     let res:Response;
     if(ids.length==0){
         console.log("no input...");
@@ -36,6 +45,7 @@ export async function createPdf(ids:number[]): Promise<string> {
 
     console.log(location);
     return location;
+}
 }
 
 function getWebPath(filePath: string): string {

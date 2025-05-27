@@ -1,3 +1,4 @@
+from flask_jwt_extended import jwt_required
 from sqlalchemy import and_
 import os
 from datetime import datetime, date
@@ -179,6 +180,7 @@ def fill_pdf(athlete: Athlete, year: int) -> str:
     return destination
 
 @bp_athlete_pdf.route('/<int:athlete_id>/export/pdf', methods=['GET'])
+@jwt_required()
 def export_athlete_pdf(athlete_id):
     # Parameter
     year_str = request.args.get('year')

@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, Blueprint
+from flask_jwt_extended import jwt_required
 from database import db
 from database.models import Athlete as DBAthlete, Result as DBResult, Rule as DBRule
 #from api.export_pdf import fill_out_group
@@ -9,6 +10,7 @@ bp_group = Blueprint("group", __name__)
 #Gruppe wird als Liste von Athleten ID's übergeben
 
 @bp_group.route('/gruppen/export/pdf', methods=['GET'])
+@jwt_required()
 def export_group_pdf():
     ids_param: str = request.args.get("ids", "")
     if not ids_param:
