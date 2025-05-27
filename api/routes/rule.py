@@ -1,8 +1,6 @@
 from flask import Blueprint, request, jsonify
 from datetime import datetime, date
 import csv
-from io import StringIO
-
 from database import db
 from database.models import Rule, Discipline
 from database.schemas import RuleSchema
