@@ -34,6 +34,7 @@ def export_group_pdf():
             last_name=db_athlete.last_name,
             gender=db_athlete.gender,
             birth_date=db_athlete.birth_date,
+            swim_certificate=False,
             performances=[]
         )
 
