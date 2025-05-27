@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify, Blueprint
 from database import db
 from database.models import Athlete as DBAthlete, Result as DBResult, Rule as DBRule
-from api.export_pdf import fill_out_group
-from api.athlet import Athlete, PerformanceData
+#from api.export_pdf import fill_out_group
+#from api.athlet import Athlete, PerformanceData
 
 bp_group = Blueprint("group", __name__)
 
