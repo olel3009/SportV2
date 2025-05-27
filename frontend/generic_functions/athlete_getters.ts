@@ -458,3 +458,26 @@ export async function addFeatToAthlete(
   }
 
 }
+
+export async function createAthlete(fName:string, lName:string, mail:string, bdate:string, sex:string): Promise<{ message: string} | false> {
+  
+  const res = await fetch("http://127.0.0.1:5000/athletes", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      first_name: fName,
+      last_name: lName,
+      email: mail,
+      birth_date:bdate,
+      gender: sex
+    }),
+  });
+  if (!res.ok) {
+    const errorBody = await res.json();
+    throw new Error(errorBody.error || "Failed to add athlete");
+  }else{
+    alert("Athlet wurde hinzugefügt!")
+  }
+
+  return res.json();
+}
