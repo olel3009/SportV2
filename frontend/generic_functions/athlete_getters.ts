@@ -1,7 +1,13 @@
 //Fügen Sie hier alle Funktionen ein, die Athleten abrufen, damit sie im bereits vorhandenen Code verwendet werden können
 //Auf diese Weise müssen wir, wenn die API fertig ist, nur die Logik hier ändern und nicht an anderer Stelle im Code
 //Außerdem werden diese Funktionen mit ziemlicher Sicherheit mehr als einmal verwendet, daher ist es gut, sie woanders zu platzieren
-import { Athlete, Feat, Rule, Discipline, csvFeat } from "../src/models/athlete";
+import {
+  Athlete,
+  Feat,
+  Rule,
+  Discipline,
+  csvFeat,
+} from "../src/models/athlete";
 import { validateAndGetToken } from "./auth";
 
 export type csvCombo = {
@@ -21,14 +27,13 @@ export async function getAthleteWithFeats(id: number): Promise<csvCombo[]> {
   if (token === null || token === false) {
     // Token ist ungültig, validateAndGetToken leitet bereits weiter
     return [];
-
   } else {
     let fetchlink: string = "http://127.0.0.1:5000/athletes/" + id + "/results";
     console.log(fetchlink);
     const res = await fetch(fetchlink, {
       cache: "no-store",
       headers: {
-        "Authorization": "Bearer " + localStorage.getItem("access_token")
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
       },
     });
     if (!res.ok) {
@@ -51,11 +56,7 @@ export async function getAthleteWithFeats(id: number): Promise<csvCombo[]> {
       result: raw.result,
     }));
     return mapped;
-
   }
-
-
-
 }
 
 type RawAthlete = {
@@ -65,9 +66,9 @@ type RawAthlete = {
   gender: "m" | "f" | "d";
   birth_date: string;
   swim_certificate: boolean;
-  total_bronze: number|undefined;
-  total_silver: number|undefined;
-  total_gold: number|undefined;
+  total_bronze: number | undefined;
+  total_silver: number | undefined;
+  total_gold: number | undefined;
   created_at: string;
   updated_at: string;
 };
@@ -86,60 +87,53 @@ export async function getAthleteById(id: number): Promise<Athlete | undefined> {
 }
 
 export async function getAthletesMedals(): Promise<Athlete[]> {
-
-
   const token = validateAndGetToken();
   if (token === null || token === false) {
     // Token ist ungültig, validateAndGetToken leitet bereits weiter
     console.log("Token ist ungültig");
     return [];
-
   } else {
-      // 1) load the base list
+    // 1) load the base list
     const all = await getAllAthletes();
     console.log("Token ist gültig");
-  // 2) for each athlete kick off a fetch + map to your client‐side type
-  const athletePromises = all.map(async (athlete): Promise<Athlete> => {
-    const res = await fetch(
-      `http://127.0.0.1:5000/athletes/${athlete.id}?show_results=true`,
-      { cache: "no-store", 
-        headers: {
-        "Authorization": "Bearer " + localStorage.getItem("access_token")
-      },
-      },
-      
-    );
-    if (!res.ok) {
-      throw new Error(`API call failed: ${res.status}`);
-    }
+    // 2) for each athlete kick off a fetch + map to your client‐side type
+    const athletePromises = all.map(async (athlete): Promise<Athlete> => {
+      const res = await fetch(
+        `http://127.0.0.1:5000/athletes/${athlete.id}?show_results=true`,
+        {
+          cache: "no-store",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        }
+      );
+      if (!res.ok) {
+        throw new Error(`API call failed: ${res.status}`);
+      }
 
-    // 3) JSON is one athlete with medal counts
-    const raw: RawAthlete = await res.json();
+      // 3) JSON is one athlete with medal counts
+      const raw: RawAthlete = await res.json();
 
-  
+      // 4) map to your front‐end Athlete interface
+      return {
+        id: raw.id,
+        firstName: raw.first_name,
+        lastName: raw.last_name,
+        sex: raw.gender,
+        dateOfBirth: raw.birth_date,
+        swimCertificate: raw.swim_certificate,
+        goldMedals: raw.total_gold ?? 0,
+        silverMedals: raw.total_silver ?? 0,
+        bronzeMedals: raw.total_bronze ?? 0,
+        disciplines: [],
+        feats: [],
+      };
+    });
 
-    // 4) map to your front‐end Athlete interface
-    return {
-      id: raw.id,
-      firstName: raw.first_name,
-      lastName: raw.last_name,
-      sex: raw.gender,
-      dateOfBirth: raw.birth_date,
-      swimCertificate: raw.swim_certificate,
-      goldMedals: raw.total_gold ?? 0,
-      silverMedals: raw.total_silver ?? 0,
-      bronzeMedals: raw.total_bronze ?? 0,
-      disciplines: [],
-      feats: [],
-    };
-  
-  });
-
-  // 5) wait for all fetch+maps to finish in parallel
-  return await Promise.all(athletePromises);
+    // 5) wait for all fetch+maps to finish in parallel
+    return await Promise.all(athletePromises);
+  }
 }
-}
-
 
 export async function getAllAthletes(): Promise<Athlete[]> {
   const token = validateAndGetToken();
@@ -151,7 +145,7 @@ export async function getAllAthletes(): Promise<Athlete[]> {
     const res = await fetch("http://127.0.0.1:5000/athletes", {
       cache: "no-store",
       headers: {
-        "Authorization": "Bearer " + localStorage.getItem("access_token")
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
       },
     });
     if (!res.ok) {
@@ -161,24 +155,54 @@ export async function getAllAthletes(): Promise<Athlete[]> {
     const data: RawAthlete[] = await res.json();
     console.log("Raw data fetched:", data);
 
-  //Mapping
-  const mapped: Athlete[] = data.map((raw) => ({
-    id: raw.id,
-    firstName: raw.first_name,
-    lastName: raw.last_name,
-    sex: raw.gender,
-    dateOfBirth: raw.birth_date,
-    swimCertificate: raw.swim_certificate,
-    goldMedals: raw.total_gold??0,
-    silverMedals: raw.total_silver??0,
-    bronzeMedals: raw.total_bronze??0,
-    disciplines: [],
-    feats: [],
-  }));
+    //Mapping
+    const mapped: Athlete[] = data.map((raw) => ({
+      id: raw.id,
+      firstName: raw.first_name,
+      lastName: raw.last_name,
+      sex: raw.gender,
+      dateOfBirth: raw.birth_date,
+      swimCertificate: raw.swim_certificate,
+      goldMedals: raw.total_gold ?? 0,
+      silverMedals: raw.total_silver ?? 0,
+      bronzeMedals: raw.total_bronze ?? 0,
+      disciplines: [],
+      feats: [],
+    }));
 
-  return mapped;
+    return mapped;
+  }
 }
 
+export async function deleteAthlete(ids: number[]) {
+  const token = validateAndGetToken();
+  if (token === null || token === false) {
+    // Token ist ungültig, validateAndGetToken leitet bereits weiter
+    return [];
+  } else {
+    for (const id of ids) {
+      const allFeats = await (
+        await getAllFeats(true, id)
+      ).map((feat) => feat.id);
+      await deleteFeat(allFeats);
+
+      const responseAthlete = await fetch(
+        `http://127.0.0.1:5000/athletes/${id}`,
+        {
+          method: "DELETE",
+          cache: "no-store",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        }
+      );
+      if (!responseAthlete.ok) {
+        throw new Error(`Error: ${responseAthlete.statusText}`);
+      }
+      console.log("Athlete deleted successfully");
+    }
+    return true;
+  }
 }
 
 type RawFeat = {
@@ -210,7 +234,7 @@ export async function getAllFeats(
     const res = await fetch("http://127.0.0.1:5000/results", {
       cache: "no-store",
       headers: {
-        "Authorization": "Bearer " + localStorage.getItem("access_token")
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
       },
     });
     if (!res.ok) {
@@ -242,7 +266,9 @@ export async function getAllFeats(
     preppedFeats.forEach((feat) => {
       feat.ruling = rules.find((r) => r.id == feat.rule_id);
       if (feat.ruling === undefined) return;
-      feat.ruling.discipline = disciplines.find(d => d.id === feat.ruling!.discipline_id) || { id: 0, name: "" }
+      feat.ruling.discipline = disciplines.find(
+        (d) => d.id === feat.ruling!.discipline_id
+      ) || { id: 0, name: "" };
     });
 
     return preppedFeats;
@@ -255,19 +281,22 @@ export async function deleteFeat(ids: number[]) {
     // Token ist ungültig, validateAndGetToken leitet bereits weiter
     return [];
   } else {
-  for (const id of ids) {
-    const response = await fetch(`http://127.0.0.1:5000/results/${id}`, {
-      method: 'DELETE',
-      cache: 'no-store',
-    });
+    for (const id of ids) {
+      const response = await fetch(`http://127.0.0.1:5000/results/${id}`, {
+        method: "DELETE",
+        cache: "no-store",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      });
 
-    if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+      console.log("Feat deleted successfully");
     }
-    console.log('Feat deleted successfully')
+    return true;
   }
-  return true;
-}
 }
 
 type RawRule = {
@@ -318,7 +347,7 @@ export async function getAllRules(): Promise<Rule[]> {
     const res = await fetch("http://127.0.0.1:5000/rules", {
       cache: "no-store",
       headers: {
-        "Authorization": "Bearer " + localStorage.getItem("access_token")
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
       },
     });
     if (!res.ok) {
@@ -363,8 +392,6 @@ export async function getAllRules(): Promise<Rule[]> {
 
     return mapped;
   }
-
-
 }
 
 type RawDiscipline = {
@@ -384,7 +411,7 @@ export async function getAllDisciplines(): Promise<Discipline[]> {
     const res = await fetch("http://127.0.0.1:5000/disciplines", {
       cache: "no-store",
       headers: {
-        "Authorization": "Bearer " + localStorage.getItem("access_token")
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
       },
     });
     if (!res.ok) {
@@ -437,7 +464,7 @@ export async function addFeatToAthlete(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + localStorage.getItem("access_token")
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
       },
 
       body: JSON.stringify({
@@ -451,41 +478,47 @@ export async function addFeatToAthlete(
       const errorBody = await res.json();
       throw new Error(errorBody.error || "Failed to add result");
     } else {
-      alert("Ergebnis wurde eingetragen!")
+      alert("Ergebnis wurde eingetragen!");
     }
 
     return res.json();
   }
-
 }
 
-export async function createAthlete(fName:string, lName:string, mail:string, bdate:string, sex:string): Promise<{ message: string} | false> {
-  
+export async function createAthlete(
+  fName: string,
+  lName: string,
+  mail: string,
+  bdate: string,
+  sex: string
+): Promise<{ message: string } | false> {
   const token = validateAndGetToken();
-    if (token === null || token === false) {
-      // Token ist ungültig, validateAndGetToken leitet bereits weiter
-      console.error("Token ist ungültig");
-      return false;
+  if (token === null || token === false) {
+    // Token ist ungültig, validateAndGetToken leitet bereits weiter
+    console.error("Token ist ungültig");
+    return false;
+  } else {
+    const res = await fetch("http://127.0.0.1:5000/athletes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+      body: JSON.stringify({
+        first_name: fName,
+        last_name: lName,
+        email: mail,
+        birth_date: bdate,
+        gender: sex,
+      }),
+    });
+    if (!res.ok) {
+      const errorBody = await res.json();
+      throw new Error(errorBody.error || "Failed to add athlete");
     } else {
+      alert("Athlet wurde hinzugefügt!");
+    }
 
-  const res = await fetch("http://127.0.0.1:5000/athletes", {
-    method: "POST",
-    headers: { "Content-Type": "application/json","Authorization": "Bearer " + localStorage.getItem("access_token") },
-    body: JSON.stringify({
-      first_name: fName,
-      last_name: lName,
-      email: mail,
-      birth_date:bdate,
-      gender: sex
-    }),
-  });
-  if (!res.ok) {
-    const errorBody = await res.json();
-    throw new Error(errorBody.error || "Failed to add athlete");
-  }else{
-    alert("Athlet wurde hinzugefügt!")
+    return res.json();
   }
-
-  return res.json();
-}
 }
