@@ -24,7 +24,8 @@ def create_app():
     app.config['ALLOWED_IMAGE_EXTS'] = {'png', 'jpg', 'jpeg', 'gif'}
     app.config['ALLOWED_CERT_EXTS']  = {'pdf', 'png', 'jpg', 'jpeg'}
     app.config['PDF_TEMPLATE_PATH']  = r'api/data/DSA_Einzelpruefkarte_2025_SCREEN.pdf'
-    app.config['PDF_OUTPUT_FOLDER'] = rf"api/pdfs/"
+    app.config['GROUP_PDF_TEMPLATE_PATH'] = r'api/data/DSA_Gruppenpruefkarte_2025_SCREEN.pdf'
+    app.config['PDF_OUTPUT_FOLDER'] = rf"frontend/public/downloadFiles/"
     os.makedirs(app.config['PDF_OUTPUT_FOLDER'], exist_ok=True)
 
     
@@ -43,10 +44,10 @@ def create_app():
     from api.routes.result import bp_result 
     from api.routes.rule import bp_rule
     from api.routes.discipline import bp_discipline
-    #from api.routes.group import bp_group
+    from api.routes.group import bp_group
     from api.routes.athlete_pdf import bp_athlete_pdf
     
-    for bp in [bp_user, bp_trainer, bp_result, bp_athlete, bp_rule, bp_discipline, bp_athlete_pdf]:
+    for bp in [bp_user, bp_trainer, bp_result, bp_athlete, bp_rule, bp_discipline, bp_group, bp_athlete_pdf]:
         app.register_blueprint(bp)
 
     @app.errorhandler(ValidationError)
