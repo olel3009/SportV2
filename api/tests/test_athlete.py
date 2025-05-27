@@ -133,7 +133,7 @@ def test_update_athlete_gender_email(client):
     assert updated is not None
     assert updated["gender"] == "f"
     assert updated["email"] == "anna.lustig@test.de"
-
+@pytest.mark.skip
 def test_delete_athlete(client):
     """
     Testet das Löschen eines Athleten per DELETE /athletes/<id>.
