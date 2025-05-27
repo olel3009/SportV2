@@ -1,7 +1,7 @@
 import path from 'path';
 type pdfReturn ={
     message:string,
-    pdf_feedback:string
+    path:string
 }
 export async function createPdf(ids:number[]): Promise<string> {
     let res:Response;
@@ -9,7 +9,7 @@ export async function createPdf(ids:number[]): Promise<string> {
         console.log("no input...");
         return '';
     }else if(ids.length==1){
-            res = await fetch("http://127.0.0.1:5000/athletes/"+ids[0]+"/export/pdf", {
+            res = await fetch("http://127.0.0.1:5000/athletes/"+ids[0]+"/export/pdf?year=2025", {
             cache: "no-store"
         });
         if (!res.ok) {
@@ -32,14 +32,14 @@ export async function createPdf(ids:number[]): Promise<string> {
     const data: pdfReturn = await res.json();
 
     //Mapping
-    let location= data.pdf_feedback;
+    let location= data.path;
 
     console.log(location);
     return location;
 }
 
 export async function downloadPdf(ids:number[]): Promise <boolean>{
-    let filePath= await createPdf(ids);
+    let filePath = await createPdf(ids);
     const link = document.createElement('a');
     link.href = filePath;  // matches your express.static mount
     console.log(link.href)

@@ -13,7 +13,9 @@ import { Athlete } from "@/models/athlete";
 import { downloadCsv } from "@/exportCsv";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import DeleteResource from "@/components/ui/deleteResource";
+import DeleteResource, {
+  DeleteResourceButton,
+} from "@/components/ui/deleteResource";
 
 export default function Page() {
   const router = useRouter();
@@ -22,7 +24,8 @@ export default function Page() {
   const deletedAthletes = () => {
     const deletedIds = getSelectedAthleteIds();
     setAthletes(athletes.filter((athlete) => !deletedIds.includes(athlete.id)));
-  }
+    window.location.reload();
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,14 +50,8 @@ export default function Page() {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Athleten</h1>
-      <DeleteResource
-        type="athlete"
-        text="Ausgewählte Löschen"
-        ids={getSelectedAthleteIds}
-        warning={`Sind Sie sicher, dass sie die ausgewählten Athleten sowie alle Leistungen der Athleten löschen möchten?`}
-        onDelete={deletedAthletes}
-      />
-      <div className="grid grid-cols-2 gap-2">
+
+      <div className="flex flex-wrap gap-2">
         <DownloadCsvButton
           ids={getSelectedAthleteIds}
           text={"Ausgewählte als Csv exportieren"}
@@ -62,6 +59,13 @@ export default function Page() {
         <DownloadPdfButton
           ids={getSelectedAthleteIds}
           text={"Ausgewählte als PDF exportieren"}
+        />
+        <DeleteResourceButton
+          type="athlete"
+          text="Ausgewählte Löschen"
+          ids={getSelectedAthleteIds}
+          warning={`Sind Sie sicher, dass sie die ausgewählten Athleten sowie alle Leistungen der Athleten löschen möchten?`}
+          onDelete={deletedAthletes}
         />
       </div>
       <DataTable
