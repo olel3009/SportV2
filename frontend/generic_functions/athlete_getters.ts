@@ -461,9 +461,16 @@ export async function addFeatToAthlete(
 
 export async function createAthlete(fName:string, lName:string, mail:string, bdate:string, sex:string): Promise<{ message: string} | false> {
   
+  const token = validateAndGetToken();
+    if (token === null || token === false) {
+      // Token ist ungültig, validateAndGetToken leitet bereits weiter
+      console.error("Token ist ungültig");
+      return false;
+    } else {
+
   const res = await fetch("http://127.0.0.1:5000/athletes", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json","Authorization": "Bearer " + localStorage.getItem("access_token") },
     body: JSON.stringify({
       first_name: fName,
       last_name: lName,
@@ -480,4 +487,5 @@ export async function createAthlete(fName:string, lName:string, mail:string, bda
   }
 
   return res.json();
+}
 }
