@@ -152,6 +152,21 @@ export default function Page() {
   let usedExercises: number[] = [];
 
   
+  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setTokenValid(validateAndGetToken());
+  }, []);
+
+  if (tokenValid === null) {
+    // Noch nicht geprüft, z.B. Ladeanzeige oder leer
+    return null;
+  }
+  if (!tokenValid) {
+    // Token ist ungültig, validateAndGetToken leitet bereits weiter
+    return null;
+  }
+
 
   if (loading) {
     return (
@@ -176,20 +191,7 @@ export default function Page() {
     );
   }
 
-const [tokenValid, setTokenValid] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    setTokenValid(validateAndGetToken());
-  }, []);
-
-  if (tokenValid === null) {
-    // Noch nicht geprüft, z.B. Ladeanzeige oder leer
-    return null;
-  }
-  if (!tokenValid) {
-    // Token ist ungültig, validateAndGetToken leitet bereits weiter
-    return null;
-  }
 
   return (
     <div className="p-6 gap-4 flex flex-col">
