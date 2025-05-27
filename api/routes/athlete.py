@@ -190,15 +190,15 @@ def create_athletes_from_csv():
         try:
             parts = original_line_data.split(';')
             print(parts)
-            if len(parts) != 5:
+            if len(parts) != 6:
                 errors_list.append({
                     "line_number": line_number,
                     "data": original_line_data,
-                    "error": "Ungültiges Datenformat. Erwartet werden 5 Felder getrennt durch ';'."
+                    "error": "Ungültiges Datenformat. Erwartet werden 6 Felder getrennt durch ';'."
                 })
                 continue
 
-            first_name, last_name, birth_date_str, gender_str, swim_certificate_str = parts
+            first_name, last_name, birth_date_str, gender_str, swim_certificate_str, email = parts
 
             if not first_name or not last_name:
                 errors_list.append({
@@ -246,7 +246,8 @@ def create_athletes_from_csv():
                 last_name=last_name,
                 birth_date=birth_date_obj,
                 gender=gender_val,
-                swim_certificate=swim_certificate_bool
+                swim_certificate=swim_certificate_bool,
+                email=email
             )
             created_athlete_objects.append(athlete_obj)
 
