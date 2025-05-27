@@ -108,8 +108,15 @@ def fill_pdf(athlete: Athlete, year: int) -> str:
     existing_fields = set(reader.get_fields().keys())
     page = writer.pages[0]
 
+    # 2.5) Prüfungsjahr in jpd1/jpd2 aufsplitten
+    y2 = f"{year_param % 100:02d}"  
+    jdp1, jdp2 = y2[0], y2[1]
+
     # 2) PDF-Felder befüllen
-    field_updates = {}
+    field_updates = {
+        "jdp1": jdp1,
+        "jdp2": jdp2,
+    }
 
     # 2a) Name, Vorname, Geschlecht
     field_updates['name']    = athlete.first_name
