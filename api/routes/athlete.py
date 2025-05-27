@@ -293,6 +293,7 @@ def create_athletes_from_csv():
     }), response_status_code
 
 @bp_athlete.route('/athletes/<int:id>/upload_picture', methods=['POST'])
+@jwt_required()
 def upload_athlete_picture(id):
     ath = DBAthlete.query.get_or_404(id)
     if 'picture' not in request.files:
@@ -316,6 +317,7 @@ def upload_athlete_picture(id):
 
 
 @bp_athlete.route('/athletes/<int:id>/upload_swim_cert', methods=['POST'])
+@jwt_required()
 def upload_swim_certificate(id):
     ath = DBAthlete.query.get_or_404(id)
     if 'swim_cert_file' not in request.files:
