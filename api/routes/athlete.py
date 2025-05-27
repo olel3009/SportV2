@@ -172,12 +172,16 @@ def create_athletes_from_csv():
         original_line_data = line_content.strip()
         if not original_line_data:
             continue
+        if processed_lines_count==0:
+            processed_lines_count += 1
+            continue
 
         processed_lines_count += 1
         line_number = index + 1
 
         try:
             parts = original_line_data.split(';')
+            print(parts)
             if len(parts) != 5:
                 errors_list.append({
                     "line_number": line_number,
@@ -197,6 +201,7 @@ def create_athletes_from_csv():
                 continue
 
             try:
+                print(birth_date_str)
                 birth_date_obj = datetime.strptime(birth_date_str, '%d.%m.%Y').date()
             except ValueError:
                 errors_list.append({
