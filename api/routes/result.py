@@ -91,7 +91,7 @@ def create_result():
     db.session.add(new)
     db.session.commit()
     logger.info("Ergebnis erfolgreich kreiert!")
-    return jsonify({"message": "Result added", "id": new_result.id}), 201
+    return jsonify({"message": "Result added", "id": new.id}), 201
 
 @bp_result.route('/results', methods=['GET'])
 def get_results():

@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 
 import styles from "./page.module.css";
 import DownloadCsvButton from "@/components/ui/csvExportButton";
+import DownloadPdfButton from "@/components/ui/groupDownloadButton";
 import { getSelectedAthleteIds } from "@/components/ui/DataTable";
 import { DataTable } from "@/components/ui/DataTable";
 import { columns } from "@/components/AthleteTableColumns";
@@ -46,10 +47,6 @@ export default function Page() {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Athleten</h1>
-      <DownloadCsvButton
-        ids={getSelectedAthleteIds}
-        text={"Ausgewählte als Csv exportieren"}
-      />
       <DeleteResource
         type="athlete"
         text="Ausgewählte Löschen"
@@ -57,6 +54,16 @@ export default function Page() {
         warning={`Sind Sie sicher, dass sie die ausgewählten Athleten sowie alle Leistungen der Athleten löschen möchten?`}
         onDelete={deletedAthletes}
       />
+      <div className="grid grid-cols-2 gap-2">
+        <DownloadCsvButton
+          ids={getSelectedAthleteIds}
+          text={"Ausgewählte als Csv exportieren"}
+        />
+        <DownloadPdfButton
+          ids={getSelectedAthleteIds}
+          text={"Ausgewählte als PDF exportieren"}
+        />
+      </div>
       <DataTable
         columns={columns}
         data={athletes}
