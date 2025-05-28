@@ -1,11 +1,12 @@
-import io, csv
-from flask import Blueprint, request, jsonify
+import csv
+from marshmallow import ValidationError
 from datetime import datetime, date
+from flask import Blueprint, request, jsonify
 from database import db
 from database.models import Result, Athlete, Rule, Discipline
 from database.schemas import ResultSchema
-from marshmallow import ValidationError
 from api.logs.logger import logger
+from api.utils import to_float_german
 
 bp_result = Blueprint('result', __name__)
 
@@ -269,9 +270,9 @@ def import_results_from_csv():
 
         # --- 6) Leistungswert parsen ---
         try:
-            value = float(rec['Leistung'].replace(',', '.'))
-        except:
-            return jsonify({"error": f"Zeile {idx}: Ungültiger Leistungswert '{rec['Leistung']}'"}), 400
+            value = to_float_german(rec['Leistung'])
+        except ValueError as e:
+            return jsonify({"error": f"Zeile {idx}: Ungültiger Leistungswert – {e}"}), 400
 
         # --- 7) Medaille bestimmen ---
         medal = determine_medal(rule, value, athlete.gender)
