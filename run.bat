@@ -7,7 +7,7 @@ set VENV_ACTIVATION_SCRIPT=.\venv\Scripts\activate.bat
 if not exist "%VENV_ACTIVATION_SCRIPT%" (
     echo ERROR: Virtual environment activation script not found at:
     echo %VENV_ACTIVATION_SCRIPT%
-    echo Please ensure the 'venv' folder exists and was created correctly.
+    echo Please run the setup_env.bat script first.
     pause
     exit /b 1
 )
@@ -27,26 +27,37 @@ set PYTHONPATH=%CD%
 echo PYTHONPATH=%PYTHONPATH%
 echo.
 
-echo Seeding database with test data...
-python .\database\seed_db.py
-if errorlevel 1 (
-    echo ERROR: Database seeding failed. Check the python output.
-    pause
-    exit /b 1
+echo Building Frontend (npm run build)...
+if exist .\frontend\package.json (
+    cd frontend
+    call npm run build
+    if errorlevel 1 (
+        echo ERROR: Frontend build failed. Check the output above.
+        cd ..
+        pause
+        exit /b 1
+    )
+    cd ..
+    echo Frontend build finished.
+) else (
+    echo WARNING: .\frontend\package.json not found. Skipping frontend build.
 )
-echo Database seeding finished.
 echo.
 
 echo Starting Backend (Flask)...
-start "SPORTV2 Backend" flask --app run.py --debug run
+start "Backend" flask --app run.py run
 echo Backend process launched in a new window.
 echo.
 
-echo Starting Frontend (npm dev)...
-cd frontend
-start "SPORTV2 Frontend" npm run dev
-cd ..
-echo Frontend process launched in a new window.
+echo Starting Frontend (npm run dev)...
+if exist .\frontend\package.json (
+    cd frontend
+    start "Frontend" npm run start
+    cd ..
+    echo Frontend process launched in a new window.
+) else (
+    echo WARNING: .\frontend\package.json not found. Cannot start frontend dev server.
+)
 echo.
 
 echo ==================================================

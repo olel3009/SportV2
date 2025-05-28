@@ -128,6 +128,23 @@ export async function getAllAthletes(): Promise<Athlete[]> {
   return mapped;
 }
 
+export async function deleteAthlete(ids: number[]) {
+  for (const id of ids) {
+    const allFeats = await (await getAllFeats(true, id)).map(feat => feat.id)
+    await deleteFeat(allFeats)
+
+    const responseAthlete = await fetch(`http://127.0.0.1:5000/athletes/${id}`, {
+      method: 'DELETE',
+      cache: 'no-store',
+    });
+    if (!responseAthlete.ok) {
+      throw new Error(`Error: ${responseAthlete.statusText}`);
+    }
+    console.log('Athlete deleted successfully')
+  }
+  return true;
+}
+
 type RawFeat = {
   id: number;
   athlete_id: number;
@@ -185,6 +202,21 @@ export async function getAllFeats(
   });
 
   return preppedFeats;
+}
+
+export async function deleteFeat(ids: number[]) {
+  for (const id of ids) {
+    const response = await fetch(`http://127.0.0.1:5000/results/${id}`, {
+      method: 'DELETE',
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+    console.log('Feat deleted successfully')
+  }
+  return true;
 }
 
 type RawRule = {
@@ -338,6 +370,29 @@ export async function addFeatToAthlete(
     throw new Error(errorBody.error || "Failed to add result");
   }else{
     alert("Ergebnis wurde eingetragen!")
+  }
+
+  return res.json();
+}
+
+export async function createAthlete(fName:string, lName:string, mail:string, bdate:string, sex:string): Promise<{ message: string} | false> {
+  
+  const res = await fetch("http://127.0.0.1:5000/athletes", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      first_name: fName,
+      last_name: lName,
+      email: mail,
+      birth_date:bdate,
+      gender: sex
+    }),
+  });
+  if (!res.ok) {
+    const errorBody = await res.json();
+    throw new Error(errorBody.error || "Failed to add athlete");
+  }else{
+    alert("Athlet wurde hinzugefügt!")
   }
 
   return res.json();
