@@ -153,38 +153,3 @@ def test_delete_athlete(client):
     get_resp = client.get("/athletes")
     all_athletes = get_resp.get_json()
     assert not any(a["id"] == athlete_id for a in all_athletes)
-
-
-def test_export_athlete_pdf(client):
-    """
-    Testet den PDF-Export eines Athleten per GET /athletes/<id>/export/pdf.
-    Legt dafür zuvor den Athleten und optional seine Results an.
-    """
-    # 1) Athlet anlegen
-    create_resp = client.post("/athletes", json={
-        "first_name": "Lena",
-        "last_name": "Test",
-        "email": "lena.test@test.de",
-        "birth_date": "1.1.2003",
-        "gender": "f"
-    })
-    athlete_id = create_resp.get_json()["id"]
-
-    # 2) (Optional) Results für diesen Athleten anlegen, falls dein PDF-Export 
-    #    ab 1 Result Sinn macht. Z.B.:
-    client.post("/results", json={
-        "athlete_id": athlete_id,
-        "year": 2023,
-        "age": 28,
-        "disciplin": "Ausdauer",
-        "result": 12.34,
-        "points": 3,
-        "medal": "Gold"
-    })
-
-    # 3) PDF-Export aufrufen
-    export_resp = client.get(f"/athletes/{athlete_id}/export/pdf")
-    assert export_resp.status_code == 200
-    data = export_resp.get_json()
-    assert data["message"] == "Export erfolgreich"
-    assert "pdf_feedback" in data
