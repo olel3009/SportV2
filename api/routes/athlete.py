@@ -201,6 +201,7 @@ def get_athletes_results(athlete_id):
 
 @bp_athlete.post('/athletes/csv')
 def create_athletes_from_csv():
+    
     if not request.data:
         return jsonify({"error": "Keine Daten im Request Body gefunden."}), 400
 
@@ -224,21 +225,21 @@ def create_athletes_from_csv():
 
         try:
             parts = original_line_data.split(';')
-            if len(parts) != 5:
+            if len(parts) != 6:
                 errors_list.append({
                     "line_number": line_number,
                     "data": original_line_data,
-                    "error": "Ungültiges Datenformat. Erwartet werden 5 Felder getrennt durch ';'."
+                    "error": "Ungültiges Datenformat. Erwartet werden 6 Felder getrennt durch ';'."
                 })
                 continue
+            
+            first_name, last_name, email, birth_date_str, gender_str, swim_certificate_str = parts
 
-            first_name, last_name, birth_date_str, gender_str, swim_certificate_str = parts
-
-            if not first_name or not last_name:
+            if not first_name or not last_name or not email:
                 errors_list.append({
                     "line_number": line_number,
                     "data": original_line_data,
-                    "error": "Vorname und Nachname dürfen nicht leer sein."
+                    "error": "Vorname, Nachname und E-Mail dürfen nicht leer sein."
                 })
                 continue
 
@@ -248,7 +249,7 @@ def create_athletes_from_csv():
                 errors_list.append({
                     "line_number": line_number,
                     "data": original_line_data,
-                    "error": f"Ungültiges Datumsformat für birth_date ('{birth_date_str}'). Erwartet: YYYY-MM-DD."
+                    "error": f"Ungültiges Datumsformat für birth_date ('{birth_date_str}'). Erwartet: TT.MM.JJJJ."
                 })
                 continue
 
@@ -274,9 +275,23 @@ def create_athletes_from_csv():
                 })
                 continue
 
+            # ####################################################################
+            # NEU HINZUGEFÜGT: Prüfen, ob die E-Mail bereits existiert
+            # ####################################################################
+            existing_athlete = DBAthlete.query.filter_by(email=email).first()
+            if existing_athlete:
+                errors_list.append({
+                    "line_number": line_number,
+                    "data": original_line_data,
+                    "error": f"Ein Athlet mit der E-Mail '{email}' existiert bereits."
+                })
+                continue
+            # ####################################################################
+
             athlete_obj = DBAthlete(
                 first_name=first_name,
                 last_name=last_name,
+                email=email,
                 birth_date=birth_date_obj,
                 gender=gender_val,
                 swim_certificate=swim_certificate_bool
@@ -289,10 +304,10 @@ def create_athletes_from_csv():
                 "data": original_line_data,
                 "error": f"Ein unerwarteter Fehler ist bei der Verarbeitung dieser Zeile aufgetreten: {str(e)}"
             })
-            continue 
+            continue
 
     if not created_athlete_objects and not errors_list and processed_lines_count == 0:
-         return jsonify({"message": "Keine verarbeitbaren Athletendaten gefunden (nur leere Zeilen?)."}), 400
+        return jsonify({"message": "Keine verarbeitbaren Athletendaten gefunden (nur leere Zeilen?)."}), 400
 
     committed_athlete_ids = []
     if created_athlete_objects:
@@ -301,20 +316,19 @@ def create_athletes_from_csv():
             db.session.commit()
             for athlete in created_athlete_objects:
                 if athlete.id is not None:
-                     committed_athlete_ids.append(athlete.id)
+                    committed_athlete_ids.append(athlete.id)
                 else:
                     errors_list.append({
                         "line_data_intended_for": f"{athlete.first_name} {athlete.last_name}",
                         "error": "Athlet wurde möglicherweise erstellt, aber ID konnte nicht abgerufen werden."
                     })
-
         except Exception as e:
             db.session.rollback()
             for obj in created_athlete_objects:
-                 errors_list.append({
-                    "line_data_intended_for": f"{obj.first_name} {obj.last_name}", 
+                errors_list.append({
+                    "line_data_intended_for": f"{obj.first_name} {obj.last_name}",
                     "error": f"Konnte nicht in Datenbank gespeichert werden aufgrund eines Batch-Fehlers: {str(e)}"
-                 })
+                })
             committed_athlete_ids = []
 
     response_status_code = 207
