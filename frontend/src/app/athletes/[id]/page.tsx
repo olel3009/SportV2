@@ -33,12 +33,14 @@ import {
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUtcTimecodeFromGermanDate } from "@/date_format";
-import { findBestMedal } from "@/medal_functions";
-import DownloadPdfButton from "@/components/ui/groupDownloadButton";
-
+import { findBestMedal } from "@/medal_functions"; 
+import { validateAndGetToken } from "@/auth";
 
 import DeleteResource from "@/components/ui/deleteResource";
 import { useEffect, useState } from "react";
+import DownloadPdfButton, { DownloadPdfLink } from "@/components/ui/groupDownloadButton";
+
+
 
 const getAge = (dateString: string) => {
   const [day, month, year] = dateString.split(".").map(Number);
@@ -70,10 +72,10 @@ function MedalDisplay({
     type === "Gold"
       ? "bg-yellow-300 text-yellow-900"
       : type === "Bronze"
-      ? "bg-orange-300 text-orange-900"
-      : type === "Silber"
-      ? "bg-gray-300 text-gray-800"
-      : "invisible";
+        ? "bg-orange-300 text-orange-900"
+        : type === "Silber"
+          ? "bg-gray-300 text-gray-800"
+          : "invisible";
   return (
     <Badge className={`${colors} flex gap-2 pointer-events-none`}>
       <Medal size={size} />
@@ -152,6 +154,23 @@ export default function Page() {
   });
   let usedExercises: number[] = [];
 
+  
+  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setTokenValid(validateAndGetToken());
+  }, []);
+
+  if (tokenValid === null) {
+    // Noch nicht geprüft, z.B. Ladeanzeige oder leer
+    return null;
+  }
+  if (!tokenValid) {
+    // Token ist ungültig, validateAndGetToken leitet bereits weiter
+    return null;
+  }
+
+
   if (loading) {
     return (
       <div className="p-6 flex flex-col gap-2">
@@ -174,6 +193,8 @@ export default function Page() {
       </div>
     );
   }
+
+
 
   return (
     <div className="p-6 gap-4 flex flex-col">
@@ -201,6 +222,7 @@ export default function Page() {
 
           <div className="flex flex-wrap ml-auto">
             <DownloadCsvLink ids={[id]} text="CSV" />
+            <DownloadPdfLink ids={[id]} text="PDF" />
             <DeleteResource
               ids={[id]}
               type="athlete"
@@ -211,10 +233,7 @@ export default function Page() {
           </div>
         </CardContent>
       </Card>
-      <div className="grid grid-cols-2 gap-2">
-        <DownloadCsvButton ids={[id]} text="Als Csv exportieren" />
-        <DownloadPdfButton ids={[id]} text="Als PDF exportieren" />
-      </div>
+      
       <h2 className="text-xl font-bold">Schwimmnachweis</h2>
       <div>
         {!athlete.swimCertificate && (

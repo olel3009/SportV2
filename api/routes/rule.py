@@ -7,6 +7,8 @@ from database.models import Rule, Discipline
 from database.schemas import RuleSchema
 from api.logs.logger import logger
 from api.utils import to_float_german
+from marshmallow import ValidationError
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bp_rule = Blueprint('rule', __name__)
 
@@ -16,6 +18,7 @@ def parse_date(s: str) -> date:
 
 # CREATE Rule
 @bp_rule.route('/rules', methods=['POST'])
+@jwt_required()
 def create_rule():
     data = request.json
     schema = RuleSchema()
@@ -57,6 +60,7 @@ def create_rule():
 
 # READ Rules
 @bp_rule.route('/rules', methods=['GET'])
+@jwt_required()
 def get_rules():
     all_rules = Rule.query.all()
     schema = RuleSchema(many=True)
@@ -65,6 +69,7 @@ def get_rules():
     return jsonify(result)
 
 @bp_rule.route('/rules/<int:id>', methods=['GET'])
+@jwt_required()
 def get_rule(id):
     rule = Rule.query.get_or_404(id)
     schema = RuleSchema()
@@ -73,6 +78,7 @@ def get_rule(id):
 
 # UPDATE Rule
 @bp_rule.route('/rules/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_rule_id(id):
     rule = Rule.query.get_or_404(id)
     data = request.json
@@ -123,6 +129,7 @@ def update_rule_id(id):
 
 # DELETE Rule
 @bp_rule.route('/rules/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_rule(id):
     rule = Rule.query.get_or_404(id)
     db.session.delete(rule)
@@ -130,7 +137,10 @@ def delete_rule(id):
     logger.info("Regel erfolgreich gelöscht!")
     return jsonify({"message": "Rule deleted"})
 
+
+# Import Rules from CSV
 @bp_rule.route('/rules/import', methods=['POST'])
+@jwt_required()
 def import_rules_from_csv():
     """
     Importiert Regeln aus einer hochgeladenen CSV.

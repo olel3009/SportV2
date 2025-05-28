@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from flask import Blueprint, request, jsonify, current_app
+from flask_jwt_extended import jwt_required
 from sqlalchemy import extract
 from PyPDF2 import PdfReader, PdfWriter
 
@@ -49,6 +50,7 @@ EXERCISE_CODES = {
 MEDAL_POINTS = {'Bronze': 1, 'Silber': 2, 'Gold': 3}
 
 @bp_group.route('/export/pdf', methods=['POST'])
+@jwt_required()
 def export_group_pdf():
     data = request.get_json(silent=True) or {}
     year = data.get('year') or request.args.get('year', type=int)

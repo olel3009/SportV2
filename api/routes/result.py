@@ -2,6 +2,7 @@ import csv
 from marshmallow import ValidationError
 from datetime import datetime, date
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from database import db
 from database.models import Result, Athlete, Rule, Discipline
 from database.schemas import ResultSchema
@@ -49,6 +50,7 @@ def determine_medal(rule, result_value, athlete_gender):
     return None
 
 @bp_result.route('/results', methods=['POST'])
+@jwt_required()
 def create_result():
     data = request.get_json()
     schema = ResultSchema()
@@ -95,6 +97,7 @@ def create_result():
     return jsonify({"message": "Result added", "id": new.id}), 201
 
 @bp_result.route('/results', methods=['GET'])
+@jwt_required()
 def get_results():
     all = Result.query.all()
     schema = ResultSchema(many=True)
@@ -103,6 +106,7 @@ def get_results():
 
 
 @bp_result.route('/results/<int:id>', methods=['GET'])
+@jwt_required()
 def get_result_id(id):
     res = Result.query.get_or_404(id)
     schema = ResultSchema()
@@ -111,6 +115,7 @@ def get_result_id(id):
 
 
 @bp_result.route('/results/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_result(id):
     res = Result.query.get_or_404(id)
     data = request.get_json()
@@ -161,6 +166,7 @@ def update_result(id):
 
 
 @bp_result.route('/results/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_result(id):
     res = Result.query.get_or_404(id)
     db.session.delete(res)
@@ -194,6 +200,7 @@ def parse_date_field(value: str, field: str, idx: int) -> datetime.date:
         raise ValueError(f"Zeile {idx}: Ungültiges Datum im Feld '{field}' (`{s}`), muss DD.MM.YYYY sein")
 
 @bp_result.route('/results/import', methods=['POST'])
+@jwt_required()
 def import_results_from_csv():
     f = request.files.get('file')
     if not f:

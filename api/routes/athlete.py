@@ -2,6 +2,7 @@ from datetime import datetime
 import os
 from flask import Blueprint, request, jsonify, current_app, url_for
 from werkzeug.utils import secure_filename
+from flask_jwt_extended import jwt_required
 from database import db
 from database.models import Athlete as DBAthlete, Result as DBResult, Rule as DBRule
 from database.schemas import AthleteSchema, DisciplineSchema, ResultSchema, RuleSchema
@@ -12,6 +13,7 @@ from api.logs.logger import logger
 bp_athlete = Blueprint('athlete', __name__)
 
 @bp_athlete.route('/athletes', methods=['POST'])
+@jwt_required()
 def create_athlete():
     data = request.json
     schema = AthleteSchema()
@@ -30,6 +32,7 @@ def create_athlete():
     return jsonify({"message": "Athlet hinzugefügt", "id": new_athlete.id}), 201
 
 @bp_athlete.route('/athletes', methods=['GET'])
+@jwt_required()
 def get_athletes():
     athletes = DBAthlete.query.all()
     result = []
@@ -49,6 +52,7 @@ def get_athletes():
     return jsonify(result)
 
 @bp_athlete.route('/athletes/<int:id>', methods=['GET'])
+@jwt_required()
 def get_athlete_id(id):
     # 1) Athleten‐Datensatz laden oder 404
     athlete = DBAthlete.query.get_or_404(id)
@@ -69,6 +73,7 @@ def get_athlete_id(id):
     return jsonify(data), 200
 
 @bp_athlete.route('/athletes/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_athlete(id):
     athlete = DBAthlete.query.get_or_404(id)
     data = request.json
@@ -89,6 +94,7 @@ def update_athlete(id):
     return jsonify({"message": "Athlet aktualisiert"})
 
 @bp_athlete.route('/athletes/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_athlete(id):
     athlete = DBAthlete.query.get_or_404(id)
     db.session.delete(athlete)
@@ -97,6 +103,7 @@ def delete_athlete(id):
     return jsonify({"message": "Athlet gelöscht"})
 
 @bp_athlete.route('/athletes/<int:athlete_id>/results', methods=['GET'])
+@jwt_required()
 def get_athletes_results(athlete_id):
 
     db_athlete = DBAthlete.query.get_or_404(athlete_id)
@@ -154,6 +161,7 @@ def get_athletes_results(athlete_id):
     return jsonify(response_payload), 200
 
 @bp_athlete.post('/athletes/csv')
+@jwt_required()
 def create_athletes_from_csv():
     if not request.data:
         return jsonify({"error": "Keine Daten im Request Body gefunden."}), 400
@@ -172,21 +180,25 @@ def create_athletes_from_csv():
         original_line_data = line_content.strip()
         if not original_line_data:
             continue
+        if processed_lines_count==0:
+            processed_lines_count += 1
+            continue
 
         processed_lines_count += 1
         line_number = index + 1
 
         try:
             parts = original_line_data.split(';')
-            if len(parts) != 5:
+            print(parts)
+            if len(parts) != 6:
                 errors_list.append({
                     "line_number": line_number,
                     "data": original_line_data,
-                    "error": "Ungültiges Datenformat. Erwartet werden 5 Felder getrennt durch ';'."
+                    "error": "Ungültiges Datenformat. Erwartet werden 6 Felder getrennt durch ';'."
                 })
                 continue
 
-            first_name, last_name, birth_date_str, gender_str, swim_certificate_str = parts
+            first_name, last_name, birth_date_str, gender_str, swim_certificate_str, email = parts
 
             if not first_name or not last_name:
                 errors_list.append({
@@ -197,6 +209,7 @@ def create_athletes_from_csv():
                 continue
 
             try:
+                print(birth_date_str)
                 birth_date_obj = datetime.strptime(birth_date_str, '%d.%m.%Y').date()
             except ValueError:
                 errors_list.append({
@@ -233,7 +246,8 @@ def create_athletes_from_csv():
                 last_name=last_name,
                 birth_date=birth_date_obj,
                 gender=gender_val,
-                swim_certificate=swim_certificate_bool
+                swim_certificate=swim_certificate_bool,
+                email=email
             )
             created_athlete_objects.append(athlete_obj)
 
@@ -285,6 +299,7 @@ def create_athletes_from_csv():
     }), response_status_code
 
 @bp_athlete.route('/athletes/<int:id>/upload_picture', methods=['POST'])
+@jwt_required()
 def upload_athlete_picture(id):
     ath = DBAthlete.query.get_or_404(id)
     if 'picture' not in request.files:
@@ -308,6 +323,7 @@ def upload_athlete_picture(id):
 
 
 @bp_athlete.route('/athletes/<int:id>/upload_swim_cert', methods=['POST'])
+@jwt_required()
 def upload_swim_certificate(id):
     ath = DBAthlete.query.get_or_404(id)
     if 'swim_cert_file' not in request.files:
