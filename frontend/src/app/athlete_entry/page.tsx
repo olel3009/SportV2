@@ -2,7 +2,7 @@
 "use client";
 
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createAthlete } from "@/../generic_functions/athlete_getters";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import {
   SelectItem
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { validateAndGetToken } from "@/auth";
 
 function formatGermanDate(isoDate: string): string {
   // isoDate is "YYYY-MM-DD"
@@ -50,6 +51,20 @@ export default function CreateAthletePage() {
       setIsSubmitting(false);
     }
   };
+  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+  
+    useEffect(() => {
+      setTokenValid(validateAndGetToken());
+    }, []);
+  
+    if (tokenValid === null) {
+      // Noch nicht geprüft, z.B. Ladeanzeige oder leer
+      return null;
+    }
+    if (!tokenValid) {
+      // Token ist ungültig, validateAndGetToken leitet bereits weiter
+      return null;
+    }
 
   return (
     <form

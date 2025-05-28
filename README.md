@@ -1,31 +1,12 @@
-# SPORTV2 (Working name)
+# SPORTV2
 Managementtool zur Leistsungserfassung von Athleten
 
 # Setup
-## Simples Virtuel Environment
-Erstellen:
-- python -m venv venv  
+Folgende Software wird vorrausgesetzt:
+- Python
+- Node.js und NPM
 
-Aktivierbar durch:
-- Windows: .\venv\Scripts\activate
-- Linux: ./venv/bin/activate.sh  
+Führen Sie die setup.bat aus
 
-Pakete installieren:
-- pip install -r requirements.txt
-
-## Starten des Backends & DB
-- Virtuelles Environment erstellen und/oder aktivieren
-- flask --app database/migrate.py run
-- Nach erfolgreichem Migrieren mit `Strg + C` abbrechen.  
-
-Wenn die Testdaten verwendet werden möchten, voherige beiden Schritte überspringen. Stattdessen:   
-- Windows: python .\database\seed_db.py
-- Linux: python ./database/seed_db.py
-
-Abschließend App starten:  
-- flask --app run.py run
-
-## Starten des Frontends
-- cd /frontend
-- npm i --force
-- npm run dev
+# Starten der App
+Führen Sie die run.bat aus, es sollten sich 2 Konsolenfenster öffnen. Die App ist bei normalen Einstellungen unter http://localhost:3000 erreichbar.

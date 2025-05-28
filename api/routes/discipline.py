@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from database.models import Discipline
 from database.schemas import DisciplineSchema
 from database import db
@@ -8,6 +9,7 @@ bp_discipline = Blueprint('discipline', __name__)
 
 # CREATE Discipline
 @bp_discipline.route('/disciplines', methods=['POST'])
+@jwt_required()
 def create_discipline():
     data = request.json
     schema = DisciplineSchema()
@@ -23,6 +25,7 @@ def create_discipline():
 
 # READ Disciplines
 @bp_discipline.route('/disciplines', methods=['GET'])
+@jwt_required()
 def get_disciplines():
     all_disc = Discipline.query.all()
     schema = DisciplineSchema(many=True)
@@ -31,6 +34,7 @@ def get_disciplines():
     return jsonify(result)
 
 @bp_discipline.route('/disciplines/<int:id>', methods=['GET'])
+@jwt_required()
 def get_discipline_id(id):
     discipline = Discipline.query.get_or_404(id)
     schema = DisciplineSchema()
@@ -39,6 +43,7 @@ def get_discipline_id(id):
 
 # UPDATE Discipline
 @bp_discipline.route('/disciplines/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_discipline(id):
     disc = Discipline.query.get_or_404(id)
     data = request.json
@@ -56,6 +61,7 @@ def update_discipline(id):
 
 # DELETE Discipline
 @bp_discipline.route('/disciplines/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_discipline(id):
     disc = Discipline.query.get_or_404(id)
     db.session.delete(disc)

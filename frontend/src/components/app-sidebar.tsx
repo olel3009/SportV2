@@ -1,4 +1,5 @@
-import { LayoutPanelTop, Users, Settings, ChartNoAxesCombined, BookOpenText, ClipboardList, Import } from "lucide-react"
+'use client'
+import { LayoutPanelTop, Users, Settings, ChartNoAxesCombined, BookOpenText, LogOut, ClipboardList, Import } from "lucide-react"
 
 import { 
     Sidebar, 
@@ -49,37 +50,47 @@ const items = [
     icon: BookOpenText
   },
   {
-    title: "Einstellungen",
-    url: "/settings",
-    icon: Settings
+    title: "Logout",
+    url: "/",
+    icon: LogOut
   }
 ]
+
+function handleLogout() {
+  localStorage.removeItem("access_token");
+  window.location.href = "/";
+}
 
 export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
-
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
+                  {item.title === "Logout" ? (
+                    <SidebarMenuButton asChild>
+                      <button onClick={handleLogout} className="flex items-center gap-2 w-full">
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </button>
+                    </SidebarMenuButton>
+                  ) : (
+                    <SidebarMenuButton asChild>
+                      <Link href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
-            
           </SidebarGroupContent>
         </SidebarGroup>
-
       </SidebarContent>
     </Sidebar>
   )

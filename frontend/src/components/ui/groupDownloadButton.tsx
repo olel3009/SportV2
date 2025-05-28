@@ -1,11 +1,10 @@
 "use client";
 
-import { downloadCsv } from "@/exportCsv";
+import { downloadPdf } from "@/exportPdf";
 import { Button } from "@/components/ui/button";
 import React from "react";
-import Link from "next/link";
-import { Download } from "lucide-react";
 import * as Tooltip from "@radix-ui/react-tooltip";
+import { Download } from "lucide-react";
 
 interface Props {
   ids: number[] | (() => number[]);
@@ -15,22 +14,22 @@ interface Props {
 const handleClick = async (ids: number[] | (() => number[])) => {
   const resolvedIds = Array.isArray(ids) ? ids : ids();
   try {
-    const ok = await downloadCsv(resolvedIds);
+    const ok = await downloadPdf(resolvedIds);
     if (!ok) console.warn("Download failed");
   } catch (e) {
-    console.error("downloadCsv threw:", e);
+    console.error("downloadPdf threw:", e);
   }
 };
 
-export default function DownloadCsvButton({ ids, text }: Props) {
+export default function DownloadPdfButton({ ids, text }: Props) {
   return (
-    <Button onClick={() => handleClick(ids)} className="w-auto flex gap-1 flex-grow">
-      <Download /> {text}
+    <Button onClick={() => handleClick(ids)} className="w-auto flex-grow">
+      <Download className="" /> <span className="">{text}</span>
     </Button>
   );
 }
 
-export function DownloadCsvLink({ ids, text }: Props) {
+export function DownloadPdfLink({ ids, text }: Props) {
   return (
     <Tooltip.Root>
       <Tooltip.Trigger asChild>
@@ -48,7 +47,7 @@ export function DownloadCsvLink({ ids, text }: Props) {
         sideOffset={10} // Abstand zwischen Tooltip und Maus
         className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
       >
-        Ausgewählte Athleten in zwei CSV-Dateien exportieren
+        Prüfkarte für ausgewälten Athleten exportieren
         <Tooltip.Arrow className="fill-gray-800" />
       </Tooltip.Content>
     </Tooltip.Root>

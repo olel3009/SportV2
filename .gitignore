@@ -13,6 +13,7 @@ frontend/package-lock.json
 
 # testing
 /coverage
+list_pdf_field.py
 
 # next.js
 frontend/.next/
@@ -45,8 +46,9 @@ frontend/next-env.d.ts
 venv
 **/__pycache__
 
-#data
+# data
 database/uploads
+frontend/public/downloadFiles
 
 # app starters
 app.db

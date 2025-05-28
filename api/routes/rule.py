@@ -1,23 +1,24 @@
+import csv
 from flask import Blueprint, request, jsonify
 from datetime import datetime, date
-import csv
-from io import StringIO
-
+from marshmallow import ValidationError
 from database import db
 from database.models import Rule, Discipline
 from database.schemas import RuleSchema
-from database import db
 from api.logs.logger import logger
+from api.utils import to_float_german
 from marshmallow import ValidationError
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 bp_rule = Blueprint('rule', __name__)
 
-def parse_date_ddmmyyyy(s: str) -> date:
+def parse_date(s: str) -> date:
     """Parst ein Datum im Format DD.MM.YYYY."""
     return datetime.strptime(s, "%d.%m.%Y").date()
 
 # CREATE Rule
 @bp_rule.route('/rules', methods=['POST'])
+@jwt_required()
 def create_rule():
     data = request.json
     schema = RuleSchema()
@@ -59,6 +60,7 @@ def create_rule():
 
 # READ Rules
 @bp_rule.route('/rules', methods=['GET'])
+@jwt_required()
 def get_rules():
     all_rules = Rule.query.all()
     schema = RuleSchema(many=True)
@@ -67,6 +69,7 @@ def get_rules():
     return jsonify(result)
 
 @bp_rule.route('/rules/<int:id>', methods=['GET'])
+@jwt_required()
 def get_rule(id):
     rule = Rule.query.get_or_404(id)
     schema = RuleSchema()
@@ -75,6 +78,7 @@ def get_rule(id):
 
 # UPDATE Rule
 @bp_rule.route('/rules/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_rule_id(id):
     rule = Rule.query.get_or_404(id)
     data = request.json
@@ -125,6 +129,7 @@ def update_rule_id(id):
 
 # DELETE Rule
 @bp_rule.route('/rules/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_rule(id):
     rule = Rule.query.get_or_404(id)
     db.session.delete(rule)
@@ -132,7 +137,10 @@ def delete_rule(id):
     logger.info("Regel erfolgreich gelöscht!")
     return jsonify({"message": "Rule deleted"})
 
+
+# Import Rules from CSV
 @bp_rule.route('/rules/import', methods=['POST'])
+@jwt_required()
 def import_rules_from_csv():
     """
     Importiert Regeln aus einer hochgeladenen CSV.
@@ -149,7 +157,6 @@ def import_rules_from_csv():
     if 'csv' not in request.files:
         return jsonify(error="No file part"), 400
     file = request.files['csv']
-    # optional: auf CSV-MIME oder Extension prüfen
     if not file.filename.lower().endswith('.csv'):
         return jsonify(error="Invalid file type"), 400
 
@@ -167,7 +174,18 @@ def import_rules_from_csv():
         if not disc:
             errors.append(f"Zeile {i}: Disziplin „{row['Disziplin']}“ nicht gefunden")
             continue
-
+        
+        try:
+            tbm = to_float_german(row['Bronze-Maennlich'])
+            tsm = to_float_german(row['Silber-Maennlich'])
+            tgm = to_float_german(row['Gold-Maennlich'])
+            tbf = to_float_german(row['Bronze-Weiblich'])
+            tsf = to_float_german(row['Silber-Weiblich'])
+            tgf = to_float_german(row['Gold-Weiblich'])
+        except Exception as e:
+            errors.append(f"Zeile {i}: Ungültiger Threshold-Wert – {e}")
+            continue
+        
         # 2) Basis-Daten map
         data = {
             "discipline_id": disc.id,
@@ -177,12 +195,12 @@ def import_rules_from_csv():
             "description_f": row["Beschreibung-Weiblich"],
             "min_age":       int(row["Mindestalter"]),
             "max_age":       int(row["Hoechstalter"]),
-            "threshold_bronze_m": float(row["Bronze-Maennlich"]),
-            "threshold_silver_m": float(row["Silber-Maennlich"]),
-            "threshold_gold_m":   float(row["Gold-Maennlich"]),
-            "threshold_bronze_f": float(row["Bronze-Weiblich"]),
-            "threshold_silver_f": float(row["Silber-Weiblich"]),
-            "threshold_gold_f":   float(row["Gold-Weiblich"]),
+            "threshold_bronze_m": tbm,
+            "threshold_silver_m": tsm,
+            "threshold_gold_m":   tgm,
+            "threshold_bronze_f": tbf,
+            "threshold_silver_f": tsf,
+            "threshold_gold_f":   tgf,
         }
 
         # 3) Gültigkeitsjahr oder explizite Start/Ende?
@@ -198,7 +216,7 @@ def import_rules_from_csv():
         else:
             # parse explicit dates
             try:
-                data["valid_start"] = parse_date_ddmmyyyy(row["Gueltig-Start"])
+                data["valid_start"] = parse_date(row["Gueltig-Start"])
             except Exception:
                 errors.append(f"Zeile {i}: Ungültiges Datum in Gueltig-Start")
                 continue
@@ -206,7 +224,7 @@ def import_rules_from_csv():
             ende = row.get("Gueltig-Ende","").strip()
             if ende:
                 try:
-                    data["valid_end"] = parse_date_ddmmyyyy(ende)
+                    data["valid_end"] = parse_date(ende)
                 except Exception:
                     errors.append(f"Zeile {i}: Ungültiges Datum in Gueltig-Ende")
                     continue

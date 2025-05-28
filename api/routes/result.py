@@ -1,11 +1,13 @@
-import io, csv
-from flask import Blueprint, request, jsonify
+import csv
+from marshmallow import ValidationError
 from datetime import datetime, date
+from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from database import db
 from database.models import Result, Athlete, Rule, Discipline
 from database.schemas import ResultSchema
-from marshmallow import ValidationError
 from api.logs.logger import logger
+from api.utils import to_float_german
 
 bp_result = Blueprint('result', __name__)
 
@@ -48,6 +50,7 @@ def determine_medal(rule, result_value, athlete_gender):
     return None
 
 @bp_result.route('/results', methods=['POST'])
+@jwt_required()
 def create_result():
     data = request.get_json()
     schema = ResultSchema()
@@ -91,9 +94,10 @@ def create_result():
     db.session.add(new)
     db.session.commit()
     logger.info("Ergebnis erfolgreich kreiert!")
-    return jsonify({"message": "Result added", "id": new_result.id}), 201
+    return jsonify({"message": "Result added", "id": new.id}), 201
 
 @bp_result.route('/results', methods=['GET'])
+@jwt_required()
 def get_results():
     all = Result.query.all()
     schema = ResultSchema(many=True)
@@ -102,6 +106,7 @@ def get_results():
 
 
 @bp_result.route('/results/<int:id>', methods=['GET'])
+@jwt_required()
 def get_result_id(id):
     res = Result.query.get_or_404(id)
     schema = ResultSchema()
@@ -110,6 +115,7 @@ def get_result_id(id):
 
 
 @bp_result.route('/results/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_result(id):
     res = Result.query.get_or_404(id)
     data = request.get_json()
@@ -160,6 +166,7 @@ def update_result(id):
 
 
 @bp_result.route('/results/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_result(id):
     res = Result.query.get_or_404(id)
     db.session.delete(res)
@@ -193,6 +200,7 @@ def parse_date_field(value: str, field: str, idx: int) -> datetime.date:
         raise ValueError(f"Zeile {idx}: Ungültiges Datum im Feld '{field}' (`{s}`), muss DD.MM.YYYY sein")
 
 @bp_result.route('/results/import', methods=['POST'])
+@jwt_required()
 def import_results_from_csv():
     f = request.files.get('file')
     if not f:
@@ -269,9 +277,9 @@ def import_results_from_csv():
 
         # --- 6) Leistungswert parsen ---
         try:
-            value = float(rec['Leistung'].replace(',', '.'))
-        except:
-            return jsonify({"error": f"Zeile {idx}: Ungültiger Leistungswert '{rec['Leistung']}'"}), 400
+            value = to_float_german(rec['Leistung'])
+        except ValueError as e:
+            return jsonify({"error": f"Zeile {idx}: Ungültiger Leistungswert – {e}"}), 400
 
         # --- 7) Medaille bestimmen ---
         medal = determine_medal(rule, value, athlete.gender)
