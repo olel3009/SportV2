@@ -38,7 +38,7 @@ echo Database seeding finished.
 echo.
 
 echo Starting Backend (Flask)...
-start "SPORTV2 Backend" flask --app run.py run
+start "SPORTV2 Backend" flask --app run.py --debug run
 echo Backend process launched in a new window.
 echo.
 
