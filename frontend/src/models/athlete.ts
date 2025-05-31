@@ -2,6 +2,7 @@ export interface Athlete {
     id: number;
     firstName: string;
     lastName: string;
+    email:string;
     sex: "m" | "f" | "d";
     swimCertificate: boolean;
     dateOfBirth: string;

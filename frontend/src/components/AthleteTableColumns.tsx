@@ -149,7 +149,7 @@ export const columns: ColumnDef<Athlete>[] = [
   // Medals
   {
     accessorKey: "goldMedals",
-    header: ({ column }) => sortedHeader(column, "Medaillen"),
+    header: "Medaillen",
     enableGlobalFilter: false,
     cell: ({ row }) => {
       const feats = row.original.feats || [];
