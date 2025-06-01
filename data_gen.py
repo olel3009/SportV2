@@ -4,14 +4,12 @@ from database.models import Athlete
 from datetime import datetime, date
 
 def parse_date(d: str):
-    print(d)
-    new_date = d.split("-")
-    print(new_date)
-    new_date = date(int(new_date[1]), int(new_date[1]), int(new_date[2]))
-    print(type(new_date))
-    return datetime.strftime(new_date, "%d.%m.%Y")
+    new_date = d.split(".")
+    parsed_date = date(int(new_date[2]), int(new_date[1]), int(new_date[0]))
+    return parsed_date.strftime("%d.%m.%Y")
 
-print(parse_date("01-01-2000"))
+print(type(parse_date("1.1.2000")))
+print(parse_date("1.1.2000"))
 
 athletes = [
         Athlete(first_name="Lena", last_name="Müller", email = "lena.mueller@test.de", birth_date=parse_date("1.1.2010"), gender="f", swim_certificate=False),
@@ -55,7 +53,16 @@ with open(csv_rules, newline="") as csv_data:
 #    print(line)
 
 def random_date(start, end):
-    return start + (end - start) * random.random()
+    try:
+        day = int(random.choice(range(1,30)))
+        month = int(random.choice(range(1,11)))
+        year = int(start + (end - start) * random.random())
+    except ValueError:
+        day = int(random.choice(range(1,28)))
+    print(day)
+    print(month)
+    print(year)
+    return date(year,month,day).strftime("%d.%m.%Y")
 
 #print(random_bday())
 
@@ -126,7 +133,7 @@ def generate_csv_data(n: int)->list:
         if r_perf == None:
             pass
         else:
-            data.append(f"{r_ath[0]};{r_exer[0]};{r_exer[1]};{int(random_date(2020, 2025))};Bronze;{random_perf(r_ath, bday, r_exer)}")
+            data.append(f"{r_ath[0]};{r_exer[0]};{r_exer[1]};{str(random_date(2020, 2025))};Bronze;{random_perf(r_ath, bday, r_exer)}")
     return data
 
 csv_athletes = r"api\data\athleten.csv"
