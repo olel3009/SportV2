@@ -1,9 +1,17 @@
-from datetime import date
-from datetime import datetime
 import random
 import csv
 from database.models import Athlete
-from database.seed_db import parse_date
+from datetime import datetime, date
+
+def parse_date(d: str):
+    print(d)
+    new_date = d.split("-")
+    print(new_date)
+    new_date = date(int(new_date[1]), int(new_date[1]), int(new_date[2]))
+    print(type(new_date))
+    return datetime.strftime(new_date, "%d.%m.%Y")
+
+print(parse_date("01-01-2000"))
 
 athletes = [
         Athlete(first_name="Lena", last_name="Müller", email = "lena.mueller@test.de", birth_date=parse_date("1.1.2010"), gender="f", swim_certificate=False),
@@ -53,36 +61,37 @@ def random_date(start, end):
 
 def random_athlete():
     rand_ath = random.choice(athletes)        
-    return f"{rand_ath.last_name};{rand_ath.first_name};{rand_ath.birth_date}", rand_ath.gender
+    return f"{rand_ath.last_name};{rand_ath.first_name};{rand_ath.gender};{rand_ath.birth_date}", rand_ath.gender
 
 #print(random_athlete())
 
 perfs = {
     "Ausdauer": [
-        "Laufen",
-        "10km Lauf",
+        "800m Lauf",
         "Dauer-/Geländelauf",
-        "7,5km Walking/Nordic Walking",
         "Schwimmen",
         "Radfahren"
     ],
     "Kraft": [
+        "Werfen",
         "Schlagball",
-        "Medizinball",
-        "Kugelstoßen",
-        "Steinstoßen",
-        "Standweitsprung",
+        "Medizinball/Kugelstoßen",
+        "Geräteturnen",
+        "Standweitsprung"
     ],
     "Schnelligkeit": [
+        "Geräteturnen",
         "Laufen",
-        "Schwimmen",
-        "Radfahren",
+        "25 m Schwimmen",
+        "200 m Radfahren"
     ],
     "Koordination": [
+        "Zonenweitsprung",
         "Hochsprung",
         "Weitsprung",
         "Drehwurf",
-        "Schleuderball"
+        "Schleuderball",
+        "Geräteturnen"
     ]
 }
 
@@ -111,16 +120,20 @@ def generate_csv_data(n: int)->list:
     data=[]
     for i in range(1, n):
         r_ath = random_athlete()
-        bday = random_athlete()[0].split(";")[2]
+        bday = random_athlete()[0].split(";")[3]
         r_exer = random_exer()
-        data.append(f"{r_ath[0]};{bday[0]};{r_exer[0]};{r_exer[1]};{random_perf(r_ath, bday, r_exer)};{int(random_date(2020, 2025))}")
+        r_perf = random_perf(r_ath, bday, r_exer)
+        if r_perf == None:
+            pass
+        else:
+            data.append(f"{r_ath[0]};{r_exer[0]};{r_exer[1]};{int(random_date(2020, 2025))};Bronze;{random_perf(r_ath, bday, r_exer)}")
     return data
 
 csv_athletes = r"api\data\athleten.csv"
 
-with open(csv_athletes, "w", newline="") as destination:
-    writer = csv.writer(destination, delimiter='"')
-    writer.writerow(["Nachname;Vorname;Geburtstag;Uebung;Kategorie;Leistung;Datum"])
+with open(csv_athletes, "w", newline="", encoding="utf-8-sig") as destination:
+    writer = csv.writer(destination, delimiter='"', quotechar="'")
+    writer.writerow(["Name;Vorname;Geschlecht;Geburtsdatum;Übung;Kategorie;Datum;Ergebnis;Punkte"])
     data = generate_csv_data(1000)
     for line in data:
         writer.writerow([line])

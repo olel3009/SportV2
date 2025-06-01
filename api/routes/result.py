@@ -205,7 +205,7 @@ def import_results_from_csv():
     f = request.files.get('file')
     if not f:
         return jsonify({"error": "Keine CSV-Datei hochgeladen"}), 400
-
+    print(f)
     text = f.stream.read().decode('utf-8-sig')
     reader = csv.DictReader(text.splitlines(), delimiter=';')
 
