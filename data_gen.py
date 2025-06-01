@@ -113,14 +113,14 @@ def generate_csv_data(n: int)->list:
         r_ath = random_athlete()
         bday = random_athlete()[0].split(";")[2]
         r_exer = random_exer()
-        data.append(f"{r_ath[0]};{bday[0]};{r_exer[0]};{r_exer[1]};{random_perf(r_ath, bday, r_exer)};{int(random_date(2020, 2025))};{0}")
+        data.append(f"{r_ath[0]};{bday[0]};{r_exer[0]};{r_exer[1]};{random_perf(r_ath, bday, r_exer)};{int(random_date(2020, 2025))}")
     return data
 
 csv_athletes = r"api\data\athleten.csv"
 
 with open(csv_athletes, "w", newline="") as destination:
     writer = csv.writer(destination, delimiter='"')
-    writer.writerow(["Name;Vorname;Geburtsdatum;Uebung;Kategorie;Leistung;Datum;Punkte"])
+    writer.writerow(["Nachname;Vorname;Geburtstag;Uebung;Kategorie;Leistung;Datum"])
     data = generate_csv_data(1000)
     for line in data:
         writer.writerow([line])
