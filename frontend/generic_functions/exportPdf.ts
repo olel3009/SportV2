@@ -29,7 +29,7 @@ export async function createPdf(ids: number[]): Promise<string> {
         throw new Error(`API call failed: ${res.status}`);
       }
     } else {
-      let appendage = "?ids=";
+      let appendage = "?athlete_ids=";
       appendage += ids.join(",");
       let fetchlink = "http://127.0.0.1:5000/group/export/pdf" + appendage + `&year=${currentYear}`;
       console.log(fetchlink);
