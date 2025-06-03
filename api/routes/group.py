@@ -49,7 +49,7 @@ EXERCISE_CODES = {
 
 MEDAL_POINTS = {'Bronze': 1, 'Silber': 2, 'Gold': 3}
 
-@bp_group.route('/export/pdf', methods=['POST'])
+@bp_group.route('/export/pdf', methods=['GET'])
 @jwt_required()
 def export_group_pdf():
     data = request.get_json(silent=True) or {}
@@ -62,7 +62,8 @@ def export_group_pdf():
         athlete_ids = ids
 
     # Validierung
-    if not isinstance(athlete_ids, list) or not 1 <= len(athlete_ids) <= 10:
+    ath_len = len(athlete_ids)
+    if not isinstance(athlete_ids, list):
         return jsonify(error="Bitte eine Liste von 1–10 athlete_ids übergeben"), 400
     if not isinstance(year, int):
         return jsonify(error="Bitte 'year' als Integer übergeben"), 400
@@ -162,4 +163,4 @@ def export_group_pdf():
     with open(out_path, 'wb') as f:
         writer.write(f)
 
-    return jsonify(pdf_path=out_path), 200
+    return jsonify(path=out_path), 200
