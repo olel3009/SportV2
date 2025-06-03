@@ -278,7 +278,7 @@ def import_results_from_csv():
 
         # --- 6) Leistungswert parsen ---
         try:
-            value = float(rec['Ergebnis'].replace(',', '.'))
+            value = float(rec['Punkte'].replace(',', '.'))
         except:
             return jsonify({"error": f"Zeile {idx}: Ungültiger Leistungswert '{rec['Ergebnis']}'"}), 400
 
