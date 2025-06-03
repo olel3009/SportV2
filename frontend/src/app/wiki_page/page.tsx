@@ -131,12 +131,25 @@ export default function Home() {
       <div className="flex-1 p-6 overflow-y-auto ml-64">
         <h1 className="text-2xl font-bold mb-6">Wiki-Seite</h1>
         <div id="leistungen_ergebnisse_athlet_diziplin" className="mb-8">
-          <h2 className="text-xl font-semibold">01. Ansicht von Leistungen und Ergebnissen pro Athlet und Disziplin</h2>
-          <p>Hier könnte die Beschreibung stehen</p>
+          <h2 className="text-xl font-semibold">01. Dashboard</h2>
+          <p>Im Dashboard werden zwei Tabellen angezeigt</p>
+          <p>Die linke Tabelle zeigt die anstehenden Geburtstage der Athleten innerhalb den nächsten 7 Tagen</p>
+          <p>Die rechte Tabelle zeigt die besten Athleten sortiert nach Medaillenanzahl an</p>
+          <p>Es exisitert auch der Knopf zum aktualisieren der Regelungen. Weitere Details im Kapitel "08. Manuelle Aktualisierung der Regelungen durch Knopfdruck"</p>
         </div>
         <div id="detailansicht_athleten" className="mb-8">
           <h2 className="text-xl font-semibold">02. Detailansicht eines Athleten</h2>
-          <p>Hier könnte die Beschreibung stehen</p>
+          <p>Die Detailansicht eines Athleten zeigt:</p>
+          <p> 
+            1. Ob ein Schwimmnachweis generell beim Athleten verfügbar ist. Sollte einer auch hochgeladen sein, kann man diesen auch durch das Klicken auf die angezeigte Datei herunterladen.<br />
+               Das Hochladen des Schwimmnachweises erfolgt über den grünen Knopf "Schwimmnachweis Hochladen". Beim Betätigen des Knopfes öffnet sich ein Pop-Up.<br />
+            2. Alle Leistungen des Athleten. Es werden alle Übungen, gefiltert nach den einelnen Disziplinen, in welcher der Athlet teilgenommen hat angezeigt.<br />
+               Unter den Übungen kann ein Akkordion geöffnet werden, worunter dann die Leistungen welche in der Übung erzielt wurden angezeigt.<br />
+            3. Im Akkordion wird zu dem auch eine visuelle Darstellung der Entwicklung des Athleten in dieser Übung angezeigt.<br />
+            4. Über den grünen Knopf "CSV" können zwei CSVs für den Athleten erstellt und heruntergeladen werden. Die eine CSV beinhalten die Daten des Athleten und die Andere die Leistungen<br />
+            5. Über den grünen Knopf "PDF" kann eine Prüfkarte erstellen und herunterladen. Diese Prüfkarte wird mit den besten Leistungen aus jeder Disziplin ausgefüllt.<br />
+            6. Über den roten Knopf mit den Mülltonnen-Symbol können die Leistungen oder ganz der Athlet gelöscht werden. Beim Löschen des Athleten werden auch seine Leistungen gelöscht.<br />
+          </p>
         </div>
         <div id="eintragsmodus_leistungen" className="mb-8">
           <h2 className="text-xl font-semibold">03. Eintragsmodus für Leistungswerte</h2>
@@ -164,7 +177,8 @@ export default function Home() {
         </div>
         <div id="liste_athlethen" className="mb-8">
           <h2 className="text-xl font-semibold">07. Liste aller Athleten</h2>
-          <p>Hier könnte die Beschreibung stehen</p>
+          <p>Hier werden alle Athleten aufgelistet mit den ihren Vor- und Nachnamen, Geburtsdatum, Geschlecht und alle erworbenen Medaillen.</p>
+          <p>Dabei kann bei den Vor- und Nachnamen, Geburtsdatum und Medaillen diese auf- und absteigend sortieren</p>
         </div>
         <div id="knopf_reglungsaktualisierung" className="mb-8">
           <h2 className="text-xl font-semibold">08. Manuelle Aktualisierung der Regelungen durch Knopfdruck</h2>
@@ -209,16 +223,8 @@ export default function Home() {
             - Wenn sich das Popup nicht öffnet, kontrollieren Sie Ihre Internetverbindung und versuchen Sie es nach kurzem Warten erneut.<br />
           </p>
         </div>
-        <div id="medaillen_ansicht" className="mb-8">
-          <h2 className="text-xl font-semibold">09. Medaillen Ansicht</h2>
-          <p>Hier könnte die Beschreibung stehen</p>
-        </div>
-        <div id="visuelle_darstellung_entwicklung" className="mb-8">
-          <h2 className="text-xl font-semibold">10. Visuelle Darstellung der Entwicklung eines Athleten</h2>
-          <p>Hier könnte die Beschreibung stehen</p>
-        </div>
         <div id="erstellung_athleten" className="mb-8">
-          <h2 className="text-xl font-semibold">11. Erstellung eines Athleten</h2>
+          <h2 className="text-xl font-semibold">09. Erstellung eines Athleten</h2>
           <p>Unter dem Menüpunkt Athletenerstellung können neue Athleten eingegeben werden.</p>
           <p>Hierzu müssen die Felder nur wie in den Feldern angegeben befüllt und die Eingabe mit dem unten stehenden Knopf bestätigt werden</p>
           <p>Eine Hinterlegung des Schwimmnachweises ist an dieser Stelle noch nicht möglich und muss später unter der detailansicht durchgeführt werden.</p>
