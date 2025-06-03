@@ -14,11 +14,11 @@ export async function getCsvString(ids:number[]):Promise<string>{
 }
 
 export async function getPersCsvString(ids:number[]):Promise<string>{
-    let csvTxt='Vorname;Nachname;Geburtsdatum;Geschlecht;Schwimmzertifikat;Email\n'
+    let csvTxt='Vorname;Nachname;Geburtsdatum;Geschlecht;Email\n'
     for (const id of ids) {
         const currAth: Athlete | undefined = await getAthleteById(id);
         if (currAth != undefined) {
-            csvTxt += currAth.firstName + `;` + currAth.lastName + `;` + currAth.dateOfBirth + `;` + currAth.sex + `;` + currAth.swimCertificate + `;`+currAth.email+`\n`;
+            csvTxt += currAth.firstName + `;` + currAth.lastName + `;` + currAth.dateOfBirth + `;` + currAth.sex + `;` + currAth.email+`\n`;
         }
     }
     return csvTxt;
