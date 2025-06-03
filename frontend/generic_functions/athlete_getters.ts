@@ -66,6 +66,7 @@ type RawAthlete = {
   gender: "m" | "f" | "d";
   birth_date: string;
   swim_certificate: boolean;
+  swim_certificate_file: string;
   email:string;
   total_bronze: number | undefined;
   total_silver: number | undefined;
@@ -123,6 +124,7 @@ export async function getAthletesMedals(): Promise<Athlete[]> {
         sex: raw.gender,
         dateOfBirth: raw.birth_date,
         swimCertificate: raw.swim_certificate,
+        swimCertificateFile: raw.swim_certificate_file,
         goldMedals: raw.total_gold ?? 0,
         silverMedals: raw.total_silver ?? 0,
         bronzeMedals: raw.total_bronze ?? 0,
@@ -164,6 +166,7 @@ export async function getAllAthletes(): Promise<Athlete[]> {
       sex: raw.gender,
       dateOfBirth: raw.birth_date,
       swimCertificate: raw.swim_certificate,
+      swimCertificateFile: raw.swim_certificate_file,
       goldMedals: raw.total_gold ?? 0,
       silverMedals: raw.total_silver ?? 0,
       bronzeMedals: raw.total_bronze ?? 0,

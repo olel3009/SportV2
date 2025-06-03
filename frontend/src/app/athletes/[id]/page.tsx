@@ -39,6 +39,7 @@ import { validateAndGetToken } from "@/auth";
 import DeleteResource from "@/components/ui/deleteResource";
 import { useEffect, useState } from "react";
 import DownloadPdfButton, { DownloadPdfLink } from "@/components/ui/groupDownloadButton";
+import { Button } from "@/components/ui/button";
 
 
 
@@ -235,11 +236,19 @@ export default function Page() {
       </Card>
       
       <h2 className="text-xl font-bold">Schwimmnachweis</h2>
-      <div>
-        {!athlete.swimCertificate && (
-          <p>Es ist kein Schwimmnachweis vorhanden</p>
+      <div className="flex flex-col gap-2">
+        {athlete.swimCertificate && !athlete.swimCertificateFile&& (
+          <p>Es ist ein Schwimmnachweis eingetragen aber nicht Hochgeladen.</p>
         )}
-        {athlete.swimCertificate && <p>Es ist ein Schwimmnachweis vorhanden</p>}
+        {athlete.swimCertificate && athlete.swimCertificateFile && (
+          <p>Es ist ein Schwimmnachweis vorhanden.</p>
+        )}
+        {!athlete.swimCertificate && (
+          <p>Es ist kein Schwimmnachwes vorhanden</p>
+        )}
+        <Button className="w-min">
+          Schwimmnachweis Hochladen
+        </Button>
       </div>
 
       <h2 className="text-xl font-bold">Leistungen</h2>
