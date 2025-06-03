@@ -233,6 +233,7 @@ def import_rules_from_csv():
 
         # 4) Version ermitteln (erste Version = 1, bei gleichem Name +1)
         last = (Rule.query
+                   .filter(Rule.discipline_id == disc.id)
                    .filter_by(rule_name=data["rule_name"])
                    .order_by(Rule.version.desc())
                    .first())
