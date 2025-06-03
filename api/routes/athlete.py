@@ -190,15 +190,15 @@ def create_athletes_from_csv():
 
         try:
             parts = original_line_data.split(';')
-            if len(parts) != 6:
+            if len(parts) != 5:
                 errors_list.append({
                     "line_number": line_number,
                     "data": original_line_data,
-                    "error": "Ungültiges Datenformat. Erwartet werden 6 Felder getrennt durch ';'."
+                    "error": "Ungültiges Datenformat. Erwartet werden 5 Felder getrennt durch ';'."
                 })
                 continue
             
-            first_name, last_name, birth_date_str, gender_str, swim_certificate_str, new_email = parts
+            first_name, last_name, birth_date_str, gender_str, new_email = parts
 
             if not first_name or not last_name or not new_email:
                 errors_list.append({
@@ -228,18 +228,7 @@ def create_athletes_from_csv():
                 })
                 continue
             
-            swim_certificate_bool = None
-            if swim_certificate_str.lower() == 'true':
-                swim_certificate_bool = True
-            elif swim_certificate_str.lower() == 'false':
-                swim_certificate_bool = False
-            else:
-                errors_list.append({
-                    "line_number": line_number,
-                    "data": original_line_data,
-                    "error": f"Ungültiger Wert für swim_certificate ('{swim_certificate_str}'). Erwartet: 'True' oder 'False'."
-                })
-                continue
+            swim_certificate_bool = False
 
             # ####################################################################
             # NEU HINZUGEFÜGT: Prüfen, ob die E-Mail bereits existiert
