@@ -4,7 +4,7 @@ import { getAllAthletes, addFeatToAthlete, getAllDisciplines, getAllRules, getRu
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
-import { calculateAge } from "@/generalHelpers";
+import { calculateAge, calculateAgeAtTime, parseDDMMYYYY } from "@/generalHelpers";
 import {
   Select,
   SelectContent,
@@ -38,6 +38,7 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 type athAgeMap={
   athId:string;
   age:number;
+  dob:string;
 }
 
 let ageMapper: athAgeMap[]=[];
@@ -60,8 +61,9 @@ function AthleteSelect({
   athletes.forEach(ath=>{
     const athId = String(ath.id);
     const age   = calculateAge(ath.dateOfBirth);
+    const dob = ath.dateOfBirth;
     
-    const map: athAgeMap = { athId, age }; 
+    const map: athAgeMap = {athId, age, dob}; 
 
     ageMapper.push(map);
   });
@@ -122,18 +124,23 @@ export function ExerciseSelect({
   disciplineId,
   value,
   age,
+  currYear,
   onChange
 }: {
   disciplineId: string;
   value: string;
   age:number;
+  currYear:string;
   onChange: (val: string) => void;
 }) {
-  const [exercises, setExercises] = useState<{ id: number; rule_name: string; min_age: number; max_age: number; }[] | null>(null);
+  const [exercises, setExercises] = useState<{ id: number; rule_name: string; min_age: number; max_age: number; valid_start:string; valid_end:string;}[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!disciplineId) return;
+    if (!disciplineId){
+      console.log("No discipline Id");
+      return;
+    } 
     getRulesByDisciplineId(Number(disciplineId))
       .then((data) => setExercises(data ?? []))
       .catch((err) => setError(err.message));
@@ -141,7 +148,6 @@ export function ExerciseSelect({
 
   if (error) return <div className="text-red-600">Fehler: {error}</div>;
   if (!exercises) return <div>Loading exercises…</div>;
-
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger id="uebung">
@@ -149,7 +155,18 @@ export function ExerciseSelect({
       </SelectTrigger>
       <SelectContent>
         {exercises.map((exer) => {
-          if(age>=exer.min_age&&age<=exer.max_age){
+
+          const valStartDate = typeof exer.valid_start === 'string'
+                ? parseDDMMYYYY(exer.valid_start)
+                : exer.valid_start;
+          const valEndDate = typeof exer.valid_end === 'string'
+                ? parseDDMMYYYY(exer.valid_end)
+                : exer.valid_end;
+
+          const currDat = typeof currYear === 'string'
+                ? parseDDMMYYYY(currYear)
+                : currYear;
+          if((age>=exer.min_age&&age<=exer.max_age)  &&  (currDat>=valStartDate&&currDat<=valEndDate)){
             return(<SelectItem value={String(exer.id)} key={exer.id}>
                     {exer.rule_name}
                   </SelectItem>)
@@ -195,6 +212,7 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
   // form state
   const [selectedAthlete, setSelectedAthlete] = useState("");
   const [athleteAge, setAthleteAge] = useState<number>(0);
+  const [activeAge, setActiveAge] = useState<number>(0);
   const [selectedDiscipline, setSelectedDiscipline] = useState("");
   const [selectedExercise, setSelectedExercise] = useState("");
   const [result, setResult] = useState("");
@@ -207,6 +225,16 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
 
     // if we found it, setAthleteAge to that age, otherwise 0 (or whatever default makes sense)
     setAthleteAge(found?.age ?? 0);
+    setActiveAge(athleteAge);
+  }
+
+  const handleDoneDateChange=(newDate:string)=>{
+    const found = ageMapper.find(m => m.athId === selectedAthlete);
+    const bDate = found?.dob ?? "00.00.0000";
+
+    let newActiveAge = calculateAgeAtTime(bDate, newDate);
+    setActiveAge(newActiveAge);
+    setDate(newDate);
   }
 
   // load rules + disciplines once
@@ -315,6 +343,30 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
           <div className="grid gap-2">
+            <Label htmlFor="datum">Datum</Label>
+            <Input
+              id="datum"
+              name="datum"
+              placeholder="Datum des Ergebnis"
+              value={date}
+              onChange={(e) => handleDoneDateChange(e.target.value)}
+            />
+          </div>
+          </Tooltip.Trigger>
+        <Tooltip.Content
+          side="top" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Geben sie das Datum ein, an dem die Leistung erbracht wurde
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
+
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className="grid gap-2">
             <Label>Disziplin</Label>
             <DisciplineSelect
               value={selectedDiscipline}
@@ -340,7 +392,8 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
             <ExerciseSelect
               disciplineId={selectedDiscipline}
               value={selectedExercise}
-              age={athleteAge}
+              age={activeAge}
+              currYear={date}
               onChange={setSelectedExercise}
             />
           </div>
@@ -352,30 +405,6 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
           className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
         >
           Wählen sie eine Übung
-          <Tooltip.Arrow className="fill-gray-800" />
-        </Tooltip.Content>
-      </Tooltip.Root>
-
-      <Tooltip.Root>
-        <Tooltip.Trigger asChild>
-          <div className="grid gap-2">
-            <Label htmlFor="datum">Datum</Label>
-            <Input
-              id="datum"
-              name="datum"
-              placeholder="Datum des Ergebnis"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-          </div>
-          </Tooltip.Trigger>
-        <Tooltip.Content
-          side="top" // Tooltip wird rechts angezeigt
-          align="center" // Zentriert den Tooltip vertikal zur Maus
-          sideOffset={10} // Abstand zwischen Tooltip und Maus
-          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
-        >
-          Geben sie das Datum ein, an dem die Leistung erbracht wurde
           <Tooltip.Arrow className="fill-gray-800" />
         </Tooltip.Content>
       </Tooltip.Root>
