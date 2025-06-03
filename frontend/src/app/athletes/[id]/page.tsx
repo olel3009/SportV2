@@ -42,6 +42,7 @@ import DownloadPdfButton, { DownloadPdfLink } from "@/components/ui/groupDownloa
 import { Button } from "@/components/ui/button";
 import SwimCertificateUpload from "@/components/swimCertificateUpload";
 import SwimCertificateDisplay from "@/components/swimCertificateDisplay";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 
 
@@ -250,13 +251,44 @@ export default function Page() {
         {athlete.swimCertificate && athlete.swimCertificateFile && (
           <>
             <p>Es ist ein Schwimmnachweis vorhanden.</p>
-            <SwimCertificateDisplay path={athlete.swimCertificateFile} />
+
+            <Tooltip.Root>
+              <Tooltip.Trigger>
+                <SwimCertificateDisplay path={athlete.swimCertificateFile} />
+              </Tooltip.Trigger>
+              <Tooltip.Content
+                side="top"
+                align="center"
+                sideOffset={10}
+                className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+              >
+                Klicken Sie hier, um den aktuellen Schwimmnachweis herunterzuladen.
+                <Tooltip.Arrow className="fill-gray-800" />
+              </Tooltip.Content>
+            </Tooltip.Root>
+
           </>
         )}
         {!athlete.swimCertificate && (
           <p>Es ist kein Schwimmnachweis vorhanden</p>
         )}
-        <SwimCertificateUpload id={athlete.id} />
+        <Tooltip.Root>
+          <Tooltip.Trigger asChild>
+            <div className="w-min">
+              <SwimCertificateUpload id={athlete.id} />
+            </div>
+          </Tooltip.Trigger>
+          <Tooltip.Content
+            side="right"
+            align="center"
+            sideOffset={10}
+            className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+          >
+            Einen Schwimmnachweis hochladen oder einen bestehen Schwimmnachweis ersetzen.
+            <Tooltip.Arrow className="fill-gray-800" />
+          </Tooltip.Content>
+        </Tooltip.Root>
+
       </div>
 
       <h2 className="text-xl font-bold">Leistungen</h2>

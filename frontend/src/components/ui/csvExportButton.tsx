@@ -24,7 +24,7 @@ const handleClick = async (ids: number[] | (() => number[])) => {
 
 export default function DownloadCsvButton({ ids, text }: Props) {
   return (
-    <Button onClick={() => handleClick(ids)} className="w-auto flex gap-1 flex-grow">
+    <Button onClick={() => handleClick(ids)} className="w-full flex gap-1">
       <Download /> {text}
     </Button>
   );

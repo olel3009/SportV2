@@ -15,6 +15,7 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DeleteResource, { DeleteResourceButton } from "@/components/ui/deleteResource";
 import { validateAndGetToken } from "@/auth";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 export default function Page() {
   const router = useRouter();
@@ -66,14 +67,47 @@ export default function Page() {
       <h1 className="text-2xl font-bold mb-4">Athleten</h1>
 
       <div className="flex flex-wrap gap-2">
-        <DownloadCsvButton
-          ids={getSelectedAthleteIds}
-          text={"Ausgewählte als Csv exportieren"}
-        />
-        <DownloadPdfButton
-          ids={getSelectedAthleteIds}
-          text={"Ausgewählte als PDF exportieren"}
-        />
+
+        <Tooltip.Root>
+          <Tooltip.Trigger asChild>
+            <div className="flex-grow">
+              <DownloadCsvButton
+                ids={getSelectedAthleteIds}
+                text={"Ausgewählte als Csv exportieren"}
+              />
+            </div>
+          </Tooltip.Trigger>
+          <Tooltip.Content
+            side="right"
+            align="center"
+            sideOffset={10}
+            className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+          >
+            Alle Athleten werden in zwei CSVs heruntergeladen: Eine mit Athletendaten und eine mit Leistungen.
+            <Tooltip.Arrow className="fill-gray-800" />
+          </Tooltip.Content>
+        </Tooltip.Root>
+
+        <Tooltip.Root>
+          <Tooltip.Trigger asChild>
+            <div className="flex-grow">
+            <DownloadPdfButton
+              ids={getSelectedAthleteIds}
+              text={"Ausgewählte als PDF exportieren"}
+            />
+            </div>
+          </Tooltip.Trigger>
+          <Tooltip.Content
+            side="right"
+            align="center"
+            sideOffset={10}
+            className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+          >
+            Die Prüfkarte für einen Athleten oder die Gruppenprüfkarte für mehrere Athleten herunterladen.
+            <Tooltip.Arrow className="fill-gray-800" />
+          </Tooltip.Content>
+        </Tooltip.Root>
+
         <DeleteResourceButton
           type="athlete"
           text="Ausgewählte Löschen"
