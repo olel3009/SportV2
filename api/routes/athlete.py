@@ -45,6 +45,7 @@ def get_athletes():
             "birth_date": ath.birth_date.strftime("%d.%m.%Y"),
             "gender": ath.gender,
             "swim_certificate": ath.swim_certificate,
+            "swim_certificate_file": ath.swim_cert_file,
             "created_at": ath.created_at,
             "updated_at": ath.updated_at
         })

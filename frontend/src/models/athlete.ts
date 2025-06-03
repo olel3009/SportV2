@@ -5,6 +5,7 @@ export interface Athlete {
     email:string;
     sex: "m" | "f" | "d";
     swimCertificate: boolean;
+    swimCertificateFile: string;
     dateOfBirth: string;
     goldMedals: number;
     silverMedals: number;

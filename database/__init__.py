@@ -17,7 +17,7 @@ def create_app():
     app = Flask(__name__)
 
     # wo die Dateien abgelegt werden
-    app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'uploads')
+    app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, '../frontend/public/downloadFiles/uploads')
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
     # Config
