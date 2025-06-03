@@ -23,7 +23,7 @@ const handleClick = async (ids: number[] | (() => number[])) => {
 
 export default function DownloadPdfButton({ ids, text }: Props) {
   return (
-    <Button onClick={() => handleClick(ids)} className="w-auto flex-grow">
+    <Button onClick={() => handleClick(ids)} className="w-full">
       <Download className="" /> <span className="">{text}</span>
     </Button>
   );
