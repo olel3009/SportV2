@@ -44,6 +44,20 @@ if exist .\frontend\package.json (
 )
 echo.
 
+echo Running database discipline script...
+if exist database\discipline.py (
+    python database\discipline.py
+    if errorlevel 1 (
+        echo ERROR: Failed to run database discipline script.
+        pause
+        exit /b 1
+    )
+    echo Database discipline script finished.
+) else (
+    echo WARNING: database\discipline.py not found. Skipping discipline script.
+)
+echo.
+
 echo Starting Backend (Flask)...
 start "Backend" flask --app run.py run
 echo Backend process launched in a new window.

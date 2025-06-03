@@ -2,10 +2,10 @@ from datetime import datetime
 import os
 from flask import Blueprint, request, jsonify, current_app, url_for
 from werkzeug.utils import secure_filename
+from flask_jwt_extended import jwt_required
 from database import db
 from database.models import Athlete as DBAthlete, Result as DBResult, Rule as DBRule
 from database.schemas import AthleteSchema, DisciplineSchema, ResultSchema, RuleSchema
-from api.export_pdf import fill_pdf_form
 from api.utils import allowed_file
 from sqlalchemy.orm import joinedload
 from api.logs.logger import logger
@@ -13,6 +13,7 @@ from api.logs.logger import logger
 bp_athlete = Blueprint('athlete', __name__)
 
 @bp_athlete.route('/athletes', methods=['POST'])
+@jwt_required()
 def create_athlete():
     data = request.json
     schema = AthleteSchema()
@@ -31,6 +32,7 @@ def create_athlete():
     return jsonify({"message": "Athlet hinzugefügt", "id": new_athlete.id}), 201
 
 @bp_athlete.route('/athletes', methods=['GET'])
+@jwt_required()
 def get_athletes():
     athletes = DBAthlete.query.all()
     result = []
@@ -50,6 +52,7 @@ def get_athletes():
     return jsonify(result)
 
 @bp_athlete.route('/athletes/<int:id>', methods=['GET'])
+@jwt_required()
 def get_athlete_id(id):
     # 1) Athleten‐Datensatz laden oder 404
     athlete = DBAthlete.query.get_or_404(id)
@@ -70,6 +73,7 @@ def get_athlete_id(id):
     return jsonify(data), 200
 
 @bp_athlete.route('/athletes/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_athlete(id):
     athlete = DBAthlete.query.get_or_404(id)
     data = request.json
@@ -90,6 +94,7 @@ def update_athlete(id):
     return jsonify({"message": "Athlet aktualisiert"})
 
 @bp_athlete.route('/athletes/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_athlete(id):
     athlete = DBAthlete.query.get_or_404(id)
     db.session.delete(athlete)
@@ -97,52 +102,8 @@ def delete_athlete(id):
     logger.info("Athlet erfolgreich gelöscht!")
     return jsonify({"message": "Athlet gelöscht"})
 
-@bp_athlete.route('/athletes/<int:athlete_id>/export/pdf', methods=['GET'])
-def export_athlete_pdf(athlete_id):
-    # 1) DB-Abfrage
-    db_athlete = DBAthlete.query.get_or_404(athlete_id)
-
-    # 2) Sample: hole bis zu 4 Results
-    db_results = DBResult.query.filter_by(athlete_id=athlete_id).limit(4).all()
-
-    # 3) Baue Python-Objekte
-    from api.athlet import Athlete, PerformanceData
-
-    # a) Athlete
-    #    Falls birth_date in DB ein datetime ist, direct übernehmen
-    #    Falls es ein date ist, auch ok
-    py_athlete = Athlete(
-        first_name=db_athlete.first_name,
-        last_name=db_athlete.last_name,
-        gender=db_athlete.gender,
-        birth_date=db_athlete.birth_date,
-        swim_certificate=db_athlete.swim_certificate,
-        performances=[]
-    )
-
-    # b) PerformanceData
-    for res in db_results:
-        res_rule=DBRule.query.get_or_404(res.rule_id)
-        py_athlete.performances.append(
-            PerformanceData(
-                disciplin=res_rule.discipline.discipline_name, 
-                year=res.year,
-                result=res.result, 
-                points=res.medal
-            )
-        )
-
-    # 4) PDF generieren
-    pdf_feedback = fill_pdf_form(py_athlete)
-    
-    logger.info("Athlet erfolgreich in einert PDF exportiert!")
-    
-    return jsonify({
-        "message": "Export erfolgreich",
-        "pdf_feedback": pdf_feedback
-    })
-
 @bp_athlete.route('/athletes/<int:athlete_id>/results', methods=['GET'])
+@jwt_required()
 def get_athletes_results(athlete_id):
 
     db_athlete = DBAthlete.query.get_or_404(athlete_id)
@@ -200,6 +161,7 @@ def get_athletes_results(athlete_id):
     return jsonify(response_payload), 200
 
 @bp_athlete.post('/athletes/csv')
+@jwt_required()
 def create_athletes_from_csv():
     
     if not request.data:
@@ -218,6 +180,9 @@ def create_athletes_from_csv():
     for index, line_content in enumerate(lines):
         original_line_data = line_content.strip()
         if not original_line_data:
+            continue
+        if processed_lines_count==0:
+            processed_lines_count += 1
             continue
 
         processed_lines_count += 1
@@ -244,6 +209,7 @@ def create_athletes_from_csv():
                 continue
 
             try:
+                print(birth_date_str)
                 birth_date_obj = datetime.strptime(birth_date_str, '%d.%m.%Y').date()
             except ValueError:
                 errors_list.append({
@@ -294,7 +260,8 @@ def create_athletes_from_csv():
                 email=email,
                 birth_date=birth_date_obj,
                 gender=gender_val,
-                swim_certificate=swim_certificate_bool
+                swim_certificate=swim_certificate_bool,
+                email=email
             )
             created_athlete_objects.append(athlete_obj)
 
@@ -345,6 +312,7 @@ def create_athletes_from_csv():
     }), response_status_code
 
 @bp_athlete.route('/athletes/<int:id>/upload_picture', methods=['POST'])
+@jwt_required()
 def upload_athlete_picture(id):
     ath = DBAthlete.query.get_or_404(id)
     if 'picture' not in request.files:
@@ -368,6 +336,7 @@ def upload_athlete_picture(id):
 
 
 @bp_athlete.route('/athletes/<int:id>/upload_swim_cert', methods=['POST'])
+@jwt_required()
 def upload_swim_certificate(id):
     ath = DBAthlete.query.get_or_404(id)
     if 'swim_cert_file' not in request.files:
