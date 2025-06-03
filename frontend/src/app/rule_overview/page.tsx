@@ -77,7 +77,7 @@ export default function Page() {
   //let validRules=rules.filter(rule=>{return isCurrentDateBetween(rule.valid_start, rule.valid_end)});
   //console.log(validRules)
 
-
+  let globalIndex=0;
   return (
     <div className="p-6 gap-4 flex flex-col">
       <h1 className="text-2x1 font bold mb-4">Regel-Übersicht</h1>
@@ -190,10 +190,11 @@ export default function Page() {
                   {
                     rules.map(rule => {
                       let currAgeGroup: number[] = parseAgegroup(ageGroup ?? '0,0');
+                      globalIndex=globalIndex+1;
                       if (rule.min_age == currAgeGroup[0] && rule.max_age == currAgeGroup[1]) {
                         return (
-                          <AccordionItem key={rule.description_m} value={rule.description_m}>
-                            <AccordionTrigger>{rule.description_m}</AccordionTrigger>
+                          <AccordionItem key={rule.description_m+globalIndex} value={rule.description_m+globalIndex}>
+                            <AccordionTrigger>{rule.description_m+ " Version: "+rule.version}</AccordionTrigger>
                             <AccordionContent>
                               <ul>
                                 <li>Gold: {rule.thresh_gold_m} {rule.unit}</li>
@@ -219,10 +220,11 @@ export default function Page() {
                   {
                     rules.map(rule => {
                       let currAgeGroup: number[] = parseAgegroup(ageGroup ?? '0,0');
+                      globalIndex=globalIndex+1;
                       if (rule.min_age == currAgeGroup[0] && rule.max_age == currAgeGroup[1]) {
                         return (
-                          <AccordionItem key={rule.description_f} value={rule.description_f}>
-                            <AccordionTrigger>{rule.description_f}</AccordionTrigger>
+                          <AccordionItem key={rule.description_f+globalIndex} value={rule.description_f+globalIndex}>
+                            <AccordionTrigger>{rule.description_f + " Version: "+rule.version}</AccordionTrigger>
                             <AccordionContent>
                               <ul>
                                 <li>Gold: {rule.thresh_gold_f} {rule.unit}</li>
