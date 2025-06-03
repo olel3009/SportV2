@@ -343,6 +343,30 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
           <div className="grid gap-2">
+            <Label htmlFor="datum">Datum</Label>
+            <Input
+              id="datum"
+              name="datum"
+              placeholder="Datum des Ergebnis"
+              value={date}
+              onChange={(e) => handleDoneDateChange(e.target.value)}
+            />
+          </div>
+          </Tooltip.Trigger>
+        <Tooltip.Content
+          side="top" // Tooltip wird rechts angezeigt
+          align="center" // Zentriert den Tooltip vertikal zur Maus
+          sideOffset={10} // Abstand zwischen Tooltip und Maus
+          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
+        >
+          Geben sie das Datum ein, an dem die Leistung erbracht wurde
+          <Tooltip.Arrow className="fill-gray-800" />
+        </Tooltip.Content>
+      </Tooltip.Root>
+
+      <Tooltip.Root>
+        <Tooltip.Trigger asChild>
+          <div className="grid gap-2">
             <Label>Disziplin</Label>
             <DisciplineSelect
               value={selectedDiscipline}
@@ -381,30 +405,6 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
           className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
         >
           Wählen sie eine Übung
-          <Tooltip.Arrow className="fill-gray-800" />
-        </Tooltip.Content>
-      </Tooltip.Root>
-
-      <Tooltip.Root>
-        <Tooltip.Trigger asChild>
-          <div className="grid gap-2">
-            <Label htmlFor="datum">Datum</Label>
-            <Input
-              id="datum"
-              name="datum"
-              placeholder="Datum des Ergebnis"
-              value={date}
-              onChange={(e) => handleDoneDateChange(e.target.value)}
-            />
-          </div>
-          </Tooltip.Trigger>
-        <Tooltip.Content
-          side="top" // Tooltip wird rechts angezeigt
-          align="center" // Zentriert den Tooltip vertikal zur Maus
-          sideOffset={10} // Abstand zwischen Tooltip und Maus
-          className="bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-md max-w-xs break-words"
-        >
-          Geben sie das Datum ein, an dem die Leistung erbracht wurde
           <Tooltip.Arrow className="fill-gray-800" />
         </Tooltip.Content>
       </Tooltip.Root>
