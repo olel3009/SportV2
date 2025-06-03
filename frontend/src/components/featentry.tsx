@@ -4,7 +4,7 @@ import { getAllAthletes, addFeatToAthlete, getAllDisciplines, getAllRules, getRu
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
-import { calculateAge } from "@/generalHelpers";
+import { calculateAge, calculateAgeAtTime } from "@/generalHelpers";
 import {
   Select,
   SelectContent,
@@ -38,6 +38,7 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 type athAgeMap={
   athId:string;
   age:number;
+  dob:string;
 }
 
 let ageMapper: athAgeMap[]=[];
@@ -60,8 +61,9 @@ function AthleteSelect({
   athletes.forEach(ath=>{
     const athId = String(ath.id);
     const age   = calculateAge(ath.dateOfBirth);
+    const dob = ath.dateOfBirth;
     
-    const map: athAgeMap = { athId, age }; 
+    const map: athAgeMap = {athId, age, dob}; 
 
     ageMapper.push(map);
   });
@@ -133,7 +135,10 @@ export function ExerciseSelect({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!disciplineId) return;
+    if (!disciplineId){
+      console.log("No discipline Id");
+      return;
+    } 
     getRulesByDisciplineId(Number(disciplineId))
       .then((data) => setExercises(data ?? []))
       .catch((err) => setError(err.message));
@@ -141,7 +146,6 @@ export function ExerciseSelect({
 
   if (error) return <div className="text-red-600">Fehler: {error}</div>;
   if (!exercises) return <div>Loading exercises…</div>;
-
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger id="uebung">
@@ -195,6 +199,7 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
   // form state
   const [selectedAthlete, setSelectedAthlete] = useState("");
   const [athleteAge, setAthleteAge] = useState<number>(0);
+  const [activeAge, setActiveAge] = useState<number>(0);
   const [selectedDiscipline, setSelectedDiscipline] = useState("");
   const [selectedExercise, setSelectedExercise] = useState("");
   const [result, setResult] = useState("");
@@ -207,6 +212,16 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
 
     // if we found it, setAthleteAge to that age, otherwise 0 (or whatever default makes sense)
     setAthleteAge(found?.age ?? 0);
+    setActiveAge(athleteAge);
+  }
+
+  const handleDoneDateChange=(newDate:string)=>{
+    const found = ageMapper.find(m => m.athId === selectedAthlete);
+    const bDate = found?.dob ?? "00.00.0000";
+
+    let newActiveAge = calculateAgeAtTime(bDate, newDate);
+    setActiveAge(newActiveAge);
+    setDate(newDate);
   }
 
   // load rules + disciplines once
@@ -340,7 +355,7 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
             <ExerciseSelect
               disciplineId={selectedDiscipline}
               value={selectedExercise}
-              age={athleteAge}
+              age={activeAge}
               onChange={setSelectedExercise}
             />
           </div>
@@ -365,7 +380,7 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
               name="datum"
               placeholder="Datum des Ergebnis"
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={(e) => handleDoneDateChange(e.target.value)}
             />
           </div>
           </Tooltip.Trigger>
