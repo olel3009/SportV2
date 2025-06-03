@@ -36,7 +36,7 @@ athletes = [
     ]
 
 #Regeln ziehen und in Liste speichern
-csv_rules = r"api\data\regelung-beispiel.csv"
+csv_rules = r"api\data\regelungen.csv"
 with open(csv_rules, newline="") as csv_data:
     rules=[]
     drules={
@@ -114,13 +114,16 @@ def deviation(bronze_value, gold_value):
     return round(random.choice([positiv, negativ]), 2)
 
 def random_perf(r_ath, bday, r_exer):
+    perf=[]
     for line in rules:
         if str(bday[1]) in line["Regelungsname"] and r_exer[1] in line["Disziplin"] and r_exer[0] in line["Regelungsname"]:
             if r_ath[1] == "f":
-                perf = deviation(float(line["Bronze-Weiblich"]), float(line["Gold-Weiblich"]))
+                perf.append(deviation(float(line["Bronze-Weiblich"]), float(line["Gold-Weiblich"])))
+                perf.append(line["Regelungsname"])
                 return perf
             else:
-                perf = deviation(float(line["Bronze-Maennlich"]), float(line["Gold-Maennlich"]))
+                perf.append( deviation(float(line["Bronze-Maennlich"]), float(line["Gold-Maennlich"])))
+                perf.append( line["Regelungsname"])
                 return perf
 
 def generate_csv_data(n: int)->list:
@@ -133,7 +136,7 @@ def generate_csv_data(n: int)->list:
         if r_perf == None:
             pass
         else:
-            data.append(f"{r_ath[0]};{r_exer[0]};{r_exer[1]};{str(random_date(2020, 2025))};Bronze;{random_perf(r_ath, bday, r_exer)}")
+            data.append(f"{r_ath[0]};{r_perf[1]};{r_exer[1]};{str(random_date(2020, 2025))};Bronze;{r_perf[0]}")
     return data
 
 csv_athletes = r"api\data\athleten.csv"
