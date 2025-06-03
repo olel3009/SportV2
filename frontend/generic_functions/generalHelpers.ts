@@ -51,3 +51,30 @@ export function calculateAgeAtTime(dob: string, atDate:string): number {
 
   return age;
 }
+
+export function parseDDMMYYYY(ddmmyyyy: string): Date {
+  // 1. Split on dots. We expect exactly three parts: [day, month, year].
+  const parts = ddmmyyyy.split('.');
+  if (parts.length !== 3) {
+    throw new Error(`Invalid format "${ddmmyyyy}". Expected "dd.mm.yyyy".`);
+  }
+
+  const [dayStr, monthStr, yearStr] = parts;
+
+  // 2. Convert to numbers
+  const day   = parseInt(dayStr, 10);
+  const month = parseInt(monthStr, 10);
+  const year  = parseInt(yearStr, 10);
+
+  if (
+    isNaN(day)   || isNaN(month) || isNaN(year) ||
+    day < 1      || day > 31    ||
+    month < 1    || month > 12  ||
+    year < 1970  // you can adjust lower bound if you need older dates
+  ) {
+    return new Date(0, 0, 0)
+  }
+
+  // 3. Note: JS Date months are 0‐based, so subtract 1 from month.
+  return new Date(year, month - 1, day);
+}

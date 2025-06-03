@@ -4,7 +4,7 @@ import { getAllAthletes, addFeatToAthlete, getAllDisciplines, getAllRules, getRu
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
-import { calculateAge, calculateAgeAtTime } from "@/generalHelpers";
+import { calculateAge, calculateAgeAtTime, parseDDMMYYYY } from "@/generalHelpers";
 import {
   Select,
   SelectContent,
@@ -124,14 +124,16 @@ export function ExerciseSelect({
   disciplineId,
   value,
   age,
+  currYear,
   onChange
 }: {
   disciplineId: string;
   value: string;
   age:number;
+  currYear:string;
   onChange: (val: string) => void;
 }) {
-  const [exercises, setExercises] = useState<{ id: number; rule_name: string; min_age: number; max_age: number; }[] | null>(null);
+  const [exercises, setExercises] = useState<{ id: number; rule_name: string; min_age: number; max_age: number; valid_start:string; valid_end:string;}[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -153,7 +155,18 @@ export function ExerciseSelect({
       </SelectTrigger>
       <SelectContent>
         {exercises.map((exer) => {
-          if(age>=exer.min_age&&age<=exer.max_age){
+
+          const valStartDate = typeof exer.valid_start === 'string'
+                ? parseDDMMYYYY(exer.valid_start)
+                : exer.valid_start;
+          const valEndDate = typeof exer.valid_end === 'string'
+                ? parseDDMMYYYY(exer.valid_end)
+                : exer.valid_end;
+
+          const currDat = typeof currYear === 'string'
+                ? parseDDMMYYYY(currYear)
+                : currYear;
+          if((age>=exer.min_age&&age<=exer.max_age)  &&  (currDat>=valStartDate&&currDat<=valEndDate)){
             return(<SelectItem value={String(exer.id)} key={exer.id}>
                     {exer.rule_name}
                   </SelectItem>)
@@ -356,6 +369,7 @@ export function FeatEntryContent({ id = -1 }: { id?: number }) {
               disciplineId={selectedDiscipline}
               value={selectedExercise}
               age={activeAge}
+              currYear={date}
               onChange={setSelectedExercise}
             />
           </div>
