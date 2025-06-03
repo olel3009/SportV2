@@ -6,6 +6,7 @@ type pdfReturn = {
 };
 export async function createPdf(ids: number[]): Promise<string> {
   const token = validateAndGetToken();
+  const currentYear = new Date().getFullYear();
   if (token === null || token === false) {
     // Token ist ungültig, validateAndGetToken leitet bereits weiter
     return "ungültiger Token";
@@ -16,7 +17,7 @@ export async function createPdf(ids: number[]): Promise<string> {
       return "";
     } else if (ids.length == 1) {
       res = await fetch(
-        "http://127.0.0.1:5000/athletes/" + ids[0] + "/export/pdf?year=2025",
+        "http://127.0.0.1:5000/athletes/" + ids[0] + `/export/pdf?year=${currentYear}`,
         {
           cache: "no-store",
           headers: {
@@ -30,12 +31,16 @@ export async function createPdf(ids: number[]): Promise<string> {
     } else {
       let appendage = "?ids=";
       appendage += ids.join(",");
-      let fetchlink = "http://127.0.0.1:5000/gruppen/export/pdf" + appendage;
+      let fetchlink = "http://127.0.0.1:5000/group/export/pdf" + appendage + `&year=${currentYear}`;
       console.log(fetchlink);
       res = await fetch(fetchlink, {
         cache: "no-store",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
       });
       if (!res.ok) {
+        console.log(res.json)
         throw new Error(`API call failed: ${res.status}`);
       }
     }
