@@ -33,13 +33,15 @@ import {
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUtcTimecodeFromGermanDate } from "@/date_format";
-import { findBestMedal } from "@/medal_functions"; 
+import { findBestMedal } from "@/medal_functions";
 import { validateAndGetToken } from "@/auth";
 
 import DeleteResource from "@/components/ui/deleteResource";
 import { useEffect, useState } from "react";
 import DownloadPdfButton, { DownloadPdfLink } from "@/components/ui/groupDownloadButton";
 import { Button } from "@/components/ui/button";
+import SwimCertificateUpload from "@/components/swimCertificateUpload";
+import SwimCertificateDisplay from "@/components/swimCertificateDisplay";
 
 
 
@@ -155,7 +157,7 @@ export default function Page() {
   });
   let usedExercises: number[] = [];
 
-  
+
   const [tokenValid, setTokenValid] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -234,21 +236,22 @@ export default function Page() {
           </div>
         </CardContent>
       </Card>
-      
+
       <h2 className="text-xl font-bold">Schwimmnachweis</h2>
       <div className="flex flex-col gap-2">
-        {athlete.swimCertificate && !athlete.swimCertificateFile&& (
+        {athlete.swimCertificate && !athlete.swimCertificateFile && (
           <p>Es ist ein Schwimmnachweis eingetragen aber nicht Hochgeladen.</p>
         )}
         {athlete.swimCertificate && athlete.swimCertificateFile && (
-          <p>Es ist ein Schwimmnachweis vorhanden.</p>
+          <>
+            <p>Es ist ein Schwimmnachweis vorhanden.</p>
+            <SwimCertificateDisplay path={athlete.swimCertificateFile} />
+          </>
         )}
         {!athlete.swimCertificate && (
-          <p>Es ist kein Schwimmnachwes vorhanden</p>
+          <p>Es ist kein Schwimmnachweis vorhanden</p>
         )}
-        <Button className="w-min">
-          Schwimmnachweis Hochladen
-        </Button>
+        <SwimCertificateUpload id={athlete.id} />
       </div>
 
       <h2 className="text-xl font-bold">Leistungen</h2>
