@@ -1,13 +1,13 @@
-import io, csv
-from flask import Blueprint, request, jsonify
+import csv
+from marshmallow import ValidationError
 from datetime import datetime, date
-
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from database import db
 from database.models import Result, Athlete, Rule, Discipline
 from database.schemas import ResultSchema
-from marshmallow import ValidationError
 from api.logs.logger import logger
+from api.utils import to_float_german
 
 bp_result = Blueprint('result', __name__)
 
