@@ -1,8 +1,39 @@
-from datetime import date
-from datetime import datetime
 import random
 import csv
-from collections import defaultdict
+from database.models import Athlete
+from datetime import datetime, date
+
+def parse_date(d: str):
+    new_date = d.split(".")
+    parsed_date = date(int(new_date[2]), int(new_date[1]), int(new_date[0]))
+    return parsed_date.strftime("%d.%m.%Y")
+
+print(type(parse_date("1.1.2000")))
+print(parse_date("1.1.2000"))
+
+athletes = [
+        Athlete(first_name="Lena", last_name="Müller", email = "lena.mueller@test.de", birth_date=parse_date("1.1.2010"), gender="f", swim_certificate=False),
+        Athlete(first_name="Tom", last_name="Schmidt", email = "tom.schmidt@test.de", birth_date=parse_date("1.1.2009"), gender="m", swim_certificate=False),
+        Athlete(first_name="Alex", last_name="Klein", email = "alex.klein@test.de", birth_date=parse_date("1.1.2011"), gender="m", swim_certificate=False),
+        Athlete(first_name="Sophie", last_name="Bauer", email = "sophie.bauer@test.de", birth_date=parse_date("1.1.2008"), gender="f", swim_certificate=True),
+        Athlete(first_name="Jonas", last_name="Meier", email = "jonas.meier@test.de", birth_date=parse_date("1.1.2010"), gender="m", swim_certificate=False),
+        Athlete(first_name="Marie", last_name="Schulz", email = "marie.schulz@test.de", birth_date=parse_date("1.1.2012"), gender="f", swim_certificate=False),
+        Athlete(first_name="Lukas", last_name="Becker", email = "lukas.becker@test.de", birth_date=parse_date("1.1.2011"), gender="m", swim_certificate=False),
+        Athlete(first_name="Emily", last_name="Fischer", email = "emily.fischer@test.de", birth_date=parse_date("1.1.2010"), gender="f", swim_certificate=True),
+        Athlete(first_name="Paul", last_name="Hoffmann", email = "paul.hoffmann@test.de", birth_date=parse_date("1.1.2008"), gender="m", swim_certificate=True),
+        Athlete(first_name="Lara", last_name="Wagner", email = "lara.wagner@test.de", birth_date=parse_date("1.1.2011"), gender="f", swim_certificate=True),
+        Athlete(first_name="Tim", last_name="Neumann", email = "tim.neumann@test.de", birth_date=parse_date("1.1.2008"), gender="m", swim_certificate=False),
+        Athlete(first_name="Anna", last_name="Hartmann", email = "anna.hartmann@test.de", birth_date=parse_date("1.1.2009"), gender="f", swim_certificate=True),
+        Athlete(first_name="Leon", last_name="Zimmermann", email = "leon.zimmermann@test.de", birth_date=parse_date("1.1.2010"), gender="m", swim_certificate=False),
+        Athlete(first_name="Nina", last_name="Krüger", email = "nina.krueger@test.de", birth_date=parse_date("1.1.2011"), gender="f", swim_certificate=False),
+        Athlete(first_name="Max", last_name="Wolf", email = "max.wolf@test.de", birth_date=parse_date("1.1.2009"), gender="m", swim_certificate=False),
+        Athlete(first_name="Lilly", last_name="Schneider", email = "lilly.schneider@test.de", birth_date=parse_date("1.1.2012"), gender="f", swim_certificate=False),
+        Athlete(first_name="Ben", last_name="Richter", email = "ben.richter@test.de", birth_date=parse_date("1.1.2008"), gender="m", swim_certificate=False),
+        Athlete(first_name="Emma", last_name="Koch", email = "emma.koch@test.de", birth_date=parse_date("1.1.2010"), gender="f", swim_certificate=True),
+        Athlete(first_name="Noah", last_name="Klein", email = "noah.klein@test.de", birth_date=parse_date("1.1.2008"), gender="m", swim_certificate=True),
+        Athlete(first_name="Clara", last_name="Werner", email = "clara.werner@test.de", birth_date=parse_date("1.1.2011"), gender="f", swim_certificate=True),
+        Athlete(first_name="Luis", last_name="Schäfer", email = "luis.schaefer@test.de", birth_date=parse_date("1.1.2009"), gender="m", swim_certificate=False),
+    ]
 
 #Regeln ziehen und in Liste speichern
 csv_rules = r"api\data\regelung-beispiel.csv"
@@ -22,83 +53,52 @@ with open(csv_rules, newline="") as csv_data:
 #    print(line)
 
 def random_date(start, end):
-    return start + (end - start) * random.random()
-
-start_date = date(2008, 1, 1)
-end_date = date(2019, 12, 31)
-def random_bday():
-    random_birthday = random_date(start_date, end_date)
-    age = datetime.today().year - random_birthday.year
-    random_birthday = str(random_birthday).split("-")
-    return f"{str(random_birthday[2])}.{str(random_birthday[1])}.{str(random_birthday[0])}", age
+    try:
+        day = int(random.choice(range(1,30)))
+        month = int(random.choice(range(1,11)))
+        year = int(start + (end - start) * random.random())
+    except ValueError:
+        day = int(random.choice(range(1,28)))
+    print(day)
+    print(month)
+    print(year)
+    return date(year,month,day).strftime("%d.%m.%Y")
 
 #print(random_bday())
 
-surname_m = [
-    "Ben", "Paul", "Leon", "Elias", "Noah",
-    "Finn", "Emil", "Felix", "Luis", "Jonas",
-    "Theo", "Max", "Moritz", "Henry", "Lukas",
-    "Oskar", "Mats", "Anton", "Jakob", "Tom",
-    "David", "Nico", "Tim", "Jannik", "Simon",
-    "Liam", "Philipp", "Lenny", "Samuel", "Jonathan"
-]
+def random_athlete():
+    rand_ath = random.choice(athletes)        
+    return f"{rand_ath.last_name};{rand_ath.first_name};{rand_ath.gender};{rand_ath.birth_date}", rand_ath.gender
 
-surname_f = [
-    "Emilia", "Emma", "Mia", "Lina", "Hannah", 
-    "Marie", "Ella", "Lea", "Sophia", "Anna",
-    "Mila", "Leni", "Luisa", "Clara", "Frieda",
-    "Lotta", "Amelie", "Nora", "Paula", "Lia",
-    "Ida", "Lara", "Charlotte", "Mathilda", "Greta",
-    "Alina", "Maja", "Juna", "Elena", "Isabella"
-]
-
-name = [
-    "Müller", "Schmidt", "Schneider", "Fischer", "Weber", 
-    "Meyer", "Wagner",  "Becker",  "Schulz",  "Hoffmann",
-    "Schäfer", "Koch", "Bauer", "Richter", "Klein",
-    "Wolf", "Schröder", "Neumann", "Schwarz", "Zimmermann",
-    "Braun", "Krüger", "Hofmann", "Hartmann", "Lange",
-    "Schmitt", "Werner", "Schmitz", "Krause", "Meier"
-]
-
-def random_name():
-    rand_sex = random.choice([surname_f, surname_m])
-    if rand_sex == surname_f:
-        sex = "f"
-    else: 
-        sex = "m"
-    rand_surn = random.choice(rand_sex)
-    rand_name= random.choice(name)
-    return f"{rand_name};{rand_surn}", sex
-
-#print(random_name())
+#print(random_athlete())
 
 perfs = {
     "Ausdauer": [
-        "Laufen",
-        "10km Lauf",
+        "800m Lauf",
         "Dauer-/Geländelauf",
-        "7,5km Walking/Nordic Walking",
         "Schwimmen",
         "Radfahren"
     ],
     "Kraft": [
+        "Werfen",
         "Schlagball",
-        "Medizinball",
-        "Kugelstoßen",
-        "Steinstoßen",
-        "Standweitsprung",
+        "Medizinball/Kugelstoßen",
+        "Geräteturnen",
+        "Standweitsprung"
     ],
     "Schnelligkeit": [
+        "Geräteturnen",
         "Laufen",
-        "Schwimmen",
-        "Radfahren",
+        "25 m Schwimmen",
+        "200 m Radfahren"
     ],
     "Koordination": [
+        "Zonenweitsprung",
         "Hochsprung",
         "Weitsprung",
         "Drehwurf",
-        "Schleuderball"
+        "Schleuderball",
+        "Geräteturnen"
     ]
 }
 
@@ -113,10 +113,10 @@ def deviation(bronze_value, gold_value):
     negativ = value * 0.85
     return round(random.choice([positiv, negativ]), 2)
 
-def random_perf(r_name, r_bday, r_exer):
+def random_perf(r_ath, bday, r_exer):
     for line in rules:
-        if str(r_bday[1]) in line["Regelungsname"] and r_exer[1] in line["Disziplin"] and r_exer[0] in line["Regelungsname"]:
-            if r_name[1] == "f":
+        if str(bday[1]) in line["Regelungsname"] and r_exer[1] in line["Disziplin"] and r_exer[0] in line["Regelungsname"]:
+            if r_ath[1] == "f":
                 perf = deviation(float(line["Bronze-Weiblich"]), float(line["Gold-Weiblich"]))
                 return perf
             else:
@@ -126,17 +126,21 @@ def random_perf(r_name, r_bday, r_exer):
 def generate_csv_data(n: int)->list:
     data=[]
     for i in range(1, n):
-        r_name = random_name()
-        r_bday = random_bday()
+        r_ath = random_athlete()
+        bday = random_athlete()[0].split(";")[3]
         r_exer = random_exer()
-        data.append(f"{r_name[0]};{r_bday[0]};{r_exer[0]};{r_exer[1]};{random_perf(r_name, r_bday, r_exer)};{int(random_date(2020, 2025))}")
+        r_perf = random_perf(r_ath, bday, r_exer)
+        if r_perf == None:
+            pass
+        else:
+            data.append(f"{r_ath[0]};{r_exer[0]};{r_exer[1]};{str(random_date(2020, 2025))};Bronze;{random_perf(r_ath, bday, r_exer)}")
     return data
 
 csv_athletes = r"api\data\athleten.csv"
 
-with open(csv_athletes, "w", newline="") as destination:
-    writer = csv.writer(destination, delimiter='"')
-    writer.writerow(["Nachname;Vorname;Geburtstag;Uebung;Kategorie;Leistung;Datum"])
+with open(csv_athletes, "w", newline="", encoding="utf-8-sig") as destination:
+    writer = csv.writer(destination, delimiter='"', quotechar="'")
+    writer.writerow(["Name;Vorname;Geschlecht;Geburtsdatum;Übung;Kategorie;Datum;Ergebnis;Punkte"])
     data = generate_csv_data(1000)
     for line in data:
         writer.writerow([line])
