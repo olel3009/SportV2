@@ -211,9 +211,14 @@ export default function Page() {
           <CircleUserRound size="69" strokeWidth={0.5} />
 
           <div>
-            <span className="text-xl font-bold">
-              {athlete.firstName} {athlete.lastName}
-            </span>
+            <div className="flex gap-3">
+              <span className="text-xl font-bold">
+                {athlete.firstName} {athlete.lastName}
+              </span>
+              <span className="text-xl text-neutral-400">
+                {athlete.email}
+              </span>
+            </div>
             <div>
               {athlete.dateOfBirth.split("-").join(".")} -{" "}
               {getAge(athlete.dateOfBirth)} Jahre
