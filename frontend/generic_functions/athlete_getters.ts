@@ -51,12 +51,31 @@ export async function getAthleteWithFeats(id: number): Promise<csvCombo[]> {
       birth_date: birth_date_raw,
       exercise: raw.rule.rule_name,
       category: raw.rule.discipline.discipline_name,
-      date: raw.created_at,
+      date: formatToDDMMYYYY(raw.created_at),
       medal: raw.medal,
       result: raw.result,
     }));
     return mapped;
   }
+}
+function formatToDDMMYYYY(input: string | Date): string {
+  // 1. Parse the input into a Date object.
+  //    If it's already a Date, use it; otherwise, let Date.parse handle the ISO string.
+  const dateObj = typeof input === 'string'
+    ? new Date(input)
+    : input;
+
+  // 2. Extract day/month/year parts
+  const day = dateObj.getDate();
+  const month = dateObj.getMonth() + 1; // months are 0-based in JS
+  const year = dateObj.getFullYear();
+
+  // 3. Pad day and month with leading zeros if necessary
+  const dd = day < 10 ? `0${day}` : `${day}`;
+  const mm = month < 10 ? `0${month}` : `${month}`;
+
+  // 4. Return in "dd.mm.yyyy" format
+  return `${dd}.${mm}.${year}`;
 }
 
 type RawAthlete = {

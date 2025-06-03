@@ -199,9 +199,9 @@ def create_athletes_from_csv():
                 })
                 continue
             
-            first_name, last_name, email, birth_date_str, gender_str, swim_certificate_str = parts
+            first_name, last_name, birth_date_str, gender_str, swim_certificate_str, new_email = parts
 
-            if not first_name or not last_name or not email:
+            if not first_name or not last_name or not new_email:
                 errors_list.append({
                     "line_number": line_number,
                     "data": original_line_data,
@@ -245,12 +245,12 @@ def create_athletes_from_csv():
             # ####################################################################
             # NEU HINZUGEFÜGT: Prüfen, ob die E-Mail bereits existiert
             # ####################################################################
-            existing_athlete = DBAthlete.query.filter_by(email=email).first()
+            existing_athlete = DBAthlete.query.filter_by(email=new_email).first()
             if existing_athlete:
                 errors_list.append({
                     "line_number": line_number,
                     "data": original_line_data,
-                    "error": f"Ein Athlet mit der E-Mail '{email}' existiert bereits."
+                    "error": f"Ein Athlet mit der E-Mail '{new_email}' existiert bereits."
                 })
                 continue
             # ####################################################################
@@ -258,10 +258,10 @@ def create_athletes_from_csv():
             athlete_obj = DBAthlete(
                 first_name=first_name,
                 last_name=last_name,
-                email=email,
                 birth_date=birth_date_obj,
                 gender=gender_val,
                 swim_certificate=swim_certificate_bool,
+                email=new_email
             )
             created_athlete_objects.append(athlete_obj)
 

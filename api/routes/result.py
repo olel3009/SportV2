@@ -205,7 +205,7 @@ def import_results_from_csv():
     f = request.files.get('file')
     if not f:
         return jsonify({"error": "Keine CSV-Datei hochgeladen"}), 400
-
+    print(f)
     text = f.stream.read().decode('utf-8-sig')
     reader = csv.DictReader(text.splitlines(), delimiter=';')
 
@@ -219,25 +219,26 @@ def import_results_from_csv():
     for idx, raw in enumerate(reader, start=1):
         # --- 1) Trim keys+values ---
         rec = {k.strip(): (v or "").strip() for k, v in raw.items()}
+        #print(rec)
 
         # --- 2) Parse Geburtstag ---
         try:
-            bd = datetime.strptime(rec['Geburtstag'], "%d.%m.%Y").date()
+            bd = datetime.strptime(rec['Geburtsdatum'], "%d.%m.%Y").date()
         except Exception as e:
             return jsonify({"error": f"Zeile {idx}: Ungültiges Datum im Feld 'Geburtstag' ({rec.get('Geburtstag')})"}), 400
 
         # --- 3) Athlet suchen ---
         matches = Athlete.query.filter_by(
             first_name=rec['Vorname'],
-            last_name =rec['Nachname'],
+            last_name =rec['Name'],
             birth_date=bd
         ).all()
 
         if not matches:
-            missing_athletes.append(f"{rec['Vorname']} {rec['Nachname']} ({bd})")
+            missing_athletes.append(f"{rec['Name']} {rec['Name']} ({bd})")
             continue
         if len(matches) > 1:
-            duplicate_athletes.append(f"{rec['Vorname']} {rec['Nachname']} ({bd})")
+            duplicate_athletes.append(f"{rec['Name']} {rec['Name']} ({bd})")
             continue
 
         athlete = matches[0]
@@ -258,7 +259,7 @@ def import_results_from_csv():
             continue
 
         # erst Übungsstring matchen, dann Altersbereich
-        base = rec['Uebung']
+        base = rec['Übung']
         candidates = (Rule.query
             .filter(Rule.discipline_id == disc.id)
             .filter(Rule.rule_name.ilike(f"{base}%"))
@@ -277,9 +278,9 @@ def import_results_from_csv():
 
         # --- 6) Leistungswert parsen ---
         try:
-            value = to_float_german(rec['Leistung'])
-        except ValueError as e:
-            return jsonify({"error": f"Zeile {idx}: Ungültiger Leistungswert – {e}"}), 400
+            value = float(rec['Punkte'].replace(',', '.'))
+        except:
+            return jsonify({"error": f"Zeile {idx}: Ungültiger Leistungswert '{rec['Ergebnis']}'"}), 400
 
         # --- 7) Medaille bestimmen ---
         medal = determine_medal(rule, value, athlete.gender)
