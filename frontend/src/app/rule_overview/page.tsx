@@ -194,7 +194,7 @@ export default function Page() {
                       if (rule.min_age == currAgeGroup[0] && rule.max_age == currAgeGroup[1]) {
                         return (
                           <AccordionItem key={rule.description_m+globalIndex} value={rule.description_m+globalIndex}>
-                            <AccordionTrigger>{rule.description_m}</AccordionTrigger>
+                            <AccordionTrigger>{rule.description_m+ " Version: "+rule.version}</AccordionTrigger>
                             <AccordionContent>
                               <ul>
                                 <li>Gold: {rule.thresh_gold_m} {rule.unit}</li>
@@ -224,7 +224,7 @@ export default function Page() {
                       if (rule.min_age == currAgeGroup[0] && rule.max_age == currAgeGroup[1]) {
                         return (
                           <AccordionItem key={rule.description_f+globalIndex} value={rule.description_f+globalIndex}>
-                            <AccordionTrigger>{rule.description_f}</AccordionTrigger>
+                            <AccordionTrigger>{rule.description_f + " Version: "+rule.version}</AccordionTrigger>
                             <AccordionContent>
                               <ul>
                                 <li>Gold: {rule.thresh_gold_f} {rule.unit}</li>
