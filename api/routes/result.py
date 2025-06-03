@@ -235,10 +235,10 @@ def import_results_from_csv():
         ).all()
 
         if not matches:
-            missing_athletes.append(f"{rec['Name']} {rec['Name']} ({bd})")
+            missing_athletes.append(f"{rec['Vorname']} {rec['Name']} ({bd})")
             continue
         if len(matches) > 1:
-            duplicate_athletes.append(f"{rec['Name']} {rec['Name']} ({bd})")
+            duplicate_athletes.append(f"{rec['Vorname']} {rec['Name']} ({bd})")
             continue
 
         athlete = matches[0]

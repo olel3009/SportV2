@@ -1,99 +1,99 @@
 Disziplin;Regelungsname;Einheit;Beschreibung-Maennlich;Beschreibung-Weiblich;Mindestalter;Hoechstalter;Bronze-Weiblich;Silber-Weiblich;Gold-Weiblich;Bronze-Maennlich;Silber-Maennlich;Gold-Maennlich;Gueltigkeitsjahr
-Ausdauer;Laufen, 6-7;Min.,Sek.;800m Lauf;800m Lauf;6;7;5.40;5.00;4.15;5.40;5.00;4.15;2024
-Ausdauer;Laufen, 8-9;Min.,Sek.;800m Lauf;800m Lauf;8;9;5.35;4.50;4.10;5.25;4.40;3.55;2024
-Ausdauer;Laufen, 10-11;Min.,Sek.;800m Lauf;800m Lauf;10;11;5.20;4.40;4.00;5.05;4.20;3.35;2024
-Ausdauer;Laufen, 12-13;Min.,Sek.;800m Lauf;800m Lauf;12;13;5.10;4.25;3.45;4.45;4.00;3.15;2024
-Ausdauer;Laufen, 14-15;Min.,Sek.;800m Lauf;800m Lauf;14;15;5.00;4.20;3.35;4.20;3.40;3.00;2024
-Ausdauer;Laufen, 16-17;Min.,Sek.;800m Lauf;800m Lauf;16;17;4.50;4.05;3.25;4.05;3.25;2.45;2024
-Ausdauer;Dauer-/Geländelauf, 6-7;Min.,Sek.;Dauer-/Geländelauf;Dauer-/Geländelauf;6;7;8.00;12.00;17.00;10.00;15.00;20.00;2024
-Ausdauer;Dauer-/Geländelauf, 8-9;Min.,Sek.;Dauer-/Geländelauf;Dauer-/Geländelauf;8;9;10.00;15.00;20.00;12.00;17.00;23.00;2024
-Ausdauer;Dauer-/Geländelauf, 10-11;Min.,Sek.;Dauer-/Geländelauf;Dauer-/Geländelauf;10;11;15.00;20.00;30.00;17.00;25.00;35.00;2024
-Ausdauer;Dauer-/Geländelauf, 12-13;Min.,Sek.;Dauer-/Geländelauf;Dauer-/Geländelauf;12;13;20.00;30.00;40.00;25.00;35.00;45.00;2024
-Ausdauer;Dauer-/Geländelauf, 14-15;Min.,Sek.;Dauer-/Geländelauf;Dauer-/Geländelauf;14;15;30.00;40.00;50.00;35.00;45.00;60.00;2024
-Ausdauer;Dauer-/Geländelauf, 16-17;Min.,Sek.;Dauer-/Geländelauf;Dauer-/Geländelauf;16;17;45.00;60.00;75.00;55.00;70.00;90.00;2024
-Ausdauer;Schwimmen, 6-7;Min.,Sek.;Schwimmen 200m;Schwimmen 200m;6;7;9.00;7.40;6.20;9.00;7.20;6.10;2024
-Ausdauer;Schwimmen, 8-9;Min.,Sek.;Schwimmen 200m;Schwimmen 200m;8;9;8.00;7.00;5.55;8.00;6.45;5.40;2024
-Ausdauer;Schwimmen, 10-11;Min.,Sek.;Schwimmen 200m;Schwimmen 200m;10;11;7.20;6.25;5.30;7.00;6.20;5.10;2024
-Ausdauer;Schwimmen, 12-13;Min.,Sek.;Schwimmen 400m;Schwimmen 400m;12;13;14.50;12.55;11.00;13.30;11.30;9.45;2024
-Ausdauer;Schwimmen, 14-15;Min.,Sek.;Schwimmen 400m;Schwimmen 400m;14;15;13.05;11.40;10.00;12.00;10.15;8.45;2024
-Ausdauer;Schwimmen, 16-17;Min.,Sek.;Schwimmen 400m;Schwimmen 400m;16;17;11.50;10.30;9.05;11.00;9.40;8.20;2024
-Ausdauer;Radfahren, 8-9;Min.,Sek.;Radfahren 5km;Radfahren 5km;8;9;27.00;24.00;21.00;26.30;23.30;20.30;2024
-Ausdauer;Radfahren, 10-11;Min.,Sek.;Radfahren 10km;Radfahren 10km;10;11;50.30;43.00;35.30;48.30;41.00;33.30;2024
-Ausdauer;Radfahren, 12-13;Min.,Sek.;Radfahren 10km;Radfahren 10km;12;13;45.00;39.30;33.30;43.00;37.00;31.30;2024
-Ausdauer;Radfahren, 14-15;Min.,Sek.;Radfahren 10km;Radfahren 10km;14;15;38.00;32.30;28.30;32.00;28.00;24.00;2024
-Ausdauer;Radfahren, 16-17;Min.,Sek.;Radfahren 10km;Radfahren 10km;16;17;32.30;28.30;25.00;27.00;23.30;20.30;2024
-Kraft;Schlagball/Wurfball, 6-7;m,cm;Werfen, Schlagball (80g);Werfen, Schlagball (80g);6;7;6.00;9.00;12.00;12.00;15.00;17.00;2024
-Kraft;Schlagball/Wurfball, 8-9;m,cm;Werfen, Schlagball (80g);Werfen, Schlagball (80g);8;9;9.00;12.00;15.00;17.00;20.00;23.00;2024
-Kraft;Schlagball/Wurfball, 10-11;m,cm;Werfen, Schlagball (80g);Werfen, Schlagball (80g);10;11;11.00;15.00;18.00;21.00;25.00;28.00;2024
-Kraft;Schlagball/Wurfball, 12-13;m,cm;Werfen, Schlagball (200g);Werfen, Schlagball (80g);12;13;15.00;18.00;22.00;26.00;30.00;33.00;2024
-Kraft;Schlagball/Wurfball, 14-15;m,cm;Werfen, Schlagball (200g);Werfen, Schlagball (200g);14;15;20.00;24.00;27.00;30.00;34.00;37.00;2024
-Kraft;Schlagball/Wurfball, 16-17;m,cm;Werfen, Schlagball (200g);Werfen, Schlagball (200g);16;17;24.00;27.00;31.00;34.00;38.00;42.00;2024
-Kraft;Medizinball, 6-7;m,cm;Medizinball(1kg);Medizinball(1kg);6;7;2.50;3.50;4.50;2.50;3.50;4.50;2024
-Kraft;Medizinball, 8-9;m,cm;Medizinball(1kg);Medizinball(1kg);8;9;3.00;4.00;5.00;3.00;4.00;5.00;2024
-Kraft;Medizinball, 10-11;m,cm;Medizinball(1kg);Medizinball(1kg);10;11;5.00;6.00;7.00;5.50;6.50;7.50;2024
-Kraft;Kugelstoßen, 12-13;m,cm;Kugelstoßen(3kg);Kugelstoßen(3kg);12;13;4.75;5.25;5.75;6.25;6.75;7.25;2024
-Kraft;Kugelstoßen, 14-15;m,cm;Kugelstoßen(4kg);Kugelstoßen(3kg);14;15;5.50;6.00;6.50;7.00;7.50;8.00;2024
-Kraft;Kugelstoßen, 16-17;m,cm;Kugelstoßen(5kg);Kugelstoßen(3kg);16;17;5.75;6.25;6.75;7.50;8.00;8.50;2024
-Kraft;Standweitsprung, 6-7;m,cm;Standweitsprung;Standweitsprung;6;7;1.05;1.25;1.40;1.15;1.35;1.50;2024
-Kraft;Standweitsprung, 8-9;m,cm;Standweitsprung;Standweitsprung;8;9;1.15;1.30;1.50;1.30;1.50;1.65;2024
-Kraft;Standweitsprung, 10-11;m,cm;Standweitsprung;Standweitsprung;10;11;1.30;1.45;1.65;1.50;1.70;1.85;2024
-Kraft;Standweitsprung, 12-13;m,cm;Standweitsprung;Standweitsprung;12;13;1.40;1.60;1.80;1.70;1.90;2.05;2024
-Kraft;Standweitsprung, 14-15;m,cm;Standweitsprung;Standweitsprung;14;15;1.55;1.70;1.90;1.90;2.05;2.25;2024
-Kraft;Standweitsprung, 16-17;m,cm;Standweitsprung;Standweitsprung;16;17;1.65;1.80;2.00;2.05;2.20;2.40;2024
-Kraft;Geräteturnen, 6-7;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);6;7;1;1;1;1;1;1;2024
-Kraft;Geräteturnen, 8-9;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);8;9;1;1;1;1;1;1;2024
-Kraft;Geräteturnen, 10-11;Punkte;Geräteturnen (Barren);Geräteturnen (Barren);10;11;1;1;1;1;1;1;2024
-Kraft;Geräteturnen, 12-13;Punkte;Geräteturnen (Reck);Geräteturnen (Reck);12;13;1;1;1;1;1;1;2024
-Kraft;Geräteturnen, 14-15;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);14;15;1;1;1;1;1;1;2024
-Kraft;Geräteturnen, 16-17;Punkte;Geräteturnen (Reck);Geräteturnen (Reck);16;17;1;1;1;1;1;1;2024
-Schnelligkeit;Laufen, 6-7;Min.,Sek.;Laufen (30m);Laufen (30m);6;7;0.08;0.071;0.063;0.077;0.068;0.060;2024
-Schnelligkeit;Laufen, 8-9;Min.,Sek.;Laufen (30m);Laufen (30m);8;9;0.074;0.066;0.057;0.072;0.064;0.057;2024
-Schnelligkeit;Laufen, 10-11;Min.,Sek.;Laufen (50m);Laufen (50m);10;11;0.11;0.101;0.091;0.103;0.093;0.084;2024
-Schnelligkeit;Laufen, 12-13;Min.,Sek.;Laufen (50m);Laufen (50m);12;13;0.106;0.096;0.085;0.097;0.089;0.081;2024
-Schnelligkeit;Laufen, 14-15;Min.,Sek.;Laufen (100m);Laufen (100m);14;15;0.186;0.170;0.155;0.170;0.154;0.141;2024
-Schnelligkeit;Laufen, 16-17;Min.,Sek.;Laufen (100m);Laufen (100m);16;17;0.176;0.163;0.150;0.163;0.148;0.135;2024
-Schnelligkeit;Schwimmen, 6-7;Min.,Sek.;25 m Schwimmen;25 m Schwimmen;6;7;0.465;0.385;0.305;0.460;0.380;0.300;2024
-Schnelligkeit;Schwimmen, 8-9;Min.,Sek.;25 m Schwimmen;25 m Schwimmen;8;9;0.420;0.340;0.280;0.410;0.330;0.260;2024
-Schnelligkeit;Schwimmen, 10-11;Min.,Sek.;25 m Schwimmen;25 m Schwimmen;10;11;0.390;0.315;0.255;0.360;0.290;0.225;2024
-Schnelligkeit;Schwimmen, 12-13;Min.,Sek.;25 m Schwimmen;25 m Schwimmen;12;13;0.350;0.290;0.235;0.330;0.270;0.210;2024
-Schnelligkeit;Schwimmen, 14-15;Min.,Sek.;25 m Schwimmen;25 m Schwimmen;14;15;0.330;0.275;0.215;0.310;0.255;0.200;2024
-Schnelligkeit;Schwimmen, 16-17;Min.,Sek.;25 m Schwimmen;25 m Schwimmen;16;17;0.305;0.255;0.200;0.295;0.245;0.190;2024
-Schnelligkeit;Radfahren, 8-9;Min.,Sek.;200 m Radfahren;200 m Radfahren;8;9;0.410;0.360;0.310;0.380;0.330;0.280;2024
-Schnelligkeit;Radfahren, 10-11;Min.,Sek.;200 m Radfahren;200 m Radfahren;10;11;0.370;0.320;0.270;0.350;0.305;0.260;2024
-Schnelligkeit;Radfahren, 12-13;Min.,Sek.;200 m Radfahren;200 m Radfahren;12;13;0.310;0.270;0.235;0.295;0.260;0.225;2024
-Schnelligkeit;Radfahren, 14-15;Min.,Sek.;200 m Radfahren;200 m Radfahren;14;15;0.270;0.245;0.215;0.240;0.215;0.190;2024
-Schnelligkeit;Radfahren, 16-17;Min.,Sek.;200 m Radfahren;200 m Radfahren;16;17;0.250;0.225;0.200;0.220;0.195;0.170;2024
-Schnelligkeit;Geräteturnen, 6-7;Punkte;Geräteturnen (Sprung);Geräteturnen (Sprung);6;7;1;1;1;1;1;1;2024
-Schnelligkeit;Geräteturnen, 8-9;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);8;9;1;1;1;1;1;1;2024
-Schnelligkeit;Geräteturnen, 10-11;Punkte;Geräteturnen (Sprung);Geräteturnen (Sprung);10;11;1;1;1;1;1;1;2024
-Schnelligkeit;Geräteturnen, 12-13;Punkte;Geräteturnen (Sprung);Geräteturnen (Sprung);12;13;1;1;1;1;1;1;2024
-Schnelligkeit;Geräteturnen, 14-15;Punkte;Geräteturnen (Sprung);Geräteturnen (Sprung);14;15;1;1;1;1;1;1;2024
-Schnelligkeit;Geräteturnen, 16-17;Punkte;Geräteturnen (Sprung);Geräteturnen (Sprung);16;17;1;1;1;1;1;1;2024
-Koordination;Hochsprung, 10-11;m,cm;Hochsprung;Hochsprung;10;11;0.80;0.90;1.00;0.85;0.95;1.05;2024
-Koordination;Hochsprung, 12-13;m,cm;Hochsprung;Hochsprung;12;13;0.90;1.00;1.10;0.95;1.05;1.15;2024
-Koordination;Hochsprung, 14-15;m,cm;Hochsprung;Hochsprung;14;15;0.95;1.05;1.15;1.10;1.20;1.30;2024
-Koordination;Hochsprung, 16-17;m,cm;Hochsprung;Hochsprung;16;17;1.05;1.15;1.25;1.20;1.30;1.40;2024
-Koordination;Zonenweitsprung, 6-7;Punkte;Zonenweitsprung;Zonenweitsprung;6;7;18;21;24;18;21;24;2024
-Koordination;Zonenweitsprung, 8-9;Punkte;Zonenweitsprung;Zonenweitsprung;8;9;24;27;30;27;30;33;2024
-Koordination;Weitsprung, 10-11;m,cm;Weitsprung;Weitsprung;10;11;2.30;2.60;2.90;2.60;2.90;3.20;2024
-Koordination;Weitsprung, 12-13;m,cm;Weitsprung;Weitsprung;12;13;2.80;3.10;3.40;3.20;3.50;3.80;2024
-Koordination;Weitsprung, 14-15;m,cm;Weitsprung;Weitsprung;14;15;3.20;3.50;3.80;3.80;4.10;4.40;2024
-Koordination;Weitsprung, 16-17;m,cm;Weitsprung;Weitsprung;16;17;3.40;3.70;4.00;4.30;4.60;4.90;2024
-Koordination;Drehwurf, 6-7;Punkte;Drehwurf;Drehwurf;6;7;12;15;21;15;18;24;2024
-Koordination;Drehwurf, 8-9;Punkte;Drehwurf;Drehwurf;8;9;18;21;27;21;27;33;2024
-Koordination;Drehwurf, 10-11;Punkte;Drehwurf;Drehwurf;10;11;27;30;36;33;39;45;2024
-Koordination;Schleuderball, 12-13;m,cm;Schleuderball (1kg);Schleuderball (1kg);12;13;17.00;19.50;22.00;19.50;24.00;27.50;2024
-Koordination;Schleuderball, 14-15;m,cm;Schleuderball (1kg);Schleuderball (1kg);14;15;19.50;22.50;25.50;23.50;28.00;32.00;2024
-Koordination;Schleuderball, 16-17;m,cm;Schleuderball (1kg);Schleuderball (1kg);16;17;22.00;25.00;28.00;27.50;32.00;36.50;2024
-Koordination;Seilspringen, 6-7;Punkte;Grundsprung vorwärts mit oder ohne Zwischensprung ODER Galoppsprung;Grundsprung vorwärts mit oder ohne Zwischensprung ODER Galoppsprung;6;7;10;15;25;10;15;25;2024
-Koordination;Seilspringen, 8-9;Punkte;Grundsprung vorwärts mit oder ohne Zwischensprung ODER Galoppsprung;Grundsprung vorwärts mit oder ohne Zwischensprung ODER Galoppsprung;8;9;10;15;25;10;15;25;2024
-Koordination;Seilspringen, 10-11;Punkte;Grundsprung vorwärts ohne Zwischensprung;Grundsprung vorwärts ohne Zwischensprung;10;11;20;30;40;20;30;40;2024
-Koordination;Seilspringen, 12-13;Punkte;Grundsprung rückwärts ohne Zwischensprung;Grundsprung rückwärts ohne Zwischensprung;12;13;10;20;30;10;20;30;2024
-Koordination;Seilspringen, 14-15;Punkte;Kreuzdurchschlag ohne Zwischensprung;Kreuzdurchschlag ohne Zwischensprung;14;15;10;15;20;10;15;20;2024
-Koordination;Geräteturnen, 16-17;Punkte;Kreuzdurchschlag ohne Zwischensprung;Kreuzdurchschlag ohne Zwischensprung;16;17;10;15;20;10;15;20;2024
-Koordination;Geräteturnen, 6-7;Punkte;Geräteturnen (Schwebebalken);Geräteturnen (Schwebebalken);6;7;1;1;1;1;1;1;2024
-Koordination;Geräteturnen, 8-9;Punkte;Geräteturnen (Reck);Geräteturnen (Reck);8;9;1;1;1;1;1;1;2024
-Koordination;Geräteturnen, 10-11;Punkte;Geräteturnen (Ringe);Geräteturnen (Ringe);10;11;1;1;1;1;1;1;2024
-Koordination;Geräteturnen, 12-13;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);12;13;1;1;1;1;1;1;2024
-Koordination;Geräteturnen, 14-15;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);14;15;1;1;1;1;1;1;2024
-Koordination;Geräteturnen, 16-17;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);16;17;1;1;1;1;1;1;2024
+Ausdauer;Laufen, 6-7;Min.,Sek.;800m Lauf;800m Lauf;6;7;5.40;5.00;4.15;5.40;5.00;4.15;2025
+Ausdauer;Laufen, 8-9;Min.,Sek.;800m Lauf;800m Lauf;8;9;5.35;4.50;4.10;5.25;4.40;3.55;2025
+Ausdauer;Laufen, 10-11;Min.,Sek.;800m Lauf;800m Lauf;10;11;5.20;4.40;4.00;5.05;4.20;3.35;2025
+Ausdauer;Laufen, 12-13;Min.,Sek.;800m Lauf;800m Lauf;12;13;5.10;4.25;3.45;4.45;4.00;3.15;2025
+Ausdauer;Laufen, 14-15;Min.,Sek.;800m Lauf;800m Lauf;14;15;5.00;4.20;3.35;4.20;3.40;3.00;2025
+Ausdauer;Laufen, 16-17;Min.,Sek.;800m Lauf;800m Lauf;16;17;4.50;4.05;3.25;4.05;3.25;2.45;2025
+Ausdauer;Dauer-/Geländelauf, 6-7;Min.,Sek.;Dauer-/Geländelauf;Dauer-/Geländelauf;6;7;8.00;12.00;17.00;10.00;15.00;20.00;2025
+Ausdauer;Dauer-/Geländelauf, 8-9;Min.,Sek.;Dauer-/Geländelauf;Dauer-/Geländelauf;8;9;10.00;15.00;20.00;12.00;17.00;23.00;2025
+Ausdauer;Dauer-/Geländelauf, 10-11;Min.,Sek.;Dauer-/Geländelauf;Dauer-/Geländelauf;10;11;15.00;20.00;30.00;17.00;25.00;35.00;2025
+Ausdauer;Dauer-/Geländelauf, 12-13;Min.,Sek.;Dauer-/Geländelauf;Dauer-/Geländelauf;12;13;20.00;30.00;40.00;25.00;35.00;45.00;2025
+Ausdauer;Dauer-/Geländelauf, 14-15;Min.,Sek.;Dauer-/Geländelauf;Dauer-/Geländelauf;14;15;30.00;40.00;50.00;35.00;45.00;60.00;2025
+Ausdauer;Dauer-/Geländelauf, 16-17;Min.,Sek.;Dauer-/Geländelauf;Dauer-/Geländelauf;16;17;45.00;60.00;75.00;55.00;70.00;90.00;2025
+Ausdauer;Schwimmen, 6-7;Min.,Sek.;Schwimmen 200m;Schwimmen 200m;6;7;9.00;7.40;6.20;9.00;7.20;6.10;2025
+Ausdauer;Schwimmen, 8-9;Min.,Sek.;Schwimmen 200m;Schwimmen 200m;8;9;8.00;7.00;5.55;8.00;6.45;5.40;2025
+Ausdauer;Schwimmen, 10-11;Min.,Sek.;Schwimmen 200m;Schwimmen 200m;10;11;7.20;6.25;5.30;7.00;6.20;5.10;2025
+Ausdauer;Schwimmen, 12-13;Min.,Sek.;Schwimmen 400m;Schwimmen 400m;12;13;14.50;12.55;11.00;13.30;11.30;9.45;2025
+Ausdauer;Schwimmen, 14-15;Min.,Sek.;Schwimmen 400m;Schwimmen 400m;14;15;13.05;11.40;10.00;12.00;10.15;8.45;2025
+Ausdauer;Schwimmen, 16-17;Min.,Sek.;Schwimmen 400m;Schwimmen 400m;16;17;11.50;10.30;9.05;11.00;9.40;8.20;2025
+Ausdauer;Radfahren, 8-9;Min.,Sek.;Radfahren 5km;Radfahren 5km;8;9;27.00;24.00;21.00;26.30;23.30;20.30;2025
+Ausdauer;Radfahren, 10-11;Min.,Sek.;Radfahren 10km;Radfahren 10km;10;11;50.30;43.00;35.30;48.30;41.00;33.30;2025
+Ausdauer;Radfahren, 12-13;Min.,Sek.;Radfahren 10km;Radfahren 10km;12;13;45.00;39.30;33.30;43.00;37.00;31.30;2025
+Ausdauer;Radfahren, 14-15;Min.,Sek.;Radfahren 10km;Radfahren 10km;14;15;38.00;32.30;28.30;32.00;28.00;24.00;2025
+Ausdauer;Radfahren, 16-17;Min.,Sek.;Radfahren 10km;Radfahren 10km;16;17;32.30;28.30;25.00;27.00;23.30;20.30;2025
+Kraft;Schlagball/Wurfball, 6-7;m,cm;Werfen, Schlagball (80g);Werfen, Schlagball (80g);6;7;6.00;9.00;12.00;12.00;15.00;17.00;2025
+Kraft;Schlagball/Wurfball, 8-9;m,cm;Werfen, Schlagball (80g);Werfen, Schlagball (80g);8;9;9.00;12.00;15.00;17.00;20.00;23.00;2025
+Kraft;Schlagball/Wurfball, 10-11;m,cm;Werfen, Schlagball (80g);Werfen, Schlagball (80g);10;11;11.00;15.00;18.00;21.00;25.00;28.00;2025
+Kraft;Schlagball/Wurfball, 12-13;m,cm;Werfen, Schlagball (200g);Werfen, Schlagball (80g);12;13;15.00;18.00;22.00;26.00;30.00;33.00;2025
+Kraft;Schlagball/Wurfball, 14-15;m,cm;Werfen, Schlagball (200g);Werfen, Schlagball (200g);14;15;20.00;24.00;27.00;30.00;34.00;37.00;2025
+Kraft;Schlagball/Wurfball, 16-17;m,cm;Werfen, Schlagball (200g);Werfen, Schlagball (200g);16;17;24.00;27.00;31.00;34.00;38.00;42.00;2025
+Kraft;Medizinball, 6-7;m,cm;Medizinball(1kg);Medizinball(1kg);6;7;2.50;3.50;4.50;2.50;3.50;4.50;2025
+Kraft;Medizinball, 8-9;m,cm;Medizinball(1kg);Medizinball(1kg);8;9;3.00;4.00;5.00;3.00;4.00;5.00;2025
+Kraft;Medizinball, 10-11;m,cm;Medizinball(1kg);Medizinball(1kg);10;11;5.00;6.00;7.00;5.50;6.50;7.50;2025
+Kraft;Kugelstoßen, 12-13;m,cm;Kugelstoßen(3kg);Kugelstoßen(3kg);12;13;4.75;5.25;5.75;6.25;6.75;7.25;2025
+Kraft;Kugelstoßen, 14-15;m,cm;Kugelstoßen(4kg);Kugelstoßen(3kg);14;15;5.50;6.00;6.50;7.00;7.50;8.00;2025
+Kraft;Kugelstoßen, 16-17;m,cm;Kugelstoßen(5kg);Kugelstoßen(3kg);16;17;5.75;6.25;6.75;7.50;8.00;8.50;2025
+Kraft;Standweitsprung, 6-7;m,cm;Standweitsprung;Standweitsprung;6;7;1.05;1.25;1.40;1.15;1.35;1.50;2025
+Kraft;Standweitsprung, 8-9;m,cm;Standweitsprung;Standweitsprung;8;9;1.15;1.30;1.50;1.30;1.50;1.65;2025
+Kraft;Standweitsprung, 10-11;m,cm;Standweitsprung;Standweitsprung;10;11;1.30;1.45;1.65;1.50;1.70;1.85;2025
+Kraft;Standweitsprung, 12-13;m,cm;Standweitsprung;Standweitsprung;12;13;1.40;1.60;1.80;1.70;1.90;2.05;2025
+Kraft;Standweitsprung, 14-15;m,cm;Standweitsprung;Standweitsprung;14;15;1.55;1.70;1.90;1.90;2.05;2.25;2025
+Kraft;Standweitsprung, 16-17;m,cm;Standweitsprung;Standweitsprung;16;17;1.65;1.80;2.00;2.05;2.20;2.40;2025
+Kraft;Geräteturnen, 6-7;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);6;7;1;1;1;1;1;1;2025
+Kraft;Geräteturnen, 8-9;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);8;9;1;1;1;1;1;1;2025
+Kraft;Geräteturnen, 10-11;Punkte;Geräteturnen (Barren);Geräteturnen (Barren);10;11;1;1;1;1;1;1;2025
+Kraft;Geräteturnen, 12-13;Punkte;Geräteturnen (Reck);Geräteturnen (Reck);12;13;1;1;1;1;1;1;2025
+Kraft;Geräteturnen, 14-15;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);14;15;1;1;1;1;1;1;2025
+Kraft;Geräteturnen, 16-17;Punkte;Geräteturnen (Reck);Geräteturnen (Reck);16;17;1;1;1;1;1;1;2025
+Schnelligkeit;Laufen, 6-7;Min.,Sek.;Laufen (30m);Laufen (30m);6;7;0.08;0.071;0.063;0.077;0.068;0.060;2025
+Schnelligkeit;Laufen, 8-9;Min.,Sek.;Laufen (30m);Laufen (30m);8;9;0.074;0.066;0.057;0.072;0.064;0.057;2025
+Schnelligkeit;Laufen, 10-11;Min.,Sek.;Laufen (50m);Laufen (50m);10;11;0.11;0.101;0.091;0.103;0.093;0.084;2025
+Schnelligkeit;Laufen, 12-13;Min.,Sek.;Laufen (50m);Laufen (50m);12;13;0.106;0.096;0.085;0.097;0.089;0.081;2025
+Schnelligkeit;Laufen, 14-15;Min.,Sek.;Laufen (100m);Laufen (100m);14;15;0.186;0.170;0.155;0.170;0.154;0.141;2025
+Schnelligkeit;Laufen, 16-17;Min.,Sek.;Laufen (100m);Laufen (100m);16;17;0.176;0.163;0.150;0.163;0.148;0.135;2025
+Schnelligkeit;Schwimmen, 6-7;Min.,Sek.;25 m Schwimmen;25 m Schwimmen;6;7;0.465;0.385;0.305;0.460;0.380;0.300;2025
+Schnelligkeit;Schwimmen, 8-9;Min.,Sek.;25 m Schwimmen;25 m Schwimmen;8;9;0.420;0.340;0.280;0.410;0.330;0.260;2025
+Schnelligkeit;Schwimmen, 10-11;Min.,Sek.;25 m Schwimmen;25 m Schwimmen;10;11;0.390;0.315;0.255;0.360;0.290;0.225;2025
+Schnelligkeit;Schwimmen, 12-13;Min.,Sek.;25 m Schwimmen;25 m Schwimmen;12;13;0.350;0.290;0.235;0.330;0.270;0.210;2025
+Schnelligkeit;Schwimmen, 14-15;Min.,Sek.;25 m Schwimmen;25 m Schwimmen;14;15;0.330;0.275;0.215;0.310;0.255;0.200;2025
+Schnelligkeit;Schwimmen, 16-17;Min.,Sek.;25 m Schwimmen;25 m Schwimmen;16;17;0.305;0.255;0.200;0.295;0.245;0.190;2025
+Schnelligkeit;Radfahren, 8-9;Min.,Sek.;200 m Radfahren;200 m Radfahren;8;9;0.410;0.360;0.310;0.380;0.330;0.280;2025
+Schnelligkeit;Radfahren, 10-11;Min.,Sek.;200 m Radfahren;200 m Radfahren;10;11;0.370;0.320;0.270;0.350;0.305;0.260;2025
+Schnelligkeit;Radfahren, 12-13;Min.,Sek.;200 m Radfahren;200 m Radfahren;12;13;0.310;0.270;0.235;0.295;0.260;0.225;2025
+Schnelligkeit;Radfahren, 14-15;Min.,Sek.;200 m Radfahren;200 m Radfahren;14;15;0.270;0.245;0.215;0.240;0.215;0.190;2025
+Schnelligkeit;Radfahren, 16-17;Min.,Sek.;200 m Radfahren;200 m Radfahren;16;17;0.250;0.225;0.200;0.220;0.195;0.170;2025
+Schnelligkeit;Geräteturnen, 6-7;Punkte;Geräteturnen (Sprung);Geräteturnen (Sprung);6;7;1;1;1;1;1;1;2025
+Schnelligkeit;Geräteturnen, 8-9;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);8;9;1;1;1;1;1;1;2025
+Schnelligkeit;Geräteturnen, 10-11;Punkte;Geräteturnen (Sprung);Geräteturnen (Sprung);10;11;1;1;1;1;1;1;2025
+Schnelligkeit;Geräteturnen, 12-13;Punkte;Geräteturnen (Sprung);Geräteturnen (Sprung);12;13;1;1;1;1;1;1;2025
+Schnelligkeit;Geräteturnen, 14-15;Punkte;Geräteturnen (Sprung);Geräteturnen (Sprung);14;15;1;1;1;1;1;1;2025
+Schnelligkeit;Geräteturnen, 16-17;Punkte;Geräteturnen (Sprung);Geräteturnen (Sprung);16;17;1;1;1;1;1;1;2025
+Koordination;Hochsprung, 10-11;m,cm;Hochsprung;Hochsprung;10;11;0.80;0.90;1.00;0.85;0.95;1.05;2025
+Koordination;Hochsprung, 12-13;m,cm;Hochsprung;Hochsprung;12;13;0.90;1.00;1.10;0.95;1.05;1.15;2025
+Koordination;Hochsprung, 14-15;m,cm;Hochsprung;Hochsprung;14;15;0.95;1.05;1.15;1.10;1.20;1.30;2025
+Koordination;Hochsprung, 16-17;m,cm;Hochsprung;Hochsprung;16;17;1.05;1.15;1.25;1.20;1.30;1.40;2025
+Koordination;Zonenweitsprung, 6-7;Punkte;Zonenweitsprung;Zonenweitsprung;6;7;18;21;24;18;21;24;2025
+Koordination;Zonenweitsprung, 8-9;Punkte;Zonenweitsprung;Zonenweitsprung;8;9;24;27;30;27;30;33;2025
+Koordination;Weitsprung, 10-11;m,cm;Weitsprung;Weitsprung;10;11;2.30;2.60;2.90;2.60;2.90;3.20;2025
+Koordination;Weitsprung, 12-13;m,cm;Weitsprung;Weitsprung;12;13;2.80;3.10;3.40;3.20;3.50;3.80;2025
+Koordination;Weitsprung, 14-15;m,cm;Weitsprung;Weitsprung;14;15;3.20;3.50;3.80;3.80;4.10;4.40;2025
+Koordination;Weitsprung, 16-17;m,cm;Weitsprung;Weitsprung;16;17;3.40;3.70;4.00;4.30;4.60;4.90;2025
+Koordination;Drehwurf, 6-7;Punkte;Drehwurf;Drehwurf;6;7;12;15;21;15;18;24;2025
+Koordination;Drehwurf, 8-9;Punkte;Drehwurf;Drehwurf;8;9;18;21;27;21;27;33;2025
+Koordination;Drehwurf, 10-11;Punkte;Drehwurf;Drehwurf;10;11;27;30;36;33;39;45;2025
+Koordination;Schleuderball, 12-13;m,cm;Schleuderball (1kg);Schleuderball (1kg);12;13;17.00;19.50;22.00;19.50;24.00;27.50;2025
+Koordination;Schleuderball, 14-15;m,cm;Schleuderball (1kg);Schleuderball (1kg);14;15;19.50;22.50;25.50;23.50;28.00;32.00;2025
+Koordination;Schleuderball, 16-17;m,cm;Schleuderball (1kg);Schleuderball (1kg);16;17;22.00;25.00;28.00;27.50;32.00;36.50;2025
+Koordination;Seilspringen, 6-7;Punkte;Grundsprung vorwärts mit oder ohne Zwischensprung ODER Galoppsprung;Grundsprung vorwärts mit oder ohne Zwischensprung ODER Galoppsprung;6;7;10;15;25;10;15;25;2025
+Koordination;Seilspringen, 8-9;Punkte;Grundsprung vorwärts mit oder ohne Zwischensprung ODER Galoppsprung;Grundsprung vorwärts mit oder ohne Zwischensprung ODER Galoppsprung;8;9;10;15;25;10;15;25;2025
+Koordination;Seilspringen, 10-11;Punkte;Grundsprung vorwärts ohne Zwischensprung;Grundsprung vorwärts ohne Zwischensprung;10;11;20;30;40;20;30;40;2025
+Koordination;Seilspringen, 12-13;Punkte;Grundsprung rückwärts ohne Zwischensprung;Grundsprung rückwärts ohne Zwischensprung;12;13;10;20;30;10;20;30;2025
+Koordination;Seilspringen, 14-15;Punkte;Kreuzdurchschlag ohne Zwischensprung;Kreuzdurchschlag ohne Zwischensprung;14;15;10;15;20;10;15;20;2025
+Koordination;Seilspringen, 16-17;Punkte;Kreuzdurchschlag ohne Zwischensprung;Kreuzdurchschlag ohne Zwischensprung;16;17;10;15;20;10;15;20;2025
+Koordination;Geräteturnen, 6-7;Punkte;Geräteturnen (Schwebebalken);Geräteturnen (Schwebebalken);6;7;1;1;1;1;1;1;2025
+Koordination;Geräteturnen, 8-9;Punkte;Geräteturnen (Reck);Geräteturnen (Reck);8;9;1;1;1;1;1;1;2025
+Koordination;Geräteturnen, 10-11;Punkte;Geräteturnen (Ringe);Geräteturnen (Ringe);10;11;1;1;1;1;1;1;2025
+Koordination;Geräteturnen, 12-13;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);12;13;1;1;1;1;1;1;2025
+Koordination;Geräteturnen, 14-15;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);14;15;1;1;1;1;1;1;2025
+Koordination;Geräteturnen, 16-17;Punkte;Geräteturnen (Boden);Geräteturnen (Boden);16;17;1;1;1;1;1;1;2025
