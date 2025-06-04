@@ -7,6 +7,8 @@ import { downloadCsv } from "@/exportCsv";
 import DownloadCsvButton from "@/components/ui/csvExportButton";
 import Link from "next/link";
 import { Undo2, CircleUserRound, Medal, CircleSlash } from "lucide-react";
+import {parseDDMMYYYY } from "@/generalHelpers";
+
 import {
   Card,
   CardContent,
@@ -62,6 +64,19 @@ export default function Page() {
       .catch((err) => setError(err.message));
   }, []);
 
+  const isCurrentDateBetween=(startDate:string, endDate:string)=>{
+    const valStartDate = typeof startDate === 'string'
+                    ? parseDDMMYYYY(startDate)
+                    : startDate;
+    const valEndDate = typeof endDate === 'string'
+                    ? parseDDMMYYYY(endDate)
+                    : endDate;
+    const today= new Date();
+    let valid=((today>=valStartDate)&&(today<=valEndDate));
+    return valid ;
+
+  }
+
   if (tokenValid === null) {
     // Noch nicht geprüft, z.B. Ladeanzeige oder leer
     return null;
@@ -73,9 +88,9 @@ export default function Page() {
   
   if (error) return <div className="text-red-600">Failed to load: {error}</div>;
   if (!rules) return <div>Loading disciplines…</div>;
-  console.log(rules);
-  //let validRules=rules.filter(rule=>{return isCurrentDateBetween(rule.valid_start, rule.valid_end)});
-  //console.log(validRules)
+  //console.log(rules);
+  let validRules=rules.filter(rule=>{return isCurrentDateBetween(rule.valid_start, rule.valid_end)});
+  console.log(validRules)
 
   let globalIndex=0;
   return (
@@ -188,7 +203,7 @@ export default function Page() {
               <CardContent>
                 <Accordion type="single" collapsible>
                   {
-                    rules.map(rule => {
+                    validRules.map(rule => {
                       let currAgeGroup: number[] = parseAgegroup(ageGroup ?? '0,0');
                       globalIndex=globalIndex+1;
                       if (rule.min_age == currAgeGroup[0] && rule.max_age == currAgeGroup[1]) {
