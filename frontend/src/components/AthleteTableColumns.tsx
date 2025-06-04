@@ -146,6 +146,16 @@ export const columns: ColumnDef<Athlete>[] = [
     },
   },
 
+  {
+    accessorKey: "swimCertificate",
+    header: "Schwimmnachweis",
+    cell: ({row}) => {
+      const cert = row.original.swimCertificate;
+      if (cert) return "Ja"
+      else return "Nein"
+    },
+  },
+
   // Medals
   {
     accessorKey: "goldMedals",
