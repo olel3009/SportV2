@@ -90,7 +90,7 @@ export default function Page() {
   if (!rules) return <div>Loading disciplines…</div>;
   //console.log(rules);
   let validRules=rules.filter(rule=>{return isCurrentDateBetween(rule.valid_start, rule.valid_end)});
-  console.log(validRules)
+  //console.log(validRules)
 
   let globalIndex=0;
   return (
