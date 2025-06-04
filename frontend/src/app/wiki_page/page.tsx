@@ -31,7 +31,7 @@ export default function Home() {
               href="#leistungen_ergebnisse_athlet_diziplin"
               className="text-black hover:text-gray-600"
             >
-              01. Ansicht von Leistungen und Ergebnissen pro Athlet und Disziplin
+              01. Dashboard
             </a>
           </li>
           <li>
@@ -99,29 +99,11 @@ export default function Home() {
           </li>
           <li>
             <a
-              id="link_medaillen_ansicht"
-              href="#medaillen_ansicht"
-              className="text-black hover:text-gray-600"
-            >
-              09. Medaillen Ansicht
-            </a>
-          </li>
-          <li>
-            <a
-              id="link_visuelle_darstellung_entwicklung"
-              href="#visuelle_darstellung_entwicklung"
-              className="text-black hover:text-gray-600"
-            >
-              10. Visuelle Darstellung der Entwicklung eines Athleten
-            </a>
-          </li>
-          <li>
-            <a
               id="link_erstellung_athleten"
               href="#erstellung_athleten"
               className="text-black hover:text-gray-600"
             >
-              11. Erstellung eines Athleten
+              09. Erstellung eines Athleten
             </a>
           </li>
         </ul>
